@@ -218,6 +218,7 @@ nav:
           - SoumniBot: malware/families/soumnibot.md
           - SparkCat: malware/families/sparkcat.md
           - SpinOk: malware/families/spinok.md
+          - SuperCard X: malware/families/supercard-x.md
           - SpyAgent: malware/families/spyagent.md
           - SpyLoan: malware/families/spyloan.md
           - SpyNote: malware/families/spynote.md
@@ -235,6 +236,7 @@ nav:
           - Ztorg: malware/families/ztorg.md
   - Packers:
       - packers/index.md
+      - Allatori: packers/allatori.md
       - Appdome: packers/appdome.md
       - AppSealing: packers/appsealing.md
       - Arxan (Digital.ai): packers/arxan.md
@@ -371,6 +373,7 @@ nav:
               - BIND_DEVICE_ADMIN: permissions/special/bind-device-admin.md
               - BIND_NOTIFICATION_LISTENER_SERVICE: permissions/special/bind-notification-listener-service.md
               - BIND_VPN_SERVICE: permissions/special/bind-vpn-service.md
+              - INTERACT_ACROSS_USERS_FULL: permissions/special/interact-across-users-full.md
               - MANAGE_EXTERNAL_STORAGE: permissions/special/manage-external-storage.md
               - PACKAGE_USAGE_STATS: permissions/special/package-usage-stats.md
               - REQUEST_DELETE_PACKAGES: permissions/special/request-delete-packages.md

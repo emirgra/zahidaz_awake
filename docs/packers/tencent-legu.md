@@ -13,16 +13,41 @@ The most widely used Chinese packer. Free protection service integrated with Ten
 
 ## Identification
 
-| Artifact | Description |
-|----------|-------------|
-| Native library | `libshell-super.2019.so`, `libshella-*.so`, or `libtxoprot.so` |
-| DEX stub | Minimal `classes.dex` with shell loader class |
-| Asset files | Encrypted DEX in `assets/` (e.g., `classes.dex.dat`) |
-| Metadata | `tencent_stub` in APK metadata |
+| Artifact | Location | Description |
+|----------|----------|-------------|
+| Application class | `AndroidManifest.xml` | `com.tencent.StubShell.TxAppEntry` replaces the real Application class |
+| Meta-data | `AndroidManifest.xml` | `<meta-data android:name="TxAppEntry" android:value="<real_application_class>"/>` stores the original Application class name |
+| Native libraries | `lib/armeabi/` | `libshella-<version>.so` + `libshellx-<version>.so` (versioned by Legu release) |
+| DEX stubs | `lib/armeabi/` | `mix.dex` + `mixz.dex` containing a single empty `com.mixClass{}` |
+| Older native names | `lib/` | `libshell-super.2019.so`, `libtxoprot.so` in earlier versions |
+| Runtime directory | `/data/data/<pkg>/` | `tx_shell/` directory created at runtime containing `libshella.so`, `libshellb.so`, `libshellc.so` |
+| Crash reporting | DEX | `com.tencent.bugly.legu.crashreport.CrashReport` with app ID `900015015` |
+| Version string | DEX | Static method `c()` on the shell class returns version (e.g., `"2.10.7.1"`); static field `version` holds a hash |
+
+### Version Detection
+
+The Legu version can be determined from the native library filename suffix (`libshella-2.10.7.1.so`) or by calling the version method at runtime:
+
+```javascript
+Java.perform(function() {
+    var TxAppEntry = Java.use("com.tencent.StubShell.TxAppEntry");
+    console.log("Legu version: " + TxAppEntry.c());
+});
+```
 
 ## Protection
 
-- DEX encryption with AES
+### Runtime Loading
+
+`TxAppEntry.attachBaseContext()` loads the native shell library, which decrypts the real DEX from within the outer `classes.dex` using `mmap`/`mprotect`, then calls `load()` to inject the decrypted classes into the running process. `runCreate()` delegates to the real Application's `onCreate()`. The original code exists only in memory and is not extractable statically.
+
+### `getPackageName()` Override
+
+Legu overrides `getPackageName()` with stack trace inspection to manipulate the ContentProvider installation order. This ensures the shell's providers initialize before the real app's providers, which is required for the decryption chain to complete before any app component tries to access protected classes.
+
+### Anti-Analysis
+
+- DEX encryption with AES (decrypted via native library at runtime)
 - Native library anti-debugging (ptrace self-attach)
 - Emulator detection via hardware properties
 - Anti-Frida checks (port scanning, `/proc/maps` inspection, named pipe detection)
@@ -31,11 +56,14 @@ The most widely used Chinese packer. Free protection service integrated with Ten
 
 ## Unpacking
 
+Static unpacking is not feasible since the DEX is decrypted in memory by native code. Dynamic analysis is required.
+
 ### Standard Approach
 
 1. Hook `DexClassLoader` or `InMemoryDexClassLoader` to intercept DEX loading
 2. Dump DEX bytes from memory after native loader decrypts
 3. Alternative: use [frida-dexdump](https://github.com/hluwa/frida-dexdump) which scans process memory for DEX headers
+4. Memory dump from `/proc/<pid>/maps` to locate decrypted DEX regions
 
 ### Anti-Frida Bypass
 

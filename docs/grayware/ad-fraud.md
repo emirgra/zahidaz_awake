@@ -9,7 +9,9 @@ Apps that generate fake ad impressions, clicks, or installs in the background to
 | Click injection | Listens for `PACKAGE_ADDED` broadcast, injects attribution click before new app finishes installing | `PACKAGE_ADDED` receiver + immediate HTTP request to attribution URL |
 | Ad stacking | Multiple invisible ads loaded behind a single visible ad | Multiple ad SDK network calls per visible impression |
 | Pixel stuffing | Ads loaded in 1x1 pixel containers, invisible to user | Tiny WebView or ImageView with ad network traffic |
+| VirtualDisplay rendering | `DisplayManager.createVirtualDisplay()` creates a 1x1 pixel virtual display; ads render on a `Presentation` targeting that display, invisible to user | `createVirtualDisplay` calls, `Presentation` subclass without corresponding user-visible secondary display |
 | Background ad rendering | Hidden [WebView](../attacks/webview-exploitation.md) loads and "views" ads with screen off | WebView activity without corresponding UI, battery drain |
+| Fake incoming call interstitial | `TelecomManager.addNewIncomingCall()` with a self-managed `PhoneAccount` (API 26+) triggers incoming call UI; the `Connection.onShowIncomingCallUi()` callback launches an ad activity instead | `MANAGE_OWN_CALLS` permission, `ConnectionService` subclass, immediate `DisconnectCause(LOCAL)` after ad launch |
 | Click flooding | Mass generation of fake ad clicks to poison attribution data | High-volume HTTP requests to ad tracking endpoints |
 | SDK spoofing | Forge ad impressions by replaying legitimate SDK traffic patterns | Network traffic mimicking ad SDK protocols without actual ad display |
 
@@ -32,6 +34,28 @@ Apps that generate fake ad impressions, clicks, or installs in the background to
 **Clicker** (2022): [McAfee found 16 clicker apps on Google Play with 20M+ combined downloads](https://www.mcafee.com/blogs/other-blogs/mcafee-labs/new-malicious-clicker-found-in-apps-installed-by-20m-users/) using the `com.click.cas` and `com.liveposting` libraries. The malware delayed activation by over an hour after installation and paused when the user was actively using the device, making detection through manual testing nearly impossible.
 
 **Invisible Adware** (2023): [McAfee uncovered 43 apps on Google Play](https://www.mcafee.com/blogs/other-blogs/mcafee-labs/invisible-adware-unveiling-ad-fraud-targeting-android-users/) with 2.5M downloads that loaded ads only when the device screen was off. The apps waited multiple weeks after installation before activating and requested "power saving exclusion" and "draw over other apps" permissions to maintain background execution.
+
+## VirtualDisplay Invisible Rendering
+
+A technique where ads render on a virtual display that the user never sees. The app creates a `VirtualDisplay` with 1x1 pixel dimensions via `DisplayManager.createVirtualDisplay()`, then renders a `Presentation` (designed for secondary displays like Chromecast) on that surface. The ad loads, renders, and registers impressions and clicks, but is completely invisible because the display surface is a single pixel.
+
+```java
+DisplayManager dm = (DisplayManager) getSystemService(DISPLAY_SERVICE);
+VirtualDisplay vd = dm.createVirtualDisplay("ad_surface", 1, 1, 1,
+    surface, DisplayManager.VIRTUAL_DISPLAY_FLAG_PRESENTATION);
+AdPresentation presentation = new AdPresentation(context, vd.getDisplay());
+presentation.show();
+```
+
+This is more sophisticated than pixel stuffing because the ad SDK believes it is rendering on a legitimate secondary display at full resolution, generating valid impression metrics. Combined with [HiddenApiBypass](../attacks/anti-analysis-techniques.md#hidden-api-bypass) to instantiate `DisplayManager` directly (avoiding `Context.getSystemService()` which would expose the real package name), it becomes difficult for ad networks to detect programmatically.
+
+## Fake Incoming Calls as Ad Triggers
+
+Adware abusing Android's `TelecomManager` to simulate incoming phone calls, using the call UI as a trigger to display full-screen ad interstitials. The app registers a self-managed `PhoneAccount` (capability `CAPABILITY_SELF_MANAGED` = 2048) and its own `ConnectionService`, then calls `TelecomManager.addNewIncomingCall()` to inject fake calls.
+
+When the system shows the incoming call UI, the malware's `Connection.onShowIncomingCallUi()` callback fires and launches an ad activity. The call is immediately disconnected with `DisconnectCause(LOCAL)` so it never appears in call logs.
+
+Requires only `MANAGE_OWN_CALLS` (a normal permission, no user prompt). Works on Android 8.0+ (API 26, when `CAPABILITY_SELF_MANAGED` was introduced). The user sees a brief incoming call animation, then a full-screen ad appears, designed to confuse the user into thinking the ad is related to the "call."
 
 ## Attribution Theft
 

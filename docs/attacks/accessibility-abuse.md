@@ -92,6 +92,26 @@ Some families ([Hook](../malware/families/hook.md), [Octo](../malware/families/o
 | [Medusa](../malware/families/medusa.md) | Yes | No | Yes | Yes | Yes |
 | [Hydra](../malware/families/hydra.md) | Yes | No | Yes | Yes | Yes |
 
+### Crypto Wallet Draining
+
+Accessibility-based crypto wallet drainers robotically operate the victim's wallet app to transfer funds to the attacker. The accessibility service config declares `packageNames` targeting specific wallet apps (MetaMask, imToken, Trust Wallet, TokenPocket) with `typeAllMask` events, `canRetrieveWindowContent=true`, and `canPerformGestures=true`.
+
+The attack operates as a state machine where each state corresponds to a screen in the wallet app:
+
+1. Detect UI language (Chinese/English/Vietnamese) by searching for known UI strings
+2. Read USDT balance from accessibility nodes, verify > 0
+3. Check gas balance is sufficient for the transfer (e.g., >= 0.0035 ETH)
+4. Navigate to USDT token transfer screen
+5. Inject attacker's wallet address into the recipient field via `ACTION_ARGUMENT_SET_TEXT` (action code 2097152)
+6. Input the full token balance as the transfer amount
+7. Click through Next, Confirm, and Send buttons via `performAction(ACTION_CLICK)`
+
+Each wallet app requires its own operator implementation because the UI layouts differ. The operator classes handle wallet-specific navigation, button labels, and node hierarchies.
+
+A variant targets mnemonic/seed phrase theft: the malware navigates to the seed phrase backup screen, walks the UI node tree looking for a parent container with 12+ children (the word grid), reads each word, builds a JSON payload, and exfiltrates it to a C2 endpoint.
+
+These drainers are distributed as utility apps (calling helpers, phone cleaners) to trick users into enabling the accessibility service. A custom URI scheme (e.g., `usdt://`) is commonly used as a callback mechanism between the main app process and the accessibility service process.
+
 ### Encrypted Messaging Interception
 
 A technique [introduced by Sturnus](../malware/families/sturnus.md) in 2025 that exploits a fundamental weakness in encrypted messaging apps: messages must be decrypted for display. The accessibility service reads message content after the messaging app has already decrypted it for the user's screen.

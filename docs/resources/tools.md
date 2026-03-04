@@ -23,6 +23,7 @@ Open-source and commercial tools for Android security analysis, device managemen
 |------|---------|
 | [LSPosed](https://github.com/LSPosed/LSPosed) | Xposed framework for modern Android |
 | [Magisk](https://github.com/topjohnwu/Magisk) | Root management with detection bypass |
+| [Shizuku](https://github.com/RikkaApps/Shizuku) | Privileged API access without root via ADB shell identity |
 
 ## Network
 
@@ -46,6 +47,14 @@ Open-source and commercial tools for Android security analysis, device managemen
 | [reFrida](https://github.com/zahidaz/refrida) | Browser-based Frida IDE with Monaco editor, disassembler, memory search, Stalker tracing, and visual interceptor builder |
 | [r2frida](https://github.com/nowsecure/r2frida) | Radare2 + Frida integration |
 | [radare2](https://rada.re/) | Open-source reverse engineering framework |
+
+## Reference Data
+
+| Resource | Purpose |
+|----------|---------|
+| [AndroidDeviceNames](https://github.com/jaredrummler/AndroidDeviceNames) | 27,000+ Android device model-to-marketing-name mapping |
+| [Google Play Supported Devices](https://storage.googleapis.com/play_public/supported_devices.html) | Official list of device model codes, manufacturers, and marketing names |
+| [STF Device DB](https://github.com/nicferrier/stf-device-db) | OpenSTF JSON database of Android device specifications |
 
 ## Emulation & Sandboxing
 

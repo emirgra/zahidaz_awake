@@ -14,6 +14,7 @@ Alternative distribution channels outside Google Play and the APK modding ecosys
 | Aptoide | Global | Third-party marketplace. Community-driven. Used by legitimate apps and malware alike. |
 | Baidu Mobile Assistant | China | Baidu's app store. |
 | CafeBazaar | Iran | Dominant Iranian Android store. 40M+ users. |
+| [Appland](https://www.appland.se/) | Global | White-label app distribution platform. 10M+ devices, 200+ countries. Powers OEM-branded app stores. |
 | Google Play | Global | Official store. Play Protect scanning. Droppers still get through regularly. |
 | Huawei AppGallery | Global (Huawei devices) | Second-largest Android store. Own review process. Used for regional malware distribution. |
 | OPPO App Market | China/Global | Pre-installed on OPPO/OnePlus. |

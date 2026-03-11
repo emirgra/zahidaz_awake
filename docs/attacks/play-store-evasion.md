@@ -186,6 +186,33 @@ session.commit(PendingIntent.getBroadcast(
 
 [SpyNote](../malware/families/spynote.md) and [Anatsa](../malware/families/anatsa.md) droppers adopted this technique within weeks of Restricted Settings launching, as [documented by cryptax](https://cryptax.medium.com/android-spynote-bypasses-restricted-settings-breaks-many-re-tools-8791b3e6bf38).
 
+## Server-Controlled Cloaking
+
+Apps that pass Play Store review by presenting a fully functional decoy, then switch to completely different content (gambling, adult, unlicensed streaming) based on a server-side decision at runtime. The server acts as a kill switch: during review or in non-target regions, the app shows legitimate content. For real users in target markets, the server triggers the redirect.
+
+The typical flow:
+
+1. App launches and spawns a background thread that fingerprints the device (model, brand, CPU ABI, battery state, ADB/developer mode status)
+2. The fingerprint is sent to a C2 server via WebSocket (not HTTP, making traffic harder to intercept with standard proxies)
+3. The server responds with a JSON config: either a redirect URL or an empty/missing key
+4. If the config contains a URL, a fullscreen WebView loads the remote content (gambling site, casino, etc.) overlaid on the activity
+5. If the config is empty, the app shows its decoy (a simple game, utility, or placeholder)
+
+Anti-analysis measures layered into the cloaking flow:
+
+| Check | Purpose |
+|-------|---------|
+| ADB enabled detection | Avoid activating on developer/analyst devices |
+| Install referrer collection | Verify the install came through a legitimate ad campaign |
+| Device fingerprint hashing (FNV-1a or similar) | Consistent device ID without requiring permissions |
+| Substitution cipher on C2 payload | Obfuscate fingerprint data in transit |
+| Encrypted SharedPreferences for config caching | C2 response persists locally, reducing repeat connections |
+| Push notification re-engagement (OneSignal, FCM) | Server can push users back to the gambling content after initial redirect |
+
+The decoy app is minimal (often a single `setContentView()` call) but sufficient to pass visual review. The WebView configuration enables JavaScript, DOM storage, cookies, and mixed content (`MIXED_CONTENT_ALWAYS_ALLOW`), and strips identifying substrings from the User-Agent to disguise the WebView as a regular browser.
+
+This pattern is distinct from [versioning attacks](#versioning-attacks) (which push malicious updates) and [delayed activation](#delayed-activation) (which waits before enabling local payload). Server-controlled cloaking never contains the real content locally; the server decides per-session what the user sees.
+
 ## Platform Lifecycle
 
 | Android Version | API | Change | Offensive Impact |

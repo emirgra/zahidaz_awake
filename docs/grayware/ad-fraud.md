@@ -57,6 +57,23 @@ When the system shows the incoming call UI, the malware's `Connection.onShowInco
 
 Requires only `MANAGE_OWN_CALLS` (a normal permission, no user prompt). Works on Android 8.0+ (API 26, when `CAPABILITY_SELF_MANAGED` was introduced). The user sees a brief incoming call animation, then a full-screen ad appears, designed to confuse the user into thinking the ad is related to the "call."
 
+## WebView Package Name Spoofing
+
+Ad fraud technique where the malware spoofs its identity to the WebView/Chromium engine so that all ad requests appear to come from a different, presumably legitimate app. The attacker controls the ad account for the spoofed package name and collects the revenue.
+
+The spoofing chain:
+
+1. Create a `Proxy` for `android.content.pm.IPackageManager`
+2. The proxy intercepts `getInstallerPackageName()` (returns null for the spoofed package) and `getPackageInfo()` (swaps the query package name to make validation succeed)
+3. Inject the proxy into `ActivityThread.sPackageManager` (static field) and `PackageManager.mPM` (instance field)
+4. Replace the Application's base `Context` with a `ContextWrapper` that overrides `getPackageName()`: when called from `org.chromium.base` frames (detected via stack trace inspection), it returns the fake package name; otherwise returns the real one
+5. Create and immediately destroy a WebView to force Chromium to initialize with the spoofed identity
+6. Restore the original `IPackageManager` (spoofing only needs to last through WebView init)
+
+After initialization, all ad requests from the WebView claim to come from the spoofed app. Google partially addressed this by [deprecating the X-Requested-With header](https://developer.chrome.com/blog/ppc-deprecating-xrw-header/) in WebView, which previously exposed the host app's package name to ad networks.
+
+Requires [Hidden API Bypass](../attacks/anti-analysis-techniques.md#hidden-api-bypass) to access `ActivityThread.sPackageManager` and other private framework fields.
+
 ## Attribution Theft
 
 A distinct fraud category where a malicious SDK embedded in a legitimate-looking app steals attribution data from co-installed analytics SDKs (AppsFlyer, Adjust, Branch, Kochava) to fraudulently claim credit for app installs and user actions.

@@ -140,6 +140,38 @@ Apps that monetize by injecting ads outside their own UI context -- into the not
 
 [HiddenAds](https://www.mcafee.com/blogs/other-blogs/mcafee-labs/new-hiddenads-malware-that-runs-automatically-and-hides-on-google-play-1m-users-affected/) campaigns changed their app icon to the Google Play icon and renamed themselves "Google Play" or "Setting" to hide from users while delivering persistent ads. [Invisible Adware](https://www.mcafee.com/blogs/other-blogs/mcafee-labs/invisible-adware-unveiling-ad-fraud-targeting-android-users/) (2023, 43 apps, 2.5M downloads) loaded ads only when the device screen was off, waiting multiple weeks after installation before activating.
 
+## Out-of-App Push Advertising (OPA)
+
+Server-driven push notification ads delivered via proprietary protocols (often protobuf-based). The server sends structured messages containing notification content and typed action payloads that control what happens when the user taps the notification.
+
+| Action Type | Behavior |
+|-------------|----------|
+| CUSTOM_TAB | Opens URL in Chrome Custom Tab |
+| WEBVIEW | Opens URL in embedded WebView |
+| BROWSER | Opens URL in default browser |
+| DEEPLINK | Handles deep link URI |
+| STORE_LINK | Opens Play Store listing |
+| PKG_NAME | Launches any installed app by package name |
+
+The `PKG_NAME` action is particularly notable: the server can silently trigger the launch of any app on the device. Combined with [`REQUEST_INSTALL_PACKAGES`](../permissions/special/request-install-packages.md), this creates a full sideloading pipeline: server pushes a notification with an APK download link, user clicks, APK downloads, install prompt appears. [`SYSTEM_ALERT_WINDOW`](../permissions/special/system-alert-window.md) can overlay UI on top of the install prompt to social-engineer the user into tapping "Install."
+
+OPA systems are typically locale-aware, selecting notification text matching the device's language and country. A `notShowAlive` flag controls whether to display push ads when the app is in the foreground (avoiding annoying active users, saving ads for when they leave the app).
+
+## Exit Interstitials
+
+A fullscreen ad displayed when the user tries to leave the app. The activity overrides `onBackPressed()` to block the back button while the ad is showing, trapping the user until the ad finishes or a countdown timer expires.
+
+The "backable" state is controlled by a server-configurable flag, allowing the ad network to decide per-impression whether the user can skip. Some implementations inject ads at multiple lifecycle points via a configurable "material" system:
+
+| Injection Point | Trigger |
+|-----------------|---------|
+| Enter | App launch (splash interstitial) |
+| EnterSkip | Splash with skip counter |
+| Resume | Returning to app from background |
+| Exit | Leaving the app (back button trapped) |
+
+Each injection point has server-configurable payloads with local JSON fallback defaults in assets, allowing the server to update ad behavior remotely without app updates.
+
 ## Fleeceware
 
 Apps that exploit free trial mechanics and subscription billing to charge excessive fees for minimal functionality.

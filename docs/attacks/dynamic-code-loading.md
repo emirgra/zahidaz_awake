@@ -82,6 +82,8 @@ setField(pathList, "dexElements", combined);
 | Source | Stealth | Persistence | Used By |
 |--------|---------|-------------|---------|
 | Encrypted asset in APK | Low (payload in APK, just encrypted) | High (survives without network) | Harly, most packers |
+| Resource file disguise (`res/raw/`) | High (DEX hidden as JSON/animation file, name mimics Lottie or config) | High (survives without network) | Ad fraud droppers |
+| Fake library namespace | High (loader classes placed in legitimate library package like `coil.fetch.*`) | High | Ad fraud droppers |
 | Network download from C2 | High (no payload in APK at install) | Low (requires C2 availability) | Joker, Anatsa, SharkBot |
 | SharedPreferences (Base64) | Medium (stored as string data) | Medium | Joker variants |
 | ContentProvider from another app | Medium (payload in separate app) | Medium | Triada (system-level) |

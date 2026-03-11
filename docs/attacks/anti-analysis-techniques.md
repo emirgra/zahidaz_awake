@@ -417,6 +417,34 @@ Malware checks `Build.VERSION.SECURITY_PATCH` against a threshold date to vary i
 
 This is adaptive malware that detects the security posture of the device and chooses the most effective attack path. The threshold date roughly corresponds to when specific Android security restrictions were enforced. Combined with `Build.VERSION.SDK_INT` checks, it creates multi-layered execution guardrails that maximize compatibility across device populations.
 
+## Instrumentation Hijack
+
+Android's `Instrumentation` class is a testing framework hook that intercepts Activity lifecycle callbacks before they reach the Activity itself. Malware abuses this by declaring an `<instrumentation>` element in the manifest targeting its own package, then implementing the Instrumentation subclass with all lifecycle methods as native JNI calls.
+
+```xml
+<instrumentation
+    android:name="com.example.MyInstrumentation"
+    android:targetPackage="com.example.myapp" />
+```
+
+```java
+public class MyInstrumentation extends Instrumentation {
+    static { System.loadLibrary("payload"); }
+
+    @Override
+    public native void onCreate(Bundle arguments);
+
+    @Override
+    public native void onStart();
+}
+```
+
+When the system creates the app process, it instantiates the Instrumentation class before any Activity runs. The `onCreate()` and `onStart()` callbacks fire before the app's own lifecycle, giving the malware first-mover control over the entire process. Because the methods are `native`, the actual logic is hidden in a `.so` library, invisible to DEX-level static analysis.
+
+Combined with [packing](../packers/index.md), this creates a two-layer hiding strategy: the packer encrypts the DEX, and the Instrumentation class pushes critical logic into native code. Even after unpacking, the decompiled Java shows only `native` method stubs with no implementation.
+
+Detection: `<instrumentation>` elements in the manifest where `targetPackage` matches the app's own package. Legitimate Instrumentation usage (testing frameworks like AndroidJUnitRunner) targets a *different* package (the app under test) and is not shipped in production APKs.
+
 ## APK and Manifest Corruption
 
 ### Malformed ZIP Headers

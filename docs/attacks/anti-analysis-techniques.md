@@ -439,7 +439,7 @@ Some families pad DEX files with junk data that exceeds parser buffer sizes in a
 | Reflection-based API calls | Method names resolved via strings at runtime, invisible to static analysis | [Octo](../malware/families/octo.md), [Xenomorph](../malware/families/xenomorph.md) |
 | Native code for sensitive ops | Key operations in `.so` libraries, harder to decompile | [Mandrake](../malware/families/mandrake.md) (OLLVM), [Octo2](../malware/families/octo.md) |
 | Control flow flattening | Switch-based dispatch obscures actual execution order | Commercial packers, [DexGuard](../packers/dexguard.md) |
-| Dead code injection | Junk methods/classes inflate the codebase | [Joker](../malware/families/joker.md), crypter outputs |
+| Dead code injection / DEX bloat | Junk methods/classes inflate the codebase, waste analyst time | [Joker](../malware/families/joker.md), crypter outputs |
 | Class/method renaming | `a.b.c.d()` instead of meaningful names | Nearly universal (ProGuard/R8 baseline) |
 | Dynamic class loading | Payload classes loaded from encrypted assets or C2 at runtime | [Anatsa](../malware/families/anatsa.md), [Necro](../malware/families/necro.md), [SharkBot](../malware/families/sharkbot.md) |
 
@@ -529,6 +529,21 @@ Adapt the class name to match the target's specific obfuscator.
 An obfuscation technique that renames classes, methods, and packages using visually similar characters: uppercase `O`, lowercase `o`, and zero `0` (e.g., `OooO0O0`, `o0000Ooo`, `Oooo0OO`). Unlike standard R8/ProGuard which uses short alphabetic names (`a`, `b`, `a0`), this pattern is deliberately adversarial, designed to make manual analysis painful because all identifiers look identical at a glance.
 
 When this obfuscation style appears, it indicates deliberate anti-analyst intent rather than standard build-time optimization. R8/ProGuard obfuscation is functional (reduce APK size); visual confusion obfuscation is hostile.
+
+### DEX Bloat
+
+A deliberate anti-analysis technique where the APK is inflated with thousands of junk classes and methods that serve no functional purpose. The goal is to overwhelm analysts and automated tools: decompilers slow down, class lists become unnavigable, and pattern matching produces excessive false positives.
+
+A typical implementation generates hundreds of identical classes, each containing 100-150 empty or trivially returning methods. For example, 741 junk classes with 144 methods each produces 106,704 junk methods. The junk code may be invoked once at startup (e.g., a single `callEntry()` call in `Application.onCreate()`) to prevent dead code elimination by R8, but the methods themselves do nothing meaningful.
+
+The technique is effective because:
+
+- Decompilers like JADX take significantly longer to process bloated APKs
+- Class/method lists in analysis tools become unusable (thousands of identically structured entries)
+- Automated string extraction and pattern matching returns noise from junk classes
+- Analysts cannot quickly distinguish real code from padding without runtime analysis
+
+Unlike legitimate code expansion from library bundling, DEX bloat classes follow uniform patterns: identical method signatures, no cross-references to real app code, and trivial method bodies. Detection: look for large clusters of classes with identical structure, uniform method counts, and no meaningful call graph connections to the app's real functionality.
 
 ### Domain Generation Algorithms
 

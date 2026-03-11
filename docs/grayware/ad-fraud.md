@@ -115,6 +115,45 @@ Common characteristics:
 
 Detection: look for undocumented ContentProviders at high `initOrder`, reflection calls targeting AppsFlyer or Adjust classes, and SharedPreferences files belonging to unknown SDK namespaces.
 
+## Lockscreen Ad Bypass
+
+Adware that wakes the screen and dismisses the lock screen to show fullscreen ads, even when the device is idle. The activity calls three APIs in sequence:
+
+```java
+setShowWhenLocked(true);
+setTurnScreenOn(true);
+keyguardManager.requestDismissKeyguard(this, null);
+```
+
+`setShowWhenLocked(true)` (API 27+) renders the activity on top of the lock screen. `setTurnScreenOn(true)` powers on the display. `requestDismissKeyguard()` dismisses the keyguard entirely, so the user wakes up to a fullscreen ad with no indication of what triggered it. Combined with `SCREEN_ON`/`SCREEN_OFF` broadcast receivers and exact alarm persistence (e.g., `setExactAndAllowWhileIdle` every 15 minutes), the adware can pop ads at arbitrary intervals around the clock.
+
+The older approach used `WindowManager.LayoutParams` flags (`FLAG_SHOW_WHEN_LOCKED`, `FLAG_DISMISS_KEYGUARD`, `FLAG_TURN_SCREEN_ON`), deprecated in API 27 but still functional on older devices. Modern adware uses both code paths, selecting based on `Build.VERSION.SDK_INT`.
+
+## Fake Notification Impersonation
+
+Adware that creates notification channels mimicking popular apps to lure users into tapping ad-laden overlays. The notification channel uses the impersonated app's branding: channel name, description, and accent color matching the target app's identity.
+
+For example, a channel named `"whatsapp_channel"` with color `#2cb742` (WhatsApp's signature green) and description `"WhatsApp notifications"` makes the notification appear to come from WhatsApp. Tapping the notification opens an ad overlay activity instead. The user sees what looks like a WhatsApp message, taps it, and lands on a fullscreen ad.
+
+This works because Android's notification shade shows the channel name and color set by the posting app, not the actual source app name in a prominent position. Combined with [launcher hiding](../attacks/persistence-techniques.md) (using `category.INFO` instead of `category.LAUNCHER`) and system name impersonation (labeling activities as "Google Play Protect"), the adware becomes difficult for users to identify and uninstall.
+
+## Programmatic Click Simulation
+
+Ad fraud SDKs that programmatically simulate clicks on ads displayed within the app, generating fraudulent click revenue. Unlike [click injection](#fraud-types) (which targets attribution for other apps), this technique clicks on the SDK's own ads.
+
+The fraud logic is controlled by configuration fields:
+
+| Field | Purpose |
+|-------|---------|
+| `isSimulateClick` | Master toggle for click simulation |
+| `secondsOfShowToClick` | Delay between ad display and simulated click (avoids instant-click detection) |
+| `clickPositionSelector` | Selects which ad position to click |
+| `retryClickWhenProgress100` | Retry click when page finishes loading |
+
+A mask overlay view (`FrameLayout` subclass) covers the ad during the simulated click, hiding any visual feedback (ripple effects, page transitions) from the user. Touch events on the mask are intercepted in native code (JNI), keeping the click simulation logic out of the DEX where it would be visible to static analysis.
+
+Position tracking (`positionShowedList`, `positionClickedList`) ensures the SDK doesn't click the same ad twice and can report clicked/unclicked ratios back to the server, mimicking natural click-through rates.
+
 ## Technical Indicators
 
 - `PACKAGE_ADDED` broadcast receiver (click injection vector)

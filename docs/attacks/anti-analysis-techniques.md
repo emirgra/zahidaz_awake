@@ -354,6 +354,46 @@ boolean isProxied() {
 
 If a proxy is detected, the SDK refuses to initialize, preventing analysts from capturing network traffic. This check is trivial to bypass via Frida (hook `System.getProperty` to return null for proxy keys), but it's effective against automated sandbox environments that route all traffic through a proxy by default.
 
+## Install Referrer Gating
+
+Malware that connects to the [Google Play Install Referrer API](https://developer.android.com/google/play/installreferrer) before executing any malicious code. The payload only activates if the referrer connection succeeds and the referrer data contains valid attribution timestamps (e.g., click timestamp exceeds a threshold). This means sideloaded APKs never trigger the payload: when an analyst downloads the APK from VirusTotal and installs it on an emulator, there is no referrer data, so the malicious chain never fires.
+
+This is highly effective against dynamic analysis because most sandboxes install APKs via `adb install`, which provides no referrer context. Only installs through a real ad campaign or the Play Store with attribution data activate the malware.
+
+```java
+InstallReferrerClient client = InstallReferrerClient.newBuilder(context).build();
+client.startConnection(new InstallReferrerStateListener() {
+    @Override
+    public void onInstallReferrerSetupFinished(int responseCode) {
+        if (responseCode == InstallReferrerClient.InstallReferrerResponse.OK) {
+            ReferrerDetails details = client.getInstallReferrer();
+            if (details.getReferrerClickTimestampSeconds() > THRESHOLD) {
+                activatePayload();
+            }
+        }
+    }
+});
+```
+
+Bypass: use Frida to hook `InstallReferrerClient` and return synthetic referrer data with valid timestamps.
+
+## Background Activity Launch Bypass (MediaSession)
+
+Android 10 (API 29) introduced [restrictions on launching activities from the background](https://developer.android.com/guide/components/activities/background-starts). Malware bypasses this by abusing the media key event handling system:
+
+1. Create a `VirtualDisplay` with tiny dimensions (5-15 pixels) via `DisplayManager.createVirtualDisplay()`
+2. Render a `Presentation` on the virtual display to keep it alive
+3. Create an `AudioTrack` and play random noise to acquire audio focus
+4. Create a `MediaSession` with a `PendingIntent` as the media button receiver
+5. The `PendingIntent` wraps a broadcast carrying the target activity `Intent` as an extra
+6. Dispatch `MEDIA_PLAY` key events via `AudioManager.dispatchMediaKeyEvent()`
+7. The system delivers the key event to the active `MediaSession`, which fires the `PendingIntent`
+8. The broadcast receiver extracts the `Intent` and calls `context.startActivity()`
+
+The system allows this because media button handling is considered a legitimate foreground interaction. The `VirtualDisplay` keeps a "display" active, and the `AudioTrack` gives the `MediaSession` audio focus. The entire chain is invisible: the virtual display is a few pixels and the "audio" is random noise.
+
+This technique was patched in Android 15 (API 35). On Android 10-14, it remains effective for popping up permission request screens, phishing overlays, or notification access settings from the background without user interaction.
+
 ## Hidden API Bypass
 
 [AndroidHiddenApiBypass](https://github.com/LSPosed/AndroidHiddenApiBypass) (`org.lsposed.hiddenapibypass`) is an open-source library that circumvents Android's hidden API restrictions introduced in Android 9. Normally, apps cannot call `@hide` annotated methods or directly instantiate system service classes. The library has multiple bypass variants: the original uses `Unsafe` memory operations, while the newer LSPass variant uses `Property.of()` to achieve the same result without `Unsafe`.

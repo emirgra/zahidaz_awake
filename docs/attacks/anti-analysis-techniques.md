@@ -154,6 +154,7 @@ The shift from phase 1 to phase 3 is the most important trend. Protectors that o
 | [Frida](https://frida.re/) | Full instrumentation runtime | Heavy (JS engine, server process, agent library) | Primary RE tool, automated analysis pipelines |
 | [Dobby](https://github.com/jmpews/Dobby) | Native inline hooking library | Minimal (~300 KB .so, no server, no ports) | Zygisk modules (PlayIntegrityFix, root hiding), game mods, malware |
 | [ShadowHook](https://github.com/bytedance/android-inline-hook) | Native inline hooking (ByteDance) | Minimal | ByteDance apps internally, open-source adoption growing |
+| [xHook](https://github.com/iqiyi/xHook) | PLT/GOT hooking (iQIYI) | Minimal | Stable PLT hooking, widely adopted in Chinese app ecosystem. Predecessor to ByteHook. |
 | [ByteHook](https://github.com/bytedance/bhook) | PLT/GOT hooking (ByteDance) | Minimal | PLT-level interception, less invasive than inline |
 | [LSPlant](https://github.com/LSPosed/LSPlant) | ART Java method hooking | Minimal | LSPosed framework, Xposed module ecosystem |
 | [Pine](https://github.com/canyie/pine) | ART Java method hooking | Minimal | Alternative to LSPlant for Java-level hooks |

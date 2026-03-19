@@ -117,6 +117,33 @@ The C2 kill switch is the most effective: the dropper app calls home, and the se
 
 [Necro](../malware/families/necro.md) (2024) used steganography to hide payloads inside PNG images. The [Coral SDK](https://securelist.com/necro-trojan-is-back-on-google-play/113881/) embedded in the dropper sends an encrypted POST request to C2, which responds with a link to a PNG file. The payload is encoded in the least significant bits of the image's blue channel as Base64. This technique infected 11 million devices across apps including Wuta Camera (10M+ downloads) and Max Browser (1M+ downloads).
 
+### Namespace Spoofing
+
+Planting malicious code under legitimate SDK package names so analysts skip it during triage. The attacker creates a package that closely resembles a trusted SDK namespace but with a subtle variation (e.g., `com.chartboost.roshx.ads` mimicking the real `com.chartboost.sdk`, or `com.android.providers.media` imitating a system provider).
+
+Analysts reviewing decompiled code routinely skip classes under recognized SDK namespaces. The spoofed package exploits this by hiding device profiling DTOs, encrypted C2 communication structures, and ad fraud logic under a name that looks like a standard third-party SDK.
+
+A related technique is `com.android.*` namespace squatting, where the app uses package prefixes reserved for system apps to appear as a system component in process listings, `dumpsys` output, and analysis tools.
+
+Detection: verify that SDK namespaces in the APK match their expected structure and content. Cross-reference class names against known SDK distributions. A `com.chartboost` package without Chartboost's standard class hierarchy is a clear indicator.
+
+### BMP Steganography
+
+Encrypted payloads stored as valid BMP image files to bypass file-type heuristics and security scanners that skip image assets. A 54-byte BMP header is prepended to encrypted data, creating a file that passes format validation but contains no real image content.
+
+Distinguishing characteristics:
+
+| Property | Real BMP | Steganographic BMP |
+|----------|----------|-------------------|
+| Pixel data entropy | ~6-7.5 bits/byte (varies by image content) | 7.9+ bits/byte |
+| Unique RGB triplets (first 1000 pixels) | Extensive color repetition | ~1000/1000 unique |
+| ZIP compression ratio | Significant compression | 0.95-1.00 (incompressible) |
+| Chi-squared byte distribution | Non-uniform | Near-uniform (encrypted data) |
+
+Standard dimensions are used (512x512, 1024x1024, 24bpp uncompressed) to avoid anomalous file sizes. Multiple BMP containers in the same APK often share identical headers but different encrypted pixel data.
+
+This technique differs from [Necro's PNG steganography](../malware/families/necro.md), which encodes data in the least significant bits of a real image's color channels. BMP steganography replaces the entire pixel payload with ciphertext -- simpler to implement but detectable via entropy analysis.
+
 ### Runtime String Decryption
 
 [Anatsa](../malware/families/anatsa.md) decrypts each string at runtime using a dynamically generated DES key, preventing static extraction of C2 URLs, package names, or other indicators. Combined with emulation checks and device model verification, this defeats both static and dynamic analysis in automated sandboxes.

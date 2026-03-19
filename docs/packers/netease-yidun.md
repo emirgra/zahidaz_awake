@@ -69,6 +69,7 @@ Per [NetEase's SDK Reinforcement documentation](https://support.dun.163.com/docu
 | ProGuard rule | `-keep public class com.netease.nis.sdkwrapper.Utils` in build config |
 | Assets | Custom-named encrypted files (randomized English words, `.dat` files) |
 | APKiD | Not detected -- existing [yidun rule](https://github.com/rednaga/APKiD/blob/master/apkid/rules/apk/packers.yara) matches only `wrapper`/`libnesec.so` |
+| **Common false positive** | MSA OAID SDK (`com.bun.miitmdid`) frequently co-occurs with these artifacts |
 
 ### JNI Dispatch Mechanism
 
@@ -82,51 +83,23 @@ public class Utils {
 }
 ```
 
-The dispatch uses opcode-based routing. Each method has a unique integer ID and a long constant (likely a bytecode offset or integrity check value):
+Protected methods become dispatch stubs. All lifecycle methods (`onCreate`, `onStart`, `onBind`) of protected classes delegate to `Utils.rL()`, making DEX-level static analysis see only empty shells.
 
-```java
-public void onCreate() {
-    Utils.rL(new Object[]{this, 241, 1770368273357L});
-}
-```
+### Encrypted Assets
 
-The integer is a method ID in the native VM's dispatch table. All lifecycle methods (`onCreate`, `onStart`, `onBind`) of protected classes become native dispatch stubs, making DEX-level static analysis see only empty shells.
+The SDK packer stores encrypted VM bytecode in the APK's `assets/` directory as custom-named files. The encrypted payloads are loaded at runtime by `libsecsdk.so` via the NDK `AAssetManager` API.
 
-### Encrypted Asset Format
+### OAID SDK False Positives
 
-The SDK packer stores encrypted VM bytecode in the APK's `assets/` directory. Two formats are used:
+The MSA OAID SDK (`com.bun.miitmdid`), China's Mobile Security Alliance device identifier SDK, frequently co-occurs with `com.netease.nis.sdkwrapper.Utils` and `libsecsdk.so` in Chinese-market apps. Apps integrating the OAID SDK may contain these artifacts without being intentionally packed by the attacker. Detection rules targeting `sdkwrapper`/`libsecsdk.so` will flag these apps.
 
-**Custom `.dat` format** with a structured header:
-
-```
-Offset  Size   Content
-0x00    4B     Magic: 01 06 03 00 (Yidun SDK packer identifier)
-0x04    4B     Header sub-length (uint32 LE)
-0x08    32B    SHA-256 hash or decryption key
-0x30    64B    Field table: 16 × uint32 (method index / offset table)
-0x70    ...    Encrypted VM bytecode payload (entropy ~7.99)
-```
-
-The magic bytes `01 06 03 00` and the self-referential offset at field[2] pointing to the data section start are distinctive and signaturable.
-
-**BMP steganography containers**: Encrypted data with a valid 54-byte BMP header prepended. Standard dimensions (512x512 or 1024x1024, 24bpp uncompressed) but pixel data entropy of 7.999+ bits/byte (real photographs: 4-6). Every RGB triplet is unique. The BMP headers bypass security scanners and file-type heuristics that skip image files.
-
-Small config files are AES block-aligned (sizes divisible by 16), indicating AES-CBC or AES-ECB encryption.
-
-Assets are named with randomized English dictionary words (e.g., single capitalized words like common nouns or adjectives). Each build generates different names, but the naming convention is consistent across variants.
-
-### Custom ClassLoader
-
-The SDK packer can inject a custom `ClassLoader` that routes all class loading through native code, enabling runtime code injection beyond the initially protected methods.
+To distinguish malicious use from OAID SDK integration: check whether the `Utils.rL()` dispatch protects app-specific classes (malicious) or only `com.bun.miitmdid` classes (OAID). If the only classes calling `Utils.rL()` are in the `miitmdid` namespace, the app is likely just using the OAID SDK, not packed by the attacker.
 
 ### Anti-Analysis
 
-- All internal strings in `libsecsdk.so` are encrypted
-- `/proc/self/maps` parsing for anti-tamper checks
-- `LD_PRELOAD` environment variable check for anti-hook detection
-- `mmap`/`mprotect` for executable memory mapping
+- Stripped native binary
+- `mmap`/`mprotect` for executable memory mapping (standard for runtime decryption)
 - `dlopen`/`dlsym` for dynamic loading
-- Stripped binary with no readable strings beyond libc imports
 
 ### Unpacking
 

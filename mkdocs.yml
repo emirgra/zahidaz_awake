@@ -144,9 +144,11 @@ nav:
           - BRATA: malware/families/brata.md
           - Brokewell: malware/families/brokewell.md
           - BTMOB RAT: malware/families/btmob.md
+          - Canis C2: malware/families/canis.md
           - Cerberus: malware/families/cerberus.md
           - Chameleon: malware/families/chameleon.md
           - Chrysaor: malware/families/chrysaor.md
+          - Cifrat: malware/families/cifrat.md
           - Copybara: malware/families/copybara.md
           - Crocodilus: malware/families/crocodilus.md
           - DCHSpy: malware/families/dchspy.md
@@ -166,6 +168,7 @@ nav:
           - FluBot: malware/families/flubot.md
           - FluHorse: malware/families/fluhorse.md
           - Frogblight: malware/families/frogblight.md
+          - FvncBot: malware/families/fvncbot.md
           - Geinimi: malware/families/geinimi.md
           - Gigabud: malware/families/gigabud.md
           - GM Bot: malware/families/gmbot.md
@@ -193,9 +196,11 @@ nav:
           - Mandrake: malware/families/mandrake.md
           - Marcher: malware/families/marcher.md
           - Medusa: malware/families/medusa.md
+          - Mirax: malware/families/mirax.md
           - MobiDash: malware/families/mobidash.md
           - MoqHao: malware/families/moqhao.md
           - Necro: malware/families/necro.md
+          - NoVoice: malware/families/novoice.md
           - NGate: malware/families/ngate.md
           - NotCompatible: malware/families/notcompatible.md
           - Obad: malware/families/obad.md
@@ -208,6 +213,7 @@ nav:
           - Plankton: malware/families/plankton.md
           - PlainGnome: malware/families/plaingnome.md
           - Predator: malware/families/predator.md
+          - ProSpy: malware/families/prospy.md
           - PromptSpy: malware/families/promptspy.md
           - Rafel RAT: malware/families/rafelrat.md
           - RatOn: malware/families/raton.md
@@ -245,8 +251,10 @@ nav:
       - APKProtect: packers/apkprotect.md
       - Baidu Reinforcement: packers/baidu.md
       - Bangcle (SecNeo): packers/bangcle.md
+      - DPT Shell: packers/dpt-shell.md
       - DexGuard: packers/dexguard.md
       - DexProtector: packers/dexprotector.md
+      - GoldCrypt: packers/goldcrypt.md
       - Hqwar: packers/hqwar.md
       - iJiami: packers/ijiami.md
       - Kiwisec (几维安全): packers/kiwisec.md

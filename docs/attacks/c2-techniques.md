@@ -49,7 +49,7 @@ os.flush();
 
 Advantages: works through any network, blends with normal traffic, easy to implement. Disadvantages: requires active server, domains can be seized, traffic is inspectable if pinning is absent.
 
-Used by: [BRATA](../malware/families/brata.md), [Hydra](../malware/families/hydra.md), [Cerberus](../malware/families/cerberus.md), [Octo](../malware/families/octo.md), most banking trojans.
+Used by: [BRATA](../malware/families/brata.md), [Hydra](../malware/families/hydra.md), [Cerberus](../malware/families/cerberus.md), [Octo](../malware/families/octo.md), [ProSpy](../malware/families/prospy.md) (Retrofit, `/v3/` endpoints), most banking trojans.
 
 ### WebSocket Persistent Connections
 
@@ -72,7 +72,9 @@ WebSocket ws = client.newWebSocket(request, new WebSocketListener() {
 
 Lower latency than polling HTTP. Enables interactive remote access sessions -- screen streaming, real-time VNC. Connection drop is immediately visible to both sides.
 
-Used by: [Hook](../malware/families/hook.md), [Medusa](../malware/families/medusa.md), [Octo](../malware/families/octo.md) v2.
+Used by: [Hook](../malware/families/hook.md), [Medusa](../malware/families/medusa.md), [Octo](../malware/families/octo.md) v2, [Cifrat](../malware/families/cifrat.md) (dual-channel), [Mirax](../malware/families/mirax.md) (triple-channel: control, data, proxy).
+
+[Cifrat](../malware/families/cifrat.md) takes this further with a dual-channel design: a control channel on port 8443 for low-latency commands (35+ types including gestures, SOCKS5 control, permission status) and a data channel on port 8444 for high-bandwidth streams (40+ types including screen frames, keylog batches, camera frames, SMS data). Each channel uses distinct `User-Agent` and `X-Channel-Type` headers, and both share a `X-Session-ID` UUID for correlation. This separation prevents screen streaming traffic from delaying time-sensitive commands.
 
 ### Firebase Cloud Messaging (FCM)
 
@@ -100,7 +102,9 @@ public class C2MessagingService extends FirebaseMessagingService {
 
 Google can revoke the Firebase project, but the attacker just creates a new one. The malware often uses FCM only as a wake-up signal, then connects back to the primary HTTP C2 for actual data transfer.
 
-Used by: [Ermac](../malware/families/ermac.md), [Cerberus](../malware/families/cerberus.md), [GodFather](../malware/families/godfather.md), [Anatsa](../malware/families/anatsa.md).
+Newer families bypass the wake-then-poll pattern entirely by embedding full command payloads in FCM data messages. [FvncBot](../malware/families/fvncbot.md) delivers overlay trigger commands (URL, HTML, black-screen, loading types), overlay task updates, and clickable overlay configurations directly through FCM pushes, eliminating the round-trip to an HTTP C2. This turns FCM from a wake-up channel into a primary command delivery mechanism, which is harder to detect because the command payload arrives through Google's infrastructure rather than a suspicious backend connection.
+
+Used by: [Ermac](../malware/families/ermac.md), [Cerberus](../malware/families/cerberus.md), [GodFather](../malware/families/godfather.md), [Anatsa](../malware/families/anatsa.md), [FvncBot](../malware/families/fvncbot.md) (direct command delivery).
 
 ### Telegram Bot API
 
@@ -179,6 +183,8 @@ Direct file upload for exfiltrating large data: screen recordings, keylog files,
 
 The infected device acts as a network proxy, routing attacker traffic through the victim's connection. [McAfee documented TimpDoor](https://www.mcafee.com/blogs/other-blogs/mcafee-labs/android-timpdoor-turns-mobile-devices-into-hidden-proxies/) (2018), distributed via SMS phishing as a fake voice-message app, which created a SOCKS proxy and redirected traffic through an SSH-encrypted tunnel. Over 5,000 devices were enrolled, giving attackers stealthy access through residential IP addresses. This turns compromised phones into a proxy botnet for masking other malicious activity.
 
+Used by: [Anubis](../malware/families/anubis.md), [Hydra](../malware/families/hydra.md), [LokiBot](../malware/families/lokibot.md), [Cifrat](../malware/families/cifrat.md) (SOCKS5 with bearer token auth), [Mirax](../malware/families/mirax.md) (SOCKS5 residential proxy with Yamux multiplexing).
+
 ### Tor/Onion Routing
 
 Routes C2 traffic through the Tor network, hiding the server's real IP address. The malware either bundles Tor libraries or uses Orbot as a proxy. The C2 runs as a .onion hidden service.
@@ -254,6 +260,11 @@ This is the reverse of the usual scenario: instead of a legitimate app pinning i
 | [Chameleon](../malware/families/chameleon.md) | HTTP REST | None | HTTP POST |
 | [TrickMo](../malware/families/trickmo.md) | HTTP REST | None | HTTP POST |
 | [Copybara](../malware/families/copybara.md) | HTTP REST | MQTT | HTTP POST |
+| [FvncBot](../malware/families/fvncbot.md) | HTTP REST + WebSocket | FCM command delivery | HTTP POST (event batching) |
+| [Cifrat](../malware/families/cifrat.md) | Dual WebSocket (control:8443, data:8444) | None | WebSocket data channel |
+| [Mirax](../malware/families/mirax.md) | Triple WebSocket (control:8443, data:8444, proxy:8445) | None | WebSocket data channel |
+| [ProSpy](../malware/families/prospy.md) | HTTP REST (Retrofit) | None | HTTP POST (`/v3/` endpoints) |
+| [Canis C2](../malware/families/canis.md) | HTTP REST (Python stdlib) | None | HTTP POST |
 
 ## Network Analysis
 

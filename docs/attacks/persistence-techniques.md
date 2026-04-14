@@ -427,6 +427,7 @@ Each restriction pushed malware toward more creative solutions. The overall tren
 | Family | Primary Persistence | Secondary | Anti-Uninstall |
 |--------|-------------------|-----------|----------------|
 | [Triada](../malware/families/triada.md) | Firmware | System app | Factory reset resistant |
+| [NoVoice](../malware/families/novoice.md) | System library replacement + bytecode patching | Watchdog daemon, crash handler replacement | Factory reset resistant (firmware reflash required) |
 | [Pegasus](../malware/families/pegasus.md) | Root + system install | Multiple | Survives factory reset |
 | [SpyNote](../malware/families/spynote.md) | Foreground service | Boot receiver | Hides from launcher |
 | [Anubis](../malware/families/anubis.md) | Boot receiver | Foreground service | Device admin |

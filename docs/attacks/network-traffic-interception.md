@@ -102,6 +102,8 @@ Proxy trojans [dynamically configure proxy settings only when triggered by C2](h
 
 Some malware converts infected devices into residential proxy nodes. The device's IP address is sold to proxy services, routing third-party traffic through the victim's connection. The Proxylib SDK was embedded in multiple VPN apps on the Play Store for this purpose.
 
+[Mirax](../malware/families/mirax.md) takes this further by embedding SOCKS5 residential proxy functionality directly into a full-featured banking RAT. It uses Yamux multiplexing over a dedicated WebSocket channel (port 8445) to establish persistent proxy tunnels through victims' devices. This allows operators to route malicious traffic (account takeover, password spraying, transaction fraud) through legitimate residential IPs, bypassing geolocation-based fraud detection. The proxy capability requires fewer permissions than the RAT itself, so even partially compromised devices (where the victim declined accessibility permissions) can be enrolled as proxy nodes, ensuring monetization from incomplete infections. [Necro](../malware/families/necro.md)'s NProxy module follows a similar approach through its compromised SDK distribution.
+
 ## Certificate Store Attacks
 
 ### User Certificate Installation

@@ -24,11 +24,13 @@ See also: [Call Interception](call-interception.md), [Notification Suppression](
 
 | Vector | Description | Reach | Example Families |
 |--------|-------------|-------|-----------------|
-| Smishing (SMS) | Bulk SMS with malicious links, often spoofing sender ID | Mass | [FluBot](../malware/families/flubot.md), [Mamont](../malware/families/mamont.md), [MoqHao](../malware/families/moqhao.md) |
+| Smishing (SMS) | Bulk SMS with malicious links, often spoofing sender ID | Mass | [FluBot](../malware/families/flubot.md), [Mamont](../malware/families/mamont.md), [MoqHao](../malware/families/moqhao.md), [Canis C2](../malware/families/canis.md) |
 | Play Store dropper | Benign app passes review, downloads malicious payload post-install | High trust | [Anatsa](../malware/families/anatsa.md), [Joker](../malware/families/joker.md), [Harly](../malware/families/harly.md) |
 | Fake APK sites | Cloned Play Store pages or standalone download sites hosting trojanized APKs | Targeted | [GodFather](../malware/families/godfather.md), [SpyNote](../malware/families/spynote.md) |
+| GitHub Releases | Dropper APKs hosted on GitHub release pages, updated daily to rotate hashes | Mass | [Mirax](../malware/families/mirax.md) |
 | QR code phishing | Physical or digital QR codes leading to malicious download or credential page | In-person | [Anatsa](../malware/families/anatsa.md) variants |
 | Malvertising | Ad networks serving redirects to phishing or APK download pages | Mass | [Vultur](../malware/families/vultur.md), [Brokewell](../malware/families/brokewell.md) |
+| Meta Ads (Facebook/Instagram) | Paid ads on social media platforms linking to dropper downloads | Mass (200K+ reach) | [Mirax](../malware/families/mirax.md) |
 | Messaging apps | Malicious links spread through WhatsApp, Telegram, or other messengers | Social graph | [FluBot](../malware/families/flubot.md), [GriftHorse](../malware/families/grifthorse.md) |
 
 ### Smishing in Detail
@@ -75,6 +77,12 @@ A fake UI drawn on top of the real banking app. Triggered when the target app re
 !!! warning "PWAs bypass sideloading warnings entirely"
 
     The phishing page prompts the victim to "install" a Progressive Web App. The PWA is added to the home screen with a convincing icon and name (e.g., the victim's bank). When opened, it displays a full-screen credential harvesting form. PWAs install through the browser, so none of the standard APK sideloading protections apply. This technique was observed targeting Czech and Hungarian banking customers in 2024.
+
+### Signal Linked Device Hijacking
+
+Attackers present victims with a Signal "Link Device" QR code, often with localized instructions. Scanning it links the attacker's device to the victim's Signal account, giving persistent access to all future messages without installing malware on the device. This is particularly effective against privacy-conscious targets who rely on E2EE messaging, as it bypasses encryption entirely by adding an authorized device.
+
+The technique was [popularized by Russian APTs](https://cloud.google.com/blog/topics/threat-intelligence/russia-targeting-signal-messenger) (GRU-linked groups targeting Ukrainian military Signal accounts) and has been adopted by the BITTER-linked [ProSpy](../malware/families/prospy.md) campaign targeting MENA civil society. It works against any messenger supporting multi-device linking (Signal, WhatsApp Web, Telegram Desktop).
 
 ## Voice-Based Attacks
 
@@ -123,6 +131,7 @@ Obtaining dangerous permissions ([Accessibility](accessibility-abuse.md), Device
 | Bank security alert | Global | [GodFather](../malware/families/godfather.md), [Cerberus](../malware/families/cerberus.md), [Anubis](../malware/families/anubis.md) |
 | Tax refund / government notice | US, UK, Germany, Japan | [Hydra](../malware/families/hydra.md) variants |
 | Crypto airdrop / wallet verification | Global | [SpyAgent](../malware/families/spyagent.md), [SparkCat](../malware/families/sparkcat.md) |
+| Secure messaging app (Signal, ToTok, Botim) | MENA, South Asia | [ProSpy](../malware/families/prospy.md), Dracarys (BITTER APT) |
 | Voicemail notification | Europe, US | [FluBot](../malware/families/flubot.md) |
 | Chrome / browser update | Global | [Hook](../malware/families/hook.md), [Brokewell](../malware/families/brokewell.md), [Vultur](../malware/families/vultur.md) |
 | Flash Player update | Legacy (pre-2021) | [Anubis](../malware/families/anubis.md), [Cerberus](../malware/families/cerberus.md) |

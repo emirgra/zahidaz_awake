@@ -312,6 +312,7 @@ nav:
       - Verified Boot: platform-abuse/verified-boot.md
       - Keystore: platform-abuse/keystore.md
       - Play Integrity: platform-abuse/play-integrity.md
+      - Play Frosting: platform-abuse/play-frosting.md
       - Biometric Authentication: platform-abuse/biometric-auth.md
       - Permissions:
           - permissions/index.md

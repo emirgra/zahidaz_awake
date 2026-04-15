@@ -23,6 +23,7 @@ The [Permissions](../permissions/index.md) section documents Android's permissio
 | [Keystore](keystore.md) | Hardware-backed key storage, TEE vs StrongBox, key attestation, extraction research |
 | [Play Integrity](play-integrity.md) | SafetyNet to Play Integrity evolution, attestation verdicts, bypass techniques, device trust |
 | [Biometric Authentication](biometric-auth.md) | BiometricPrompt, CryptoObject binding, fallback to PIN, downgrade attacks |
+| [Play Frosting](play-frosting.md) | Google Play distribution signature (`0x2146444e`), ECDSA-P256 proof-of-origin, verification tools, provenance triage |
 
 ### Planned
 

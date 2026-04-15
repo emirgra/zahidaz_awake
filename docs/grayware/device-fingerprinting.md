@@ -20,6 +20,22 @@ The Google Advertising ID (GAID) is a user-resettable identifier on every Androi
 
 Google's [Privacy Sandbox for Android](https://developer.android.com/design-for-safety/privacy-sandbox) (announced 2022) introduces Topics API (replacing the abandoned FLoC), Protected Audiences (on-device retargeting), Attribution Reporting API, and SDK Runtime (isolated sandbox for ad SDKs). GAID deprecation timeline remains uncertain. Google committed to supporting it for at least two years during transition.
 
+## ANDROID_ID and Legacy Fallback Patterns
+
+`Settings.Secure.ANDROID_ID` returns a 64-bit value generated at first boot (per-app on Android 8.0+, per-device before). Apps routinely include it in API calls even when they also declare the user-resettable Advertising ID, providing a stable tracking identifier that survives GAID resets.
+
+A well-known bug on Android 2.1 (Eclair) and 2.2 (Froyo) caused a subset of devices — most commonly cited are the Motorola Droid 2, Droid X, and HTC Nexus One — to [report the same ANDROID_ID value `9774d56d682e549c`](https://issuetracker.google.com/issues/36920653). Long-running Chinese and legacy apps detect this bug and fall back to a different identifier:
+
+```java
+String id = Settings.Secure.getString(cr, Settings.Secure.ANDROID_ID);
+if ("9774d56d682e549c".equals(id) || id == null) {
+    id = ((TelephonyManager) ctx.getSystemService(TELEPHONY_SERVICE))
+        .getDeviceId();
+}
+```
+
+The fallback to `TelephonyManager.getDeviceId()` (which returns the IMEI on GSM devices) is a strong indicator of legacy code originating in China or other markets where Eclair/Froyo devices persisted. On modern Android the fallback is obsolete: Android 10+ restricts `getDeviceId()` to apps holding `READ_PRIVILEGED_PHONE_STATE` (signature-level, granted only to system/carrier apps) and throws `SecurityException` for third-party callers. Per-app ANDROID_ID scoping in Android 8.0+ (values are derived from a tuple of signing key, user, and package) also eliminates the cross-app tracking value that made ANDROID_ID attractive in the first place. The pattern remains in old SDKs and provides a telltale fingerprint for dating code.
+
 ## Battery Status API (Historical)
 
 [Research by Olejnik et al. (2015)](https://dl.acm.org/doi/10.1007/978-3-319-29883-2_18) demonstrated that the HTML5 Battery Status API, which reported battery level with double-precision floating point (e.g., `0.9301929625425652`), could fingerprint devices without any permission. Firefox on Linux was particularly vulnerable. Mozilla [removed the Battery Status API from Firefox 52](https://techcrunch.com/2015/08/04/battery-attributes-can-be-used-to-track-web-users/) (March 2017).

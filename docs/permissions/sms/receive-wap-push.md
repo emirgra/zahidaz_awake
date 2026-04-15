@@ -22,6 +22,8 @@ WAP push messages can:
 - Trigger automatic URL loading (SL messages)
 - Carry OMA provisioning data (network configuration)
 
+See [OMA Client Provisioning phishing](../../attacks/sms-interception.md#oma-cp-phishing-check-point-2019) for the Check Point 2019 attack against Samsung, Huawei, LG, and Sony accepting weakly-authenticated OMA CP messages.
+
 ## Abuse in Malware
 
 ### WAP Billing Fraud

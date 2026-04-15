@@ -185,6 +185,42 @@ The infected device acts as a network proxy, routing attacker traffic through th
 
 Used by: [Anubis](../malware/families/anubis.md), [Hydra](../malware/families/hydra.md), [LokiBot](../malware/families/lokibot.md), [Cifrat](../malware/families/cifrat.md) (SOCKS5 with bearer token auth), [Mirax](../malware/families/mirax.md) (SOCKS5 residential proxy with Yamux multiplexing).
 
+### WebRTC Data Channels
+
+WebRTC's `RTCDataChannel` offers a peer-to-peer transport with built-in DTLS encryption, NAT traversal via STUN/TURN, and customizable reliability. Unlike HTTP/WebSocket C2, WebRTC traffic terminates on a peer rather than a server, making infrastructure attribution harder. The signaling server (used only to negotiate the peer connection) can be hosted on throwaway infrastructure and disappears once the session is established.
+
+```java
+PeerConnection pc = factory.createPeerConnection(rtcConfig, observer);
+DataChannel.Init init = new DataChannel.Init();
+DataChannel channel = pc.createDataChannel("control", init);
+
+channel.registerObserver(new DataChannel.Observer() {
+    @Override
+    public void onMessage(DataChannel.Buffer buffer) {
+        byte[] data = new byte[buffer.data.remaining()];
+        buffer.data.get(data);
+        executeCommand(new String(data));
+    }
+});
+```
+
+**Fantasy Hub** (Russian MaaS RAT, [documented by Zimperium zLabs in November 2025](https://zimperium.com/blog/fantasy-hub-another-russian-based-rat-as-m-a-a-s)) uses a Telegram bot for affiliate subscriptions and WebRTC to covertly stream live camera and microphone feeds from compromised devices. The encrypted WebRTC channel relays content back to the C2 server while blending with legitimate video-call traffic. Pricing is advertised at $200/week or $500/month.
+
+**Greenbean** Android banking trojan ([analyzed by Cyble](https://cyble.com/blog/greenbean-latest-android-banking-trojan-leveraging-simple-realtime-server-srs-for-cc-communication/)) uses Simple Realtime Server (SRS) with WebRTC for screen streaming. The malware executes WebRTC tasks in response to server commands labeled `C31`, `C32`, `C33`, and `C34`, enabling real-time surveillance of victim interactions with banking apps.
+
+The same primitive is used legitimately by enterprise MDM agents for remote-desktop sessions: the accessibility service processes gesture commands (`MOUSECLICK`, `MOUSEMOVE`, `BACK`, `HOME`) received over the data channel, gated by an "in-use" flag to prevent background command processing. Malicious variants strip the gate.
+
+| Aspect | WebRTC C2 | WebSocket C2 |
+|--------|-----------|--------------|
+| Topology | Peer-to-peer (via STUN/TURN) | Client-server |
+| Encryption | DTLS (mandatory) | TLS (optional) |
+| Signaling | Separate, short-lived | N/A |
+| NAT traversal | Built-in | Requires outbound connection |
+| Traffic blend | Indistinguishable from video calls | Distinguishable with inspection |
+| Detection | Harder (no fixed C2 endpoint during session) | Easier (endpoint visible) |
+
+Used by: Fantasy Hub (Russian MaaS RAT), Greenbean (banking trojan).
+
 ### Tor/Onion Routing
 
 Routes C2 traffic through the Tor network, hiding the server's real IP address. The malware either bundles Tor libraries or uses Orbot as a proxy. The C2 runs as a .onion hidden service.
@@ -227,6 +263,7 @@ This is the reverse of the usual scenario: instead of a legitimate app pinning i
 |--------|---------|-------------|---------|-----------|-------------------|
 | HTTP/HTTPS | Medium | High | Low | High | Low -- domain seizure |
 | WebSocket | Medium | Medium | Very Low | High | Low |
+| WebRTC | Very High | Medium | Very Low | Very High | High -- P2P after signaling |
 | FCM | Very High | High | Low | Low | Medium -- project revocation |
 | Telegram Bot | High | Very High | Medium | Medium | High |
 | Dead Drop | High | Medium | High | Very Low | High |

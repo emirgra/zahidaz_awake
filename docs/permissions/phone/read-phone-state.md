@@ -111,7 +111,7 @@ With IMEI access removed, malware adapted:
 
 | Alternative Identifier | Requires | Persistence |
 |----------------------|----------|-------------|
-| `Settings.Secure.ANDROID_ID` | No permission | Resets on factory reset, unique per app signing key |
+| `Settings.Secure.ANDROID_ID` | No permission | Resets on factory reset, unique per app signing key. [Legacy fallback to IMEI](../../grayware/device-fingerprinting.md#android_id-and-legacy-fallback-patterns) when value is the known-buggy `9774d56d682e549c`. |
 | `ADVERTISING_ID` | No permission (Play Services) | User-resettable |
 | `Build.SERIAL` | `READ_PHONE_STATE` (pre-10), restricted (10+) | Hardware-bound |
 | Hardware MAC | Randomized since Android 10 | Not reliable |

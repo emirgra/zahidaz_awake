@@ -44,7 +44,7 @@ APKiD identifies DPT Shell through the native library naming pattern and asset s
 
 ### Signing Artifacts
 
-DPT Shell repackaging requires re-signing, so packed apps lose Play Store frosting and original v2/v3 signatures. Common artifact: v1+v2+v3 declared but v2/v3 payloads have size 0 (effectively v1-only signing).
+DPT Shell repackaging requires re-signing, so packed apps lose [Play Frosting](../platform-abuse/play-frosting.md) and original v2/v3 signatures. Common artifact: v1+v2+v3 declared but v2/v3 payloads have size 0 (effectively v1-only signing).
 
 ## Protection Mechanism
 

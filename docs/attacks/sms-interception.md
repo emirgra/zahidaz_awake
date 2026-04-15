@@ -139,6 +139,58 @@ startActivity(ussd);
 
 USSD codes vary by carrier and country. Malware targeting specific regions hardcodes USSD strings for local carriers to check prepaid balances, transfer airtime, or subscribe to services.
 
+## Binary SMS and OMA Client Provisioning
+
+Beyond standard text SMS, Android supports binary SMS (data SMS sent to specific application ports) and WAP Push messages that carry structured payloads rather than user-visible text. These are the standard delivery channels for operator provisioning messages (APN settings, MMS config, device management bootstrap) and are handled silently by the system without showing in the user's inbox.
+
+### OMA-DM Bootstrap Interception
+
+Mobile device management agents that implement OMA-DM (Open Mobile Alliance Device Management) register broadcast receivers for binary SMS and WAP Push to receive provisioning bootstrap messages. A typical receiver pattern uses `goAsync()` to extend the broadcast lifecycle while processing:
+
+```java
+public void onReceive(Context ctx, Intent intent) {
+    abortBroadcast();
+    PendingResult pending = goAsync();
+    executor.execute(() -> {
+        processBootstrap(intent);
+        pending.clearAbortBroadcast();
+        pending.finish();
+    });
+}
+```
+
+`abortBroadcast()` prevents other apps (including the default messaging app) from seeing the provisioning SMS while processing occurs. `clearAbortBroadcast()` on the retained `PendingResult` releases the broadcast for downstream handlers once validation completes. Calling `clearAbortBroadcast()` after `onReceive` returns without `goAsync()` is a no-op because the broadcast has already been dispatched. Legitimate MDM agents validate the bootstrap URL against a whitelist and authenticate the payload before processing.
+
+Content types `application/vnd.syncml.dm+xml` (text XML) and `application/vnd.syncml.dm+wbxml` (binary WBXML) are the IANA-registered OMA-DM SyncML MIME types. Some implementations wrap these with additional compression (for example, zlib) and advertise vendor-specific MIME subtypes. Malware re-implementing this channel can silently receive and act on commands that never appear in the inbox.
+
+### OMA CP Phishing (Check Point, 2019)
+
+[Check Point Research disclosed](https://research.checkpoint.com/2019/advanced-sms-phishing-attacks-against-modern-android-based-smartphones/) that phones from Samsung, Huawei, LG, and Sony (combined 50%+ of the Android market at the time) accepted weakly-authenticated OMA Client Provisioning (OMA CP) messages. No CVEs were assigned; the vendors tracked the issues internally as Samsung SVE-2019-14073, LG LVE-SMP-190006, and OMA OPEN-7587. Key findings:
+
+| Vendor | Authentication Required | Attack Surface |
+|--------|------------------------|----------------|
+| Samsung | None | Unauthenticated OMA CP accepted without IMSI |
+| Huawei, LG, Sony | IMSI or PIN | Two-SMS attack: first impersonates operator to communicate a PIN, second is OMA CP signed with that PIN |
+
+The attack requires only a GSM modem ($10 USB dongle or phone in modem mode) plus a script to compose the OMA CP message. Accepted provisioning can install:
+
+- Malicious proxy (MITM all HTTP traffic)
+- Rogue mail server settings
+- Homepage/bookmark substitution for phishing
+- MMSC (MMS Center) replacement for traffic interception
+
+### Detection Indicators
+
+| Signal | Meaning |
+|--------|---------|
+| `android.provider.Telephony.WAP_PUSH_RECEIVED` receiver | App subscribes to WAP Push (requires `RECEIVE_WAP_PUSH` — separate permission from `RECEIVE_SMS`) |
+| `android.intent.action.DATA_SMS_RECEIVED` on specific port | Port-addressed binary SMS handler (deprecated in API 26; modern apps route through standard SMS actions) |
+| `application/vnd.syncml.dm+xml` or `application/vnd.syncml.dm+wbxml` MIME handling | OMA-DM SyncML processing (text XML or binary WBXML) |
+| `goAsync()` + retained `PendingResult` for delayed `clearAbortBroadcast()` | Provisioning bootstrap pattern with validation window |
+| SMS listener without any SMS permission | Google SMS Retriever API or Facebook AccountKit (usually legitimate, uses short-code + hash pattern) |
+
+This channel is distinct from the standard SMS interception techniques above: WAP Push uses a different permission ([`RECEIVE_WAP_PUSH`](../permissions/sms/receive-wap-push.md)) rather than `RECEIVE_SMS`, and user-visible SMS remains untouched. See [SIM & Carrier-Level Attacks](sim-carrier-attacks.md) for related binary SMS vectors (Simjacker, WIBattack).
+
 ## SMS as C2 Channel
 
 Some families receive commands via SMS as a fallback when HTTP/HTTPS C2 is unreachable:

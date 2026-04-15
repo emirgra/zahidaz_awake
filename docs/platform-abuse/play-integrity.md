@@ -2,6 +2,8 @@
 
 Google's device attestation framework, replacing SafetyNet. Apps use it to verify the device has not been tampered with -- not rooted, not running a custom ROM, bootloader locked. Banking apps, streaming services, and payment apps rely on it to gate access. For attackers and security researchers, bypassing Play Integrity is a prerequisite for dynamic analysis on modified devices.
 
+Play Integrity is distinct from [Play Frosting](play-frosting.md): Frosting is a cryptographic signature on the APK itself proving it was distributed through Google Play, while Play Integrity is a runtime attestation about device state. An APK can carry Frosting (proving Play origin) and fail Play Integrity (device now compromised), or lack Frosting (sideloaded) and still pass Integrity (legitimate user on a clean device).
+
 ## Evolution from SafetyNet
 
 ### Timeline

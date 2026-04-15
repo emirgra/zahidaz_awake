@@ -216,6 +216,40 @@ From [notification listener](notification-listener-abuse.md) access:
 4. Attacker uses stolen credentials + OTP to take over banking/email accounts
 5. Account takeover enables further attacks (SIM swap, credential resets)
 
+### Device Owner Timed Permission Auto-Revoke
+
+An app provisioned as Device Owner (via QR code, NFC, zero-touch enrollment, or ADB) can use `DevicePolicyManager.setPermissionGrantState()` to silently grant and revoke runtime permissions without user interaction. Legitimate MDM uses this for policy enforcement. Malicious Device Owners can exploit the same API to temporarily grant a sensitive permission, read the protected data, then restore the permission state to evade audit.
+
+```java
+DevicePolicyManager dpm = ctx.getSystemService(DevicePolicyManager.class);
+ComponentName admin = getAdminComponent();
+
+dpm.setPermissionGrantState(admin, pkg,
+    Manifest.permission.ACCESS_FINE_LOCATION,
+    DevicePolicyManager.PERMISSION_GRANT_STATE_GRANTED);
+
+Location loc = locationManager.getLastKnownLocation(GPS_PROVIDER);
+exfil(loc);
+
+new Handler(Looper.getMainLooper()).postDelayed(() -> {
+    dpm.setPermissionGrantState(admin, pkg,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        DevicePolicyManager.PERMISSION_GRANT_STATE_DENIED);
+}, 10_000);
+```
+
+Observed in the wild in enterprise MDM code (legitimate use): grant for 10 seconds, read location, deny. Also toggles location services off after 5 seconds if they were disabled before the query.
+
+Android 11+ (API 30) carved out `ACCESS_BACKGROUND_LOCATION` specifically: Device Owners cannot auto-grant it through `setPermissionGrantState` — the user must grant background location manually from Settings. Foreground location (`ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION`) and other runtime permissions remain auto-grantable. Malicious DO code can still obtain a single foreground location reading, which is often sufficient.
+
+This pattern bypasses:
+
+- The runtime permission dialog (never shown)
+- Permission-use indicators (too short to appear in most UI)
+- Post-fact permission audits (state restored before user checks)
+
+Prerequisites (Device Owner status) are high, but once the attacker has DO provisioning, the permission model ceases to meaningfully constrain them.
+
 ## Platform Lifecycle
 
 | Android Version | API | Change | Offensive Impact |

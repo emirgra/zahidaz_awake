@@ -152,7 +152,7 @@ The system activation dialog cannot be customized, but malware controls everythi
 | Malware Use | Common (pre-Android 9) | Rare (requires factory state) | Not observed in malware |
 | API Level | 8+ | 21+ | 21+ |
 
-Device Owner is strictly more powerful than Device Admin but requires provisioning on a factory-fresh device via `adb shell dpm set-device-owner` or NFC bump during setup wizard. Malware cannot achieve Device Owner status on a device the victim is already using.
+Device Owner is strictly more powerful than Device Admin but requires provisioning on a factory-fresh device via `adb shell dpm set-device-owner` or NFC bump during setup wizard. Malware cannot achieve Device Owner status on a device the victim is already using. Once provisioned, a Device Owner can [silently grant and revoke runtime permissions](privilege-escalation.md#device-owner-timed-permission-auto-revoke) via `setPermissionGrantState` — a capability useful both to legitimate MDM and to abusive enrollment scenarios.
 
 ## Samsung Knox Abuse
 

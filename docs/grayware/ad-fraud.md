@@ -35,6 +35,66 @@ Apps that generate fake ad impressions, clicks, or installs in the background to
 
 **Invisible Adware** (2023): [McAfee uncovered 43 apps on Google Play](https://www.mcafee.com/blogs/other-blogs/mcafee-labs/invisible-adware-unveiling-ad-fraud-targeting-android-users/) with 2.5M downloads that loaded ads only when the device screen was off. The apps waited multiple weeks after installation before activating and requested "power saving exclusion" and "draw over other apps" permissions to maintain background execution.
 
+## C2-Tasked HTTP Click Fraud
+
+A bot architecture where the compromised device is a dumb executor of tasks issued by a C2 server. Unlike WebView-based ad fraud (which loads pages and relies on the ad SDK), the device makes direct HTTP requests with attacker-supplied URLs, methods, headers, cookies, and bodies — generating clicks, impressions, or attribution events that flow through the attacker's affiliate infrastructure. [Trend Micro](https://www.trendmicro.com/en_us/research/25/j/badbox-2.0.html) and [HUMAN Security](https://www.humansecurity.com/learn/blog/satori-threat-intelligence-alert-badbox-2-0-targets-consumer-devices-with-multiple-fraud-schemes) have documented this pattern at scale in BADBOX 2.0.
+
+### Architecture
+
+```
+Device                                    C2 Server
+  │                                          │
+  ├─ Heartbeat GET /gate ─────────────────>  │
+  │  <─ Magic token (activation gate) ───────┤
+  │                                          │
+  ├─ POST /tasks (device fingerprint JSON)─> │
+  │  <─ Task list JSON ──────────────────────┤
+  │     { userAgent, secChUa, acceptLanguage,│
+  │       reportUrl, requestInterval,        │
+  │       tasks: [{ taskId, taskVersion,     │
+  │         actions: [...] }] }              │
+  │                                          │
+  │ For each action:                         │
+  │   type 0: HTTP request with spoofed      │
+  │           browser headers/cookies/body   │
+  │   type 2: WebSocket multi-step chain     │
+  │                                          │
+  ├─ POST /report (per-step results) ─────>  │
+  │     { step, url, reqHeader, reqData,     │
+  │       respCode, respHeader, cost, logs } │
+```
+
+### Distinguishing Fields
+
+Ad-fraud bot protocols share a vocabulary that distinguishes them from legitimate analytics SDKs:
+
+| Field | Purpose |
+|-------|---------|
+| `affId`, `subId` | Affiliate and sub-affiliate tracking — ad network attribution |
+| `userAgent`, `secChUa`, `acceptLanguage`, `accept` | Browser fingerprint spoofing for clicks — makes requests look like a real desktop/mobile browser |
+| `reportUrl` | Back-channel for per-click result reporting, often separate from the task-fetch endpoint |
+| `cost` | Per-step impression/click economics tracking |
+| `requestInterval` | Server-tunable polling interval (typically 1-1440 minutes) |
+| `auto_cookie` | Flag to automatically persist cookies across requests in a session |
+| `disconnect_ws`, `async`, `skip_error` | Action-level control flags for chained execution |
+
+`sec-ch-ua` (User-Agent Client Hints) is standardized as the modern successor to `User-Agent`. Ad fraud bots spoof both to match Chrome/Safari/Firefox on desktop or mobile, turning a mobile device into what looks like a browser-based click generator.
+
+### Activation Gate
+
+Some variants check a heartbeat endpoint for a magic response token before entering the tasking loop. If the server does not return the expected token, the bot stays dormant. This gates whether the campaign is active and complicates sandbox analysis — the bot appears benign unless the analyst's traffic reaches the live C2 and receives activation.
+
+### Host App Profile
+
+C2-tasked click fraud frequently ships inside trojanized forks of legitimate open-source apps. The legitimate app code lives in `classes.dex` and provides the cover functionality (keyboard, photo editor, file manager, etc.); the C2 tasking framework resides entirely in `classes2.dex`, wired in through the Application class's `onCreate()`. Multi-DEX is normal for any non-trivial Android app, so the secondary DEX does not trigger heuristic scanners on its own. For example, trojanized keyboard apps have been observed built on top of [FlorisBoard](https://github.com/florisboard/florisboard), an open-source privacy-respecting keyboard available on F-Droid.
+
+Indicators to separate this pattern from legitimate multi-DEX:
+
+- `classes.dex` contains the app's documented functionality and common SDKs (Firebase, AdMob, etc.)
+- `classes2.dex` contains a single, self-contained C2 framework (fingerprinting + networking + task executor) with no UI, no integration with the app's own features, and obfuscated class/method names
+- The Application class calls into `classes2.dex` from `onCreate()` before any legitimate functionality runs
+- No declared purpose for arbitrary HTTP execution in the app's stated use case
+
 ## VirtualDisplay Invisible Rendering
 
 A technique where ads render on a virtual display that the user never sees. The app creates a `VirtualDisplay` with 1x1 pixel dimensions via `DisplayManager.createVirtualDisplay()`, then renders a `Presentation` (designed for secondary displays like Chromecast) on that surface. The ad loads, renders, and registers impressions and clicks, but is completely invisible because the display surface is a single pixel.

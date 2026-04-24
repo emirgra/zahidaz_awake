@@ -334,6 +334,8 @@ Known marker libraries and what they indicate:
 | `libsecexe.so`, `libsecmain.so` | [Bangcle](../packers/bangcle.md) |
 | `libSecShell.so` | [SecShell (Kiwisec)](../packers/secshell.md) |
 | `libcovault-appsec.so` | [AppSealing](../packers/appsealing.md) |
+| `libsecsdk.so` (tiny `.text`, large `.note.gnu.*` CODE sections) | [NetEase YiDun NIS](../packers/netease-yidun.md#sdk-reinforcement-nis-sdk) |
+| `libnesec.so`, `libNetHTProtect.so` | [NetEase YiDun App Packer](../packers/netease-yidun.md#app-packer) |
 
 !!! tip "What to do when you detect a packer"
     If the app is packed, static analysis of the DEX code shows only the packer stub. The real code is encrypted and only available at runtime. Follow the [Analysis Decision Tree](../packers/index.md#analysis-decision-tree) to select the right unpacking approach, then move to [Dynamic Analysis](dynamic-analysis.md) or packer-specific unpacking techniques documented on each [Packer](../packers/index.md) page.
@@ -557,6 +559,7 @@ Different malware families present unique static analysis challenges. The table 
 | [Gigabud](../malware/families/gigabud.md) | Core logic in native `libstrategy.so` with Virbox packing | Analyze the Java layer for accessibility service registration, then trace native calls via Frida. |
 | [Antidot](../malware/families/antidot.md) | Custom string encryption + gibberish class names | Identify the decryption method pattern and write a jadx script or Frida hook to bulk-decrypt all strings. |
 | [Triada](../malware/families/triada.md) firmware variants | Malware code embedded in system framework | Compare system partition against known-good firmware images. Diff framework JARs and system apps. |
+| [NetEase YiDun NIS](../packers/netease-yidun.md) | Real code in renamed `.note.gnu.*` sections (Ghidra/IDA refuse to disassemble); encrypted method bodies decrypted in place at load time | Rename `.note.gnu.proc/.text/.content` to `.text/.text2/.rodata2` and flip `sh_type` from `SHT_NOTE` to `SHT_PROGBITS`. Same offsets, no shift — patch in place. See the [Stage 7 normalisation step](../packers/netease-yidun.md#stage-7-normalise-sections-for-ghidraida). |
 
 ## Flutter/Dart Analysis
 

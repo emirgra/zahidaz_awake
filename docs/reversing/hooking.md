@@ -218,6 +218,19 @@ Java.perform(function() {
 });
 ```
 
+This `Cipher.init` + `Cipher.doFinal` pair is the highest-leverage extraction point against packers that compile protected logic to native and refuse static recovery. [NetEase YiDun NIS](../packers/netease-yidun.md#stage-10-live-behavioural-capture) shows it applied end-to-end: every protected JVM method is compiled to AArch64 with no Java source recovery, but the protocol JSON, AES keys, and operator URLs all flow through `Cipher.init`/`doFinal` at the Java boundary — the trace yields complete intelligence even though the code itself stays opaque.
+
+When the target installs fatal-signal tripwires (e.g. `sigaction` handlers on SIGILL/SIGTRAP/SIGBUS/SIGSEGV that call `raise(SIGKILL)`), spawn-attach with a `sigaction` soft-hook installed before constructors run. Cover all four signals — skipping any one leaves a self-kill path. Pattern:
+
+```javascript
+Interceptor.attach(Module.findExportByName('libc.so', 'sigaction'), {
+    onEnter(a) {
+        const s = a[0].toInt32();
+        if (s === 4 || s === 5 || s === 7 || s === 11) a[1] = NULL;
+    }
+});
+```
+
 ### DEX Loading Interception
 
 Capture dynamically loaded DEX files (packed apps):

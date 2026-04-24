@@ -174,6 +174,8 @@ Frida's detection surface is large: a server process, a full JavaScript runtime 
 
 These signature-based checks are the easiest to bypass: rename the binary, change the port, use [ZygiskFrida](https://github.com/lico-n/ZygiskFrida) to inject Frida Gadget via Zygisk instead of running a server. Patch `/proc/self/maps` reads via Frida itself to filter out Frida strings. [Shamiko](https://github.com/LSPosed/LSPosed.github.io) hides root and Frida artifacts from DenyList processes.
 
+[NetEase YiDun's NIS variant](../packers/netease-yidun.md#tripwires) is a good worked example of this layer in production: raw-syscall `openat` reads `/proc/self/maps` (so libc hooks see no traffic), thread-name walk over `/proc/self/task/*/status` matches `gum-js-loop` and `linjector`, and a sigaction tripwire on SIGILL/SIGTRAP/SIGBUS/SIGSEGV converts any accidental fault during instrumentation into immediate `SIGKILL`. Skipping any one of those four signals leaves a path to self-kill.
+
 ### Xposed / LSPosed Detection
 
 | Technique | What It Detects |

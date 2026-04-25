@@ -97,6 +97,23 @@ public class NLService extends NotificationListenerService {
 
 Malware typically filters by package name to target specific banking or authentication apps, then uses regex to pull numeric codes from the notification body. After extraction, the notification is dismissed so the user never sees it.
 
+### Caller-Number Extraction Without Telephony Permissions
+
+A fallback for samples that cannot or do not want to request `READ_PHONE_STATE` / `READ_CALL_LOG` (both runtime-permission-prompted, both Play-Store-scrutinised). The notification listener filters on `Notification.CATEGORY_CALL` and parses the system dialer's incoming-call notification — title carries the caller name or number, subtext carries the line/SIM identifier — then extracts a numeric phone number with regex.
+
+```java
+@Override
+public void onNotificationPosted(StatusBarNotification sbn) {
+    Notification n = sbn.getNotification();
+    if (!Notification.CATEGORY_CALL.equals(n.category)) return;
+    String title = n.extras.getString(Notification.EXTRA_TITLE);
+    String number = extractNumber(title);
+    if (number != null) exfiltrateCall(number, sbn.getPostTime());
+}
+```
+
+Coverage is broader than `READ_CALL_LOG`: also catches WhatsApp/Telegram/Signal voice calls (which post notifications with the caller name in the title) without needing access to the messaging app's database. Hunting signal: any `NotificationListenerService` filtering on `CATEGORY_CALL` should be audited — legitimate callers are rare (call-screening apps, accessibility callers).
+
 ### Message Surveillance
 
 Messaging app notifications expose sender and preview text. WhatsApp, Telegram, Signal, and SMS all display message previews in the notification shade. The listener captures:

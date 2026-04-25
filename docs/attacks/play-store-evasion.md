@@ -240,6 +240,17 @@ The decoy app is minimal (often a single `setContentView()` call) but sufficient
 
 This pattern is distinct from [versioning attacks](#versioning-attacks) (which push malicious updates) and [delayed activation](#delayed-activation) (which waits before enabling local payload). Server-controlled cloaking never contains the real content locally; the server decides per-session what the user sees.
 
+### Dead-Man-Switch Cloaking
+
+A subvariant where the **default** state is benign and the operator only flips the payload on for real users. The dropper hits a configured URL with a `HEAD` request on every launch:
+
+- `200 OK` → load the response URL into a fullscreen WebView (the actual TDS / phishing / fakeapp surface)
+- `404` (or any non-200) → skip the WebView, fall back to the legitimate decoy UI (a working travel guide, calculator, etc.)
+
+Static analysts running the APK in a sandbox see a clean, working app — the URL they can extract returns 404 because the operator has not yet flipped the campaign on. Play review sees a clean, working app. Real users in the target market only see the payload in the window during which the operator is actively monetizing. Flipping the value back to 404 globally kills every install instantly with zero APK churn.
+
+A 9-second timeout on the fetch is typical: long enough to succeed on real cellular networks, short enough that the sandbox does not flag a hang. The `HEAD` (rather than `GET`) is intentional — it keeps the inactive-state network signature minimal and avoids pulling phishing HTML into traffic captures from researchers' lab IPs.
+
 ## Platform Lifecycle
 
 | Android Version | API | Change | Offensive Impact |

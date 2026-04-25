@@ -216,6 +216,50 @@ A mask overlay view (`FrameLayout` subclass) covers the ad during the simulated 
 
 Position tracking (`positionShowedList`, `positionClickedList`) ensures the SDK doesn't click the same ad twice and can report clicked/unclicked ratios back to the server, mimicking natural click-through rates.
 
+## Installer-Source Spoofing for CPM Uplift
+
+Ad networks pay materially higher CPM for inventory served inside Play-Store-installed apps than for sideloaded installs. Adware and ad-fraud SDKs forge the install source to capture the uplift.
+
+Two implementations show up in the wild:
+
+```java
+PackageInstaller.SessionParams params = new PackageInstaller.SessionParams(
+    PackageInstaller.SessionParams.MODE_FULL_INSTALL);
+params.getClass()
+    .getMethod("setPackageSource", int.class)
+    .invoke(params, 1);
+params.getClass()
+    .getMethod("setInstallReason", int.class)
+    .invoke(params, 4);
+```
+
+Reflectively setting `PACKAGE_SOURCE_STORE` (1) on the install session and `INSTALL_REASON_POLICY` (4) makes the installed APK report itself as Play-Store-sourced via `PackageManager.getInstallSourceInfo()`. The reflection avoids public API surface that lints would flag.
+
+The runtime variant hooks `PackageManager.getInstallerPackageName(pkg)` (typically through a `Faker.facebook.audience_network`-style namespace, sometimes using the [IPackageManager Binder proxy](../attacks/dynamic-code-loading.md#binder-proxy-system-service-hijack)) to return `"com.android.vending"` for any package the ad SDK queries. Every ad request now claims to come from a Play-Store-installed app regardless of the actual install source.
+
+Hunting tip: any code path that queries `getInstallerPackageName` and unconditionally returns `"com.android.vending"`, `"com.google.android.feedback"`, or `"com.android.packageinstaller"` is forging the install source.
+
+## Probabilistic Close-Button Hijack
+
+A click-fraud variant tuned to evade ad-network click-quality detection. Instead of always converting a close-tap into a click, the SDK rolls a random number against a server-controlled threshold and converts only a fraction of dismissals.
+
+```java
+int p = ThreadLocalRandom.current().nextInt(100);
+if (p < closeBtnJumpProbability) {
+    nativeView.performClick();
+} else {
+    super.dismiss();
+}
+```
+
+Aggregate click-quality metrics at the ad network look noisy but not obviously fraudulent — the operator tunes `closeBtnJumpProbability` (and a separate `nativeFullScreenClickProbability` for any-touch-as-click on full-screen ads) to stay under detection thresholds. Both knobs come from the same Remote Config / experiment endpoint that gates the SDK's other behaviors. A constant-100% close-to-click ratio would be flagged immediately; a server-tuned 12-25% blends with real misclick noise.
+
+## TYPE_APPLICATION_PANEL Click-Block Overlays
+
+A no-permission overlay variant: `WindowManager.LayoutParams` with `type = TYPE_APPLICATION_PANEL` (1003) does **not** require `SYSTEM_ALERT_WINDOW`, unlike `TYPE_APPLICATION_OVERLAY` (2038) and the older `TYPE_PHONE` (2002). The adware adds zero-opacity (`alpha = 0`) panel views over specific screen regions inside its own task; touches on those regions are intercepted by the panel's `onTouchEvent` and redirected to `showAdvWithPointName(...)`.
+
+Game touches at the bottom 450×42 dp band (where a virtual control sits) get rerouted to fire ad clicks instead of game input. The panel-type window is invisible, requires no special grant, and is not listed in `Settings > Apps > Display over other apps`. Detection: `WindowManager.addView` with `LayoutParams.type = 1003` (`TYPE_APPLICATION_PANEL`) on transparent / `Color.TRANSPARENT` views with non-zero touch handling.
+
 ## Multi-App Background Ad Fleet
 
 A distribution model where the same operator publishes many apps (10+) built from the same codebase with different skins (cleaner, WiFi analyzer, PDF reader, file manager). Each app independently runs an [invisible foreground service](../attacks/persistence-techniques.md#invisible-via-post_notifications-denial-android-13) that periodically attempts to launch fullscreen ad activities from the background.

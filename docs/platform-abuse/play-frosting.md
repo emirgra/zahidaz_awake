@@ -74,6 +74,18 @@ From an offensive perspective, Frosting constrains but does not prevent several 
 - **Pre-Play malware**: Attackers publishing through developer account compromise produce genuinely Frosted malicious APKs. Frosting proves Play-transit, not good intent. See the [Play Store Evasion](../attacks/play-store-evasion.md) page for developer account market pricing and techniques.
 - **Legitimate tamper**: Developers extracting their own AABs via `bundletool` produce valid-looking APKs without Frosting. Frosting absence alone is not a tamper signal.
 
+### Source Stamp ≠ Frosting
+
+A common forgery dodge: the repackager adds an `<meta-data android:name="com.android.stamp.source" android:value="https://play.google.com/store"/>` element to the manifest, and/or includes a [source stamp](https://source.android.com/docs/security/features/apksigning/sourcestamp) block (`0x6DFF800D`) in the signing block. Neither is cryptographic Play provenance — both can be added by any builder.
+
+| Artifact | What it actually proves |
+|----------|-------------------------|
+| `com.android.stamp.source` manifest meta | **Nothing.** Plain XML metadata, anyone can write it. |
+| `0x6DFF800D` source stamp block in signing block | The packager wanted to claim a particular source. Not signed by Google. Not validated by PackageManager against Play. |
+| Frosting (`0x2146444e`) with a valid signature against `frostingPublicKeys` | APK passed through Google's distribution infrastructure. Cannot be forged without compromising Google's ECDSA-P256 key. |
+
+Hunting tip: an APK whose manifest carries `com.android.stamp.source = "https://play.google.com/store"` while the signing block contains **no** Frosting block is a forged provenance claim. The `com.android.vending` installer-package match check on the device (used by some libraries to gate "real Play install") is similarly trivial to spoof via [installer-source spoofing](../grayware/ad-fraud.md#installer-source-spoofing-for-cpm-uplift). Frosting is the only bit that survives a determined repackager.
+
 ## Pitfalls
 
 A common analyst error is treating the `CN=Android, O=Google Inc.` subject on a Play App Signing certificate as impersonation. This is the expected fingerprint: Google re-signs APKs on the developer's behalf, producing a cert with Google as the subject. Combined with either Frosting (direct Play download) or the `BNDLTOOL` signer name (AAB extraction), it confirms legitimate Play origin rather than contradicting it.

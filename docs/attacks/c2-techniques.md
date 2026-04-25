@@ -76,6 +76,76 @@ Used by: [Hook](../malware/families/hook.md), [Medusa](../malware/families/medus
 
 [Cifrat](../malware/families/cifrat.md) takes this further with a dual-channel design: a control channel on port 8443 for low-latency commands (35+ types including gestures, SOCKS5 control, permission status) and a data channel on port 8444 for high-bandwidth streams (40+ types including screen frames, keylog batches, camera frames, SMS data). Each channel uses distinct `User-Agent` and `X-Channel-Type` headers, and both share a `X-Session-ID` UUID for correlation. This separation prevents screen streaming traffic from delaying time-sensitive commands.
 
+### Firebase Realtime Database (RTDB)
+
+Distinct from FCM: Firebase RTDB is used as a **bidirectional message bus**, not a push channel. The malware attaches a `ValueEventListener` to per-victim paths in a public RTDB; the operator writes to those paths from any browser or script and the listener fires on the device within milliseconds. No HTTP polling, no server infrastructure beyond the Firebase project itself.
+
+```java
+DatabaseReference ref = FirebaseDatabase.getInstance()
+    .getReference("/devices/" + androidId);
+
+ref.child("sendsms").addValueEventListener(new ValueEventListener() {
+    @Override
+    public void onDataChange(DataSnapshot s) {
+        if (!s.exists()) return;
+        String number = s.child("to").getValue(String.class);
+        String body   = s.child("body").getValue(String.class);
+        SmsManager.getDefault().sendTextMessage(number, null, body, null, null);
+        s.getRef().removeValue();
+    }
+});
+```
+
+Typical path layout used by Indian SMS-banker / `refect.pros`-toolkit families:
+
+| Path | Direction | Purpose |
+|------|-----------|---------|
+| `/sms/<pushId>` | device → operator | exfil of every received SMS |
+| `/devices/<id>/{status, lastSeen, sim_info}` | device → operator | victim registry |
+| `/forworder/<id>` | operator → device | call-forwarding USSD command |
+| `/sendsms/<id>` | operator → device | send SMS from victim's SIM |
+| `/settings/{sms_phone_number, url}` | operator → device | global config push |
+
+Hunting tip: any Android sample referencing `firebaseio.com` / `FirebaseDatabase.getReference` with `addValueEventListener` on paths keyed by a device identifier is likely an RTDB-as-C2 channel. If the database has open read rules, a `GET <project>-default-rtdb.firebaseio.com/.json` returns the full operator infrastructure (one campaign observed serving 9 different TDS endpoints from one DB).
+
+### Firebase Remote Config as Soft C2
+
+A misuse pattern that is harder to attribute than RTDB. The malware uses Firebase Remote Config to fetch JSON behavior flags (banner URLs, redirect targets, kill-switch booleans, A/B variants). Operators flip flags from the Firebase console; victims pull the new config on next launch. No request signature distinguishes a malicious config fetch from any legitimate analytics SDK.
+
+The single strongest IoC is the **fetch interval**. Legitimate apps use the documented minimum of 3600 seconds (1 hour) or longer:
+
+```java
+FirebaseRemoteConfig.getInstance().setConfigSettingsAsync(
+    new FirebaseRemoteConfigSettings.Builder()
+        .setMinimumFetchIntervalInSeconds(1L)
+        .build()
+);
+```
+
+A 1-second (or 0) minimum fetch interval means the operator wants to push config changes that take effect within seconds — only useful when the config controls security-sensitive behavior. Flag any app with `setMinimumFetchIntervalInSeconds(< 60)` and treat the Remote Config response as a C2 channel during dynamic analysis.
+
+### A/B Experiment Endpoints as Soft C2
+
+A close cousin of Remote Config soft-C2: the app calls a vendor or in-house experimentation service (`ezalter`, Optimizely, custom A/B endpoints) that returns per-user/geo flags gating monetization or fraud behaviors. Sandbox IPs receive `disabled` flags → no fraud observed → clean scan. Real victims in target geographies receive `enabled` → click injection, ad fleet, or overlay activation kicks in. The pattern is indistinguishable from legitimate experimentation infrastructure unless you correlate the response shape against the security-sensitive code paths it gates.
+
+### Toast as a Push Channel
+
+A novel low-footprint C2 channel: the device polls a server and renders the response text via `Toast.makeText().show()`.
+
+```java
+String text = httpGet(c2 + "/sdk.getToast/" + sign);
+Toast.makeText(ctx, text, Toast.LENGTH_LONG).show();
+```
+
+Properties that make it attractive:
+
+- No dangerous permission required (`Toast` is unrestricted)
+- Not a `Notification` — leaves no entry in the shade, no long-press-for-source affordance
+- ~3.5 second TTL, then gone — user cannot screenshot the origin
+- User attributes the message to the app they are currently in (implicit trust)
+
+Used as a social-engineering channel for "Update now at <url>" / "Account locked, contact <handle>" lures, where the operator can change the message server-side without an APK update. Hunting signal: any app calling `Toast.makeText()` with text fetched via HTTP.
+
 ### Firebase Cloud Messaging (FCM)
 
 Abuses Google's push notification infrastructure as a C2 wake-up channel. The malware registers with FCM using the attacker's Firebase project credentials, then receives push messages containing commands. FCM traffic is indistinguishable from legitimate app notifications.
@@ -246,6 +316,22 @@ public String generateDomain(int dayOfYear, int year) {
 ```
 
 The defender must reverse the DGA to predict and preemptively sinkhole future domains. DGA is less common on Android than on desktop botnets, but has been observed in [Anubis](../malware/families/anubis.md) and [FluBot](../malware/families/flubot.md).
+
+### Domain Fronting via Custom HostnameVerifier
+
+Distinct from certificate pinning. The malware connects to a benign-looking CDN IP but sets the `Host` header to the real C2 domain, then installs a custom `HostnameVerifier` that validates the TLS certificate against the **fronted** name rather than the connection target.
+
+```java
+HttpsURLConnection conn = (HttpsURLConnection) cdnUrl.openConnection();
+conn.setRequestProperty("Host", c2Domain);
+conn.setHostnameVerifier((hostname, session) -> {
+    return verifyCertChain(session, c2Domain);
+});
+```
+
+Network monitors see traffic to a popular CDN; the real C2 hostname only appears inside the application-layer `Host` header, invisible to basic netflow analysis and hard to block without breaking the CDN itself. No TLS error fires because the verifier was rewritten to expect the fronted name.
+
+Hunting signal: a custom `HostnameVerifier` that ignores or substitutes the `hostname` argument is almost never a legitimate engineering choice — pair with a hardcoded `setRequestProperty("Host", ...)` call to confirm.
 
 ### Certificate Pinning on C2 Traffic
 

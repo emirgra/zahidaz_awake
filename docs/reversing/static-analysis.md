@@ -773,6 +773,49 @@ Beyond traditional packing and obfuscation, recent malware families have introdu
 
 [GodFather v3](../malware/families/godfather.md) (2025) combines multiple anti-decompilation layers: ZIP archive manipulation with invalid headers prevents standard archive tools from extracting the APK contents, deliberately malformed manifest entries crash parsers, and injected `$JADXBLOCK` fields in class files cause the jadx decompiler to skip those classes entirely. This layered approach targets the specific analysis toolchain most researchers rely on.
 
+### Non-Standard ZIP Compression Method Codes
+
+Standard ZIP defines `0` (stored) and `8` (deflate) as the dominant compression methods. Android's `ZipFile` / `PackageManager` parser tolerates arbitrary unknown values and treats them as stored, but most static-analysis ZIP parsers (Python `zipfile.ZipFile`, apktool, APKiD's ZIP layer) reject anything else. Malware authors weaponize this gap by packing critical files with deliberately invalid method codes:
+
+| Observed code | Targeted file | Tool failure |
+|---------------|---------------|--------------|
+| `12121` | `AndroidManifest.xml` | apktool / `zipfile.ZipFile` cannot extract |
+| `13711` | DEX / payload assets | Same |
+| `19451` | `resources.arsc` | Same |
+
+The Android runtime installs and runs the APK normally; the analyst sees an APK that "looks fine" in `aapt dump` but cannot be unpacked by `apktool d`. Triage:
+
+```bash
+unzip -lv sample.apk | awk '$1 != "Defl:N" && $1 != "Stored" {print}'
+zipinfo -v sample.apk | grep "compression method"
+```
+
+Any compression code other than `0` or `8` is worth flagging — the chosen value is usually targeted at a specific tool crash, not random.
+
+### PNG/IEND-Suffix Steganography
+
+A simpler variant of [Necro's LSB steganography](../malware/families/necro.md) above. The attacker appends raw payload bytes **after** a PNG's `IEND` chunk. The file remains a valid PNG (header magic intact, IEND present), and `PackageManager` ignores anything after IEND when loading the asset as a drawable. Image-aware scanners that stop reading at IEND see only the legitimate image; `strings` or hex inspection reveals the trailing payload.
+
+Hunting tip: `ls -la res/drawable/` and flag any single-frame icon over ~200 KB. A 1.4 MB `ic_launcher.png` at 839×798 (when normal launcher icons are 10-50 KB) is a strong steg candidate. Compare bytes after the first IEND chunk against expected file end:
+
+```bash
+python3 -c '
+import struct, sys
+data = open(sys.argv[1], "rb").read()
+i = 0
+while i < len(data):
+    length = struct.unpack(">I", data[i:i+4])[0]
+    typ = data[i+4:i+8]
+    end = i + 8 + length + 4
+    if typ == b"IEND":
+        print(f"IEND at {end}, file size {len(data)}, suffix {len(data)-end} bytes")
+        break
+    i = end
+' res/drawable/ic_launcher.png
+```
+
+Differs from BMP steganography (which replaces pixel data with ciphertext under a real BMP header) and from Necro's PNG LSB encoding (which hides bits inside legitimate pixel data). The IEND-suffix variant is the cheapest to implement and the easiest to detect by file-size anomaly.
+
 ### OLLVM-Obfuscated Native Libraries
 
 [Mandrake](../malware/families/mandrake.md) (2024) moved core malicious functionality from DEX into native libraries obfuscated with OLLVM (Obfuscator-LLVM), applying control flow flattening, string encryption, and bogus control flow. Standard native code analysis tools like Ghidra require significant manual effort to deobfuscate.

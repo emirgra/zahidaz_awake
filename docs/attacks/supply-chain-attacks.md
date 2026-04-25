@@ -138,8 +138,26 @@ A different supply-chain shape: rather than poisoning a developer's build, the a
 | [ApkSignatureKillerEx](https://github.com/L-JINBIN/ApkSignatureKillerEx) | Companion to MT Manager; hooks `PackageManager` (`PmsHookApplication`) so apps that self-check their signature see the original certificate instead of the repack | `PmsHookApplication` in DEX, hook installed via `Application.attachBaseContext` overrides, [Talsec writeups on countering it](https://talsec.app/) |
 | [NP Manager](https://npmanager.com/) | All-in-one Telegram-distributed modding tool: smali editing, coexistence signing, signature-verification stripping, VPN/proxy-detection removal, on-device dex2c port | `NPStringFog` string encoding (see [Anti-Analysis](anti-analysis-techniques.md#stringfog)), `EntryPoint.stub(N)` trampolines from its [dex2c fork](anti-analysis-techniques.md#dex-to-native-compilation-dex2c), polymorphic decoder overloads |
 | dex2c (`dcc`) | Open-source AOT Dalvik→C/C++ compiler that NP Manager productizes; protects sensitive methods by translating them to a packaged `.so` | `Java_..._stub<N>` JNI exports, near-empty `EntryPoint` class, `amimo/dcc` strings |
+| [DFAST.RU](https://dfast.ru/) | Russian game-cheat repackager / mod-menu kit; floating overlay UI + sticky `START_STICKY` service template | `libdFastApp.so`, `SYSTEM_ALERT_WINDOW` requested by a non-launcher utility, characteristic floating menu strings |
 
 This pipeline is the production engine behind a long tail of trojanized banking, social, and game APKs distributed via [Getmodpc](https://getmodpc.net/), dFast, PlayMods, NadyMods, MillenniumMods, 5play.ru (whose `libRMS.so` is APKiD-fingerprinted as the storefront's brand mark), the WhatsApp-mod family (WALitex / YMWhatsApp / YoWhatsApp — most famously the [Triada](../malware/families/triada.md)-infected YoWhatsApp campaign), and the Russian / Indonesian / SEA Telegram modding scene more broadly. For analysts, the value is provenance: an APK carrying `bin.mt.signature` plus `PmsHookApplication` plus an `EntryPoint.stub` class is a near-certain modded redistribution rather than an original developer build, regardless of what the manifest claims.
+
+### Repackaging Static Tells
+
+A combined static-only fingerprint set for catching repackaged APKs without running them. Any one of these in isolation can be benign; three or more together is unambiguous evidence of repackaging.
+
+| Tell | Why it fires |
+|------|--------------|
+| Signed with the **AOSP public test key** (`CN=Android, O=Android, Email=android@android.com`, valid 2008-2035) | The private key ships with AOSP. Anyone can sign with it. Thumbprint `61ed377e85d386a8dfee6b864bd85b0bfaa5af81` — block on sight in any production fleet. |
+| **Burner cert** with `not_before` postdating the oldest ZIP entry by > ~1000 days | The signing cert was minted long after the files inside the APK were authored — strong "I just resigned someone else's build" signal. |
+| **`BuildConfig.APPLICATION_ID` ≠ manifest `package`** | Gradle regenerates `BuildConfig` on every build with the current `applicationId`. A mismatch means the APK was never re-built — only smali-edited and reassembled with apktool. |
+| **`assets/crashlytics-build.properties` `package_name` ≠ manifest `package`** | Crashlytics build properties are a generic `.properties` file that repackagers almost never strip. The original developer's package name leaks straight through. |
+| **`google-services.json` `firebase_database_url` / `project_id` ≠ manifest `package`** | Same logic as Crashlytics — Firebase project metadata leaks the original developer when the APK is resigned without a real Gradle rebuild. |
+| **Mixed compilers across DEX files** (R8 marker on some, `dexlib 2.x` on others) | Targeted patch injection — the attacker rebuilt one or two DEX files via smali round-trip and dropped them next to the originals. Run APKiD per DEX and diff. |
+| **99%+ of ZIP entries timestamped `1981-01-01`** | apktool's MS-DOS epoch default. Real Gradle / `zipalign` builds carry recent timestamps. |
+| **Inflated `versionCode`** (`999999999` or much higher than the upstream OSS version) | Blocks legitimate updates: Play Store and `pm install` refuse to downgrade, so the trojanized build is pinned. Particularly suspicious when the package name maps to a known OSS app. |
+| **Manifest `package` namespace holds 0% of classes** | The original namespace is unused; everything lives under squatted namespaces (`android.text.*`, `androidx.ui.model.widget.*`, fake SDK packages). Strong dropper / repackage signal. |
+| **Pirate-side self-signature kill-switch** | The repackager injects their own integrity check — a method that reads the APK's signing cert at runtime, hashes it, and bricks the process if it does not match the cracker's own cert hash (`Process.killProcess` after a short sleep, plus thread-interrupts). Prevents downstream re-cracks and dynamic re-signing for analysis. The check often carries the cracker's brand in the method name (`mobarok()`, `getmodpc_check()`). YARA on the method shape — `JarFile` iteration + `GET_SIGNATURES` / `GET_SIGNING_CERTIFICATES` + 32-char hex compare + `killProcess` — clusters the entire cartel. |
 
 ## Platform Signing Key Compromise
 

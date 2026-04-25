@@ -136,6 +136,28 @@ Beyond suppressing real notifications, malware generates fake notifications to d
 
 [Crocodilus](../malware/families/crocodilus.md) uses accessibility logging to [capture Google Authenticator OTP codes](https://www.threatfabric.com/blogs/exposing-crocodilus-new-device-takeover-malware-targeting-android-devices) directly from the screen. When the C2 sends the `TG32XAZADG` command, the malware enumerates all elements displayed in the Google Authenticator app, captures OTP names and values, and exfiltrates them. This beats app-based 2FA because the code is read after generation, not intercepted in transit.
 
+### Inbound MMS via Notification Text Substitution
+
+A covert inbound channel built into the malware's own SMS/MMS notification builder: when an incoming MMS summary contains a magic substring (e.g. `https://jkcdns`), the app substitutes the displayed notification text with a benign decoy (`"You got new sticker."`) and renders the attached image as a sticker preview.
+
+```java
+public Notification buildMmsNotification(MmsMessage m) {
+    String body = m.getBody();
+    if (body != null && body.contains(C2_TAG)) {
+        return new Notification.Builder(ctx, "stickers")
+            .setContentTitle(m.getSender())
+            .setContentText("You got new sticker.")
+            .setLargeIcon(loadAttachment(m))
+            .build();
+    }
+    return defaultBuilder(m).build();
+}
+```
+
+The operator sends MMS messages to the victim's number. The user sees only innocuous "stickers"; the embedded URL, QR code, or instructions are extracted by the app from the original MMS body and acted on (config update, payload URL, kill switch) without ever surfacing to the user. The carrier delivers the MMS through normal cellular channels, so no anomalous network traffic appears on the device's data interface — the inbound C2 rides on telephony infrastructure.
+
+Hunting signal: an SMS/MMS app whose notification builder branches on substring matches against opaque tokens, or whose `setContentText()` value is hardcoded for matching messages while `setLargeIcon()` pulls from the real attachment.
+
 ## DND and Sound Manipulation
 
 During active fraud operations (especially [ATS](automated-transfer-systems.md)), some families enable Do Not Disturb mode or mute the device to prevent any audible alerts:

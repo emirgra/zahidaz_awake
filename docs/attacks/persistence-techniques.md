@@ -31,11 +31,15 @@ The simplest and most common persistence method. Registering a `BroadcastReceive
     android:exported="true">
     <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED" />
+        <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
         <action android:name="android.intent.action.QUICKBOOT_POWERON" />
         <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+        <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
     </intent-filter>
 </receiver>
 ```
+
+Mature samples register the full set rather than a single action. `LOCKED_BOOT_COMPLETED` (paired with [`directBootAware="true"`](#device-protected-storage)) fires before the user unlocks the device for the first time after reboot — earlier than `BOOT_COMPLETED`. `QUICKBOOT_POWERON` is the HTC/Motorola/Lenovo custom broadcast for fast-boot variants. `MY_PACKAGE_REPLACED` fires whenever the malware's own APK is updated, restarting it after Play Store auto-updates or operator-pushed reinstalls.
 
 ```java
 public class BootReceiver extends BroadcastReceiver {
@@ -196,6 +200,41 @@ The `onPerformSync()` callback fires periodically. The app uses this to sync dat
 Aggressive implementations register multiple account types with separate SyncAdapter pairs (e.g., a "regular" account and a "guest" account), doubling the execution surface. Requires `GET_ACCOUNTS`, `AUTHENTICATE_ACCOUNTS`, `WRITE_SYNC_SETTINGS`, and `MANAGE_ACCOUNTS` permissions, all of which are normal (auto-granted) on older API levels.
 
 [Mandrake](../malware/families/mandrake.md) used this technique to maintain periodic C2 communication.
+
+## Phone-Call-Event Wake-Up
+
+Beyond boot and scheduled triggers, malware uses telephony state changes as a free wake source. A `BroadcastReceiver` filtered on `PHONE_STATE` (incoming/outgoing call ringing, off-hook, idle) and `NEW_OUTGOING_CALL` fires on every call without requiring foreground execution.
+
+```xml
+<receiver android:name=".CallWakeReceiver" android:exported="true">
+    <intent-filter android:priority="998">
+        <action android:name="android.intent.action.PHONE_STATE" />
+        <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+    </intent-filter>
+</receiver>
+```
+
+`READ_PHONE_STATE` is the only permission required, and most malware already holds it. The receiver runs in the malware's process for the duration of `onReceive()`, which is enough time to schedule a job, refresh a wake lock, or kick off a short-lived service. Devices in active use receive multiple calls per day, providing a reliable trigger that survives Doze, force-stop (until the next call), and notification-permission denial. Often paired with [aftercall ad SDKs](../grayware/ad-fraud.md) and [call-data harvesting](call-interception.md).
+
+## onTaskRemoved / onDestroy Restart Alarm
+
+Catches the user's "Force stop" or "swipe from recents" within a second. The service's `onTaskRemoved` and `onDestroy` callbacks schedule an exact alarm a single second in the future, pointing back at the same service:
+
+```java
+@Override
+public void onTaskRemoved(Intent rootIntent) {
+    PendingIntent pi = PendingIntent.getService(
+        this, 0, new Intent(this, this.getClass()),
+        PendingIntent.FLAG_IMMUTABLE);
+    AlarmManager am = getSystemService(AlarmManager.class);
+    am.setExactAndAllowWhileIdle(
+        AlarmManager.ELAPSED_REALTIME_WAKEUP,
+        SystemClock.elapsedRealtime() + 1000, pi);
+    super.onTaskRemoved(rootIntent);
+}
+```
+
+The user perceives no successful kill — the service reappears in `dumpsys` within a second of the dismissal animation. Combined with [Multi-Process Keep-Alive](#multi-process-keep-alive) below, even an explicit `Force stop` is undone almost immediately because each killed process re-arms the alarm before exit. Note that this does **not** survive Settings → Apps → Force Stop on Android 13+ (which sets `FLAG_STOPPED` and prevents the alarm from delivering until next launch).
 
 ## Multi-Process Keep-Alive
 

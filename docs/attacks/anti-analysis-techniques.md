@@ -78,6 +78,37 @@ private boolean checkEmulatorFiles() {
 
 [SpinOk](../malware/families/spinok.md) SDK used gyroscope and magnetometer data as anti-emulation checks before activating its data harvesting across 193 apps with 451 million downloads.
 
+### Cloud-Phone and Modern Emulator Fingerprints
+
+Beyond the AOSP emulator, malware fingerprints commercial Android cloud phones, gaming emulators, and sandbox VM stacks. A representative VETO-grade set from the Epic Protect packer:
+
+| Surface | Indicator |
+|---------|-----------|
+| Files | `/dev/socket/genymotion`, `/dev/vmos_web_session`, `/data/data/com.vmos.pro`, `/system/bin/nox-prop`, `/system/etc/redroid-release`, `/system/bin/qemud`, `/dev/qemu_pipe` |
+| System properties | `ro.redroid.width`, `ro.ldplayer.version`, `ro.cloudphone.engine`, `ro.kernel.qemu`, `ro.boot.qemu` |
+| MAC OUI prefixes | `08:00:27` (VBox), `00:0c:29` / `00:50:56` (VMware), `52:54:00` (QEMU), `00:1c:42` (Parallels), `00:16:3e` (Xen) |
+| WiFi metadata | SSID `WIFI` / `vmwifi`, BSSID prefix `12:34:56` |
+| Installed packages | `com.vmos.pro`, `com.bignox.app`, `com.bluestacks`, `com.ldmnq.launcher3`, `de.robv.android.xposed.installer` |
+| `/proc/self/maps` | Substrings `vbox`, `vmos`, `xposed`, `frida`, `substrate`, `redroid`, `ldcloud` |
+| `/proc/cpuinfo` | `intel` or `amd` on a device that should be ARM |
+
+Per-string score plus a `VETO_THRESHOLD = 100` is a common shape: any single VETO match triggers immediate kill, lower-weight matches accumulate to a soft threshold.
+
+### Sandbox Device-Model Blacklist
+
+Some samples skip emulator detection entirely and instead blocklist the **physical device models commonly used in commercial sandbox fleets**. Typical entries:
+
+```java
+String model = Build.MODEL;
+if (model.equalsIgnoreCase("Nexus 5X")
+        || model.equalsIgnoreCase("OnePlus8Pro")
+        || model.equalsIgnoreCase("Pixel 4")) {
+    return;
+}
+```
+
+Nexus 5X is Google's reference test device; OnePlus 8 Pro / Pixel 4 are common in commercial VirusTotal-tier sandboxes. Inverted from the usual emulator check (run on everything *except* these models), it produces a clean verdict in lab fleets while activating on real consumer hardware.
+
 ### Hardware Property Checks
 
 | Property | Emulator | Physical |
@@ -185,6 +216,7 @@ These signature-based checks are the easiest to bypass: rename the binary, chang
 | `/proc/self/maps` | `XposedBridge.jar` mapped into process |
 | Exception handler check | Xposed hooks modify exception handling chain |
 | ART method structure | LSPlant modifies ART internal method structures; integrity checks on `ArtMethod` fields detect this |
+| Thrown-exception stack walk | `try { throw new Exception(); } catch (Exception e) { e.getStackTrace(); }` and scan frames for `XposedBridge.main`, `XposedBridge.handleHookedMethod`, `MS$2.invoked` (Substrate), or **duplicate `ZygoteInit` frames** (any inject vector). Cheaper than `/proc` reads, catches hooks that hide from filesystem scans. |
 
 [LSPosed](https://github.com/LSPosed/LSPosed) operates through Zygisk, making traditional Xposed detection (class names, JAR in maps) ineffective. Detection now requires checking ART internals for method structure modifications.
 
@@ -234,6 +266,34 @@ if (memcmp(expected_prologue, current_prologue, 16) != 0) {
 | Timing analysis | Minimize trampoline overhead, add compensating delays |
 
 The current state of the art: protectors layer multiple detection types so that bypassing one doesn't disable all. Analysts counter by combining Zygisk-based injection (avoids process-level artifacts), Frida Stalker (avoids prologue modification), and Shamiko (hides root and maps entries). Neither side has a decisive advantage.
+
+### Triple-Kill Termination
+
+When detection fires, mature stacks do not call a single exit primitive. They spawn a thread that calls all three in sequence so that hooking any one does not stop the others:
+
+```java
+new Thread(() -> {
+    Process.killProcess(Process.myPid());
+    System.exit(0);
+    Runtime.getRuntime().halt(0);
+}).start();
+```
+
+`Process.killProcess` is the cheapest to bypass with a Java-side hook; `System.exit` runs shutdown hooks; `Runtime.halt` skips them. Native paths add `abort()` and direct `_exit` syscalls. A complete bypass requires intercepting every layer (Java + libc), otherwise the surviving primitive still terminates the process. Observed in the Epic Protect packer and several banker droppers as the standard "VETO" response.
+
+### Tainted-Key Corruption (vs Exit)
+
+A subtler response than termination. Instead of exiting on detection, the malware silently corrupts its own decryption key (typically by XOR'ing the key bytes with `0xFF`) and continues to run. Subsequent decryption operations produce garbage that does not parse as DEX, JSON, or readable strings. The analyst sees a "working" sample that produces unusable output, with no visible exit signal to pivot on.
+
+```java
+private void onTaint() {
+    for (int i = 0; i < this.key.length; i++) {
+        this.key[i] ^= (byte) 0xFF;
+    }
+}
+```
+
+Implication for analysts: hooking `nativeIsTainted` (or its equivalent) to always return `false` reveals the real keys; *not* hooking it lets the sandbox run the sample end-to-end and capture nothing useful. Observed in Anatsa-like droppers as `XXTEA.java` key flip on Frida/Magisk detection.
 
 ## Debugger Detection
 
@@ -447,6 +507,53 @@ The CompanionDevice dialog shows an opaque Bluetooth MAC address with no context
 - `CompanionDeviceManager.associate()` calls in utility apps (cleaners, PDF readers, WiFi analyzers)
 - Active companion associations visible via `adb shell dumpsys companiondevice`
 - Revoke associations via `adb shell cmd companiondevice disassociate <userId> <packageName> <macAddress>`
+
+## Early-Lifecycle Init via ContentProvider
+
+A `ContentProvider`'s `onCreate()` callback fires **before** `Application.onCreate()` completes — earlier than any Application-level hook can land. Anti-analysis stacks abuse this to spawn detection threads, install integrity guards, register `ActivityLifecycleCallbacks` for global `FLAG_SECURE`, or kick off the decryption pipeline before the analyst's instrumentation has had a chance to run.
+
+```xml
+<provider
+    android:name=".init.GuardProvider"
+    android:authorities="${applicationId}.guard"
+    android:exported="false" />
+```
+
+The provider's `query`, `insert`, `update`, and `delete` methods return null/zero stubs — it is not a real data provider, just an init hook with the earliest possible lifecycle position. Observed in the Epic Protect packer (multiple `arm.*` provider classes whose `onCreate` schedules the detection loops) and in MobiDash-style multi-stage trojans as the dropper trigger.
+
+Hunting tip: any `<provider>` whose `onCreate()` does not touch `ContentResolver`/URI but instead reads `/proc`, starts threads, or loads native libraries is doing early-lifecycle anti-analysis work. Cross-reference with [Content Provider Attacks](content-provider-attacks.md).
+
+## Phantom Manifest Components
+
+The manifest declares activities, services, or receivers whose class names are **absent from every packaged DEX**. These ghost components are placeholders for runtime-resolved classes — they get their implementations from a second-stage DEX dropped by the packer, native loader, or downloader. Static analysis sees a fully wired manifest pointing at classes that do not exist; dynamic analysis only sees them after the loader has run.
+
+Common pattern: BeatBanker / trikita-slide trojan family registers `MainActivity` plus several BroadcastReceivers and Services (FCM message handler, BOOT receiver) under random word-pair class names that do not appear in any `classes*.dex`. The native init routine drops the missing DEX after performing emulator and integrity checks.
+
+Hunting heuristic:
+
+```bash
+apktool d sample.apk -o out
+grep -oP 'android:name="[^"]+"' out/AndroidManifest.xml \
+  | sort -u > declared.txt
+for d in out/classes*.dex; do
+    dexdump -f "$d" | grep "Class descriptor"
+done | sort -u > present.txt
+diff declared.txt present.txt
+```
+
+Any declared component whose class is missing from every DEX is either dynamically loaded or dead manifest chaff. In a clean app, declared ≈ present. In a phantom-manifest dropper, the gap is exactly the malicious surface.
+
+## Decompiler-Crash Traps
+
+Surgical bytecode injection that breaks specific decompilers without obfuscating the class hierarchy itself. Unlike DexGuard-style whole-class control-flow flattening, the trap leaves the class structure clean (so analysts can navigate the call graph) but injects unreachable `goto L4; goto L4` loops in every method body that trigger known decompiler bugs — most commonly `BlockSplitter.addTempConnectionsForExcHandlers` in JADX. Method bodies fail to decompile to readable Java; raw smali is still available but slower to read.
+
+The traps are typically inserted post-build via `dexlib 2.x` (smali round-trip), so APKiD reports `compiler: dexlib 2.x` on `classes.dex` paired with high JADX failure rate concentrated in one namespace. Add a row to the Code-Level Obfuscation table when triaging:
+
+| Indicator | Cause |
+|-----------|-------|
+| `compiler: dexlib 2.x` (APKiD) on the main DEX | Smali round-trip — not standard d8/r8 — common base for crash-trap injection |
+| Many JADX `Failed to decompile` errors clustered in one package | Crash traps targeted at that namespace, not whole-app obfuscation |
+| Other DEX files in the same APK still carry an R8 marker | Mixed compilers — strong injection tell (see [Supply Chain](supply-chain-attacks.md)) |
 
 ## Hidden API Bypass
 

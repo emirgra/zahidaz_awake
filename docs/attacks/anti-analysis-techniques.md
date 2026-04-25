@@ -520,6 +520,7 @@ Some families pad DEX files with junk data that exceeds parser buffer sizes in a
 | String encryption | C2 URLs, package names encrypted at rest, decrypted at runtime | [Anatsa](../malware/families/anatsa.md) (DES), [Mandrake](../malware/families/mandrake.md), most families |
 | Reflection-based API calls | Method names resolved via strings at runtime, invisible to static analysis | [Octo](../malware/families/octo.md), [Xenomorph](../malware/families/xenomorph.md) |
 | Native code for sensitive ops | Key operations in `.so` libraries, harder to decompile | [Mandrake](../malware/families/mandrake.md) (OLLVM), [Octo2](../malware/families/octo.md) |
+| Bytecode-to-native AOT (dex2c) | Selected DEX methods translated to C/C++ and compiled with the NDK; DEX retains only `EntryPoint.stub(N)` trampolines | NP Manager output, low-budget banker repacks |
 | Control flow flattening | Switch-based dispatch obscures actual execution order | Commercial packers, [DexGuard](../packers/dexguard.md) |
 | Dead code injection / DEX bloat | Junk methods/classes inflate the codebase, waste analyst time | [Joker](../malware/families/joker.md), crypter outputs |
 | Class/method renaming | `a.b.c.d()` instead of meaningful names | Nearly universal (ProGuard/R8 baseline) |
@@ -605,6 +606,21 @@ Java.perform(function() {
 ```
 
 Adapt the class name to match the target's specific obfuscator.
+
+### DEX-to-Native Compilation (dex2c)
+
+[dex2c](https://github.com/amimo/dcc) (the open-source `dcc` engine) is an AOT compiler that translates selected Dalvik methods to C/C++, builds them with the NDK, and ships the result as a packaged `.so`. The original DEX method body is replaced with an `EntryPoint.stub(N)` trampoline that bridges back into native code. Methods are opted in via a `@Dex2C` annotation or a method-list filter, so authors typically protect only the sensitive paths (license check, C2 URL builder, packer entry) and leave the rest as standard DEX for size and compatibility.
+
+For analysts, dex2c is the free analog of commercial bytecode-to-native packers (DexGuard "code virtualization", Tencent Legu, NetEase Yidun): the static call graph stops at the trampoline, and the real logic lives in the `.so` where decompilation is far harder. NP Manager productizes a fork that runs the entire pipeline on-device, which is why low-budget Indonesian, Indian, and Russian-fronted banker repacks frequently ship a small `lib<random>.so` paired with a near-empty DEX class containing only `EntryPoint.stub(N)` calls.
+
+| Indicator | Detail |
+|-----------|--------|
+| DEX strings | `EntryPoint.stub`, `amimo/dcc`, `Dex2C` |
+| Native exports | `Java_com_<pkg>_EntryPoint_stub<N>` JNI symbols, one per protected method |
+| Build artifact | `.so` per ABI containing the translated methods, often named to mimic a benign library |
+| Companion tooling | Output of NP Manager's "dex2c" mode pairs with NPStringFog string encoding above |
+
+Reversal: locate `EntryPoint.stub(N)` in the DEX, find the matching `Java_..._stub<N>` in the `.so`, then reverse the native function. Frida `Interceptor.attach` on the JNI export captures arguments and return values without static reversing the native code.
 
 #### Visual Confusion Obfuscation
 

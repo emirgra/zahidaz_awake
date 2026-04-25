@@ -250,6 +250,21 @@ This pattern bypasses:
 
 Prerequisites (Device Owner status) are high, but once the attacker has DO provisioning, the permission model ceases to meaningfully constrain them.
 
+## Shell UID Delegation (Shizuku)
+
+A privilege model that sits between unprivileged-app and root: rather than exploiting a vulnerability, the attacker borrows the UID of a process that the user has already authorized at a higher trust tier. [Shizuku](https://github.com/RikkaApps/Shizuku) by RikkaApps is the canonical implementation. A small Java server is started as a child of `app_process`, either over ADB on a non-rooted device (`adb shell sh /sdcard/Android/data/moe.shizuku.privileged.api/start.sh`) or via root on a rooted device. The server runs at the shell UID (2000) or root UID (0) depending on the launcher and exposes a `Binder` that other apps obtain via `ShizukuBinderWrapper`. From the kernel's point of view, every IPC issued through that wrapper is coming from the privileged process — so any system service that gates on UID rather than on calling-package effectively grants the wrapped operation.
+
+Designed as a legitimate delegation API for power-user apps that want to call hidden system APIs without bundling their own root, the same plumbing is increasingly co-opted by grayware, modding tools, and on-device cheat frameworks that want shell-UID-equivalent capabilities while keeping the host app debuggable, Play-installable, and free of root-detection signals. Concrete capabilities reachable through Shizuku at shell UID alone include: silent app install/uninstall via `pm install` / `pm uninstall` without the package installer UI, `appops` permission flips that bypass the runtime permission dialog, `cmd notification disallow_assistant` and similar `cmd` calls that toggle accessibility / notification listener / device admin from a script, [`pm grant`](runtime-permission-manipulation.md) on permissions normally restricted to dev tools, freeze/disable of arbitrary packages via `pm disable-user`, and direct `dumpsys` access to other apps' state.
+
+| Indicator | Detail |
+|-----------|--------|
+| Manifest | `<uses-permission android:name="moe.shizuku.manager.permission.API_V23"/>` and a `ShizukuProvider` declaration |
+| DEX | `rikka.shizuku.Shizuku`, `ShizukuBinderWrapper`, `IShizukuService` interfaces |
+| Runtime | App functioning normally without root and without root-grant prompts, but performing `pm install` / `appops set` / silent permission toggles |
+| Process tree | A long-lived child of `app_process` running as UID 2000 (`shell`) or UID 0 (`root`), launched after the user ran an ADB one-liner or tapped a "Start service" button |
+
+For analysts the question is rarely "is Shizuku malicious" (the framework itself is not) but "what does this app do once it has shell UID, and would the user have agreed if the consent surface had spelled it out as plainly as a root prompt does." The same pattern with different binder shims appears in [`Sui`](https://github.com/RikkaApps/Sui) (root-only, integrated with Magisk's denylist for stealth) and in ad-hoc `app_process`-based servers shipped inside trojanized power tools.
+
 ## Platform Lifecycle
 
 | Android Version | API | Change | Offensive Impact |

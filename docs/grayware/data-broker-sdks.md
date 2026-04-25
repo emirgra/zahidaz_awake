@@ -33,6 +33,8 @@ Third-party SDKs embedded in otherwise legitimate apps that silently collect and
 
 **Patternz**: Israeli surveillance company (run by ISA, Nuviad's parent) using SDK data from popular apps for intelligence purposes. Patternz's pitch deck claimed access to data from 600,000 apps, enabling tracking of nearly any mobile user globally. ISA operated a legitimate ad network (Nuviad) that served as the data collection front. The system exploited the [real-time bidding ad ecosystem](surveillance-data-trade.md) to harvest device data without embedding SDKs directly.
 
+**Yandex AppMetrica**: Free, unlimited mobile analytics/attribution SDK from Yandex (historically Moscow; EU operations in the Netherlands). The pricing model drove broad adoption across consumer apps. [2022 research by Zach Edwards (Me2B Alliance)](https://appcensus.io/news/yandex-appmetrica-spying-on-russias-war/) found AppMetrica embedded in roughly 52,000 Android apps transmitting device, network, and IP data to servers in Finland and Russia, including children's apps and apps marketed to Ukrainian and US audiences. After the February 2022 invasion of Ukraine the SDK's presence shifted from a privacy issue to a sanctions and national-security concern, and major publishers began ripping it out. AppMetrica is a recurring case study in how a "free" SDK with one-line integration can pull an app into a hostile data flow that the developer never explicitly opted into.
+
 **Predicio / Gravy Analytics**: French data broker Predicio and US-based Gravy Analytics collected location data through SDK partnerships and the real-time bidding (RTB) ad ecosystem. [Gravy Analytics was hacked in January 2025](https://techcrunch.com/2025/01/13/gravy-analytics-data-broker-breach-trove-of-location-data-threatens-privacy-millions/), exposing location data for millions of devices globally. The hacker posted a 1.4 GB fragment containing approximately 30 million records, claiming the full stolen database was 17 terabytes (potentially 200+ billion records). The leaked data included coordinates from apps like Tinder, Grindr, Candy Crush, and various pregnancy tracking apps, with [researchers able to track individuals from workplaces to their homes](https://www.404media.co/hackers-claim-massive-breach-of-location-data-giant-threaten-to-leak-data/).
 
 ## SDK Identification
@@ -41,7 +43,7 @@ When analyzing a suspect app, identify embedded SDKs through:
 
 | Indicator | Location |
 |-----------|----------|
-| Package names | `com.xmode.sdk`, `io.huq`, `com.cuebiq`, `com.safegraph`, `com.predicio`, `com.tutela`, `com.measurementsys` |
+| Package names | `com.xmode.sdk`, `io.huq`, `com.cuebiq`, `com.safegraph`, `com.predicio`, `com.tutela`, `com.measurementsys`, `com.yandex.metrica` |
 | Manifest receivers/services | Look for services not attributable to the app's core functionality |
 | Network traffic | Connections to `api.xmode.io`, `sdk.huq.io`, `ingest.cuebiq.com`, known broker endpoints |
 | Gradle dependencies | Check `build.gradle` for SDK artifact references |

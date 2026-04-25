@@ -1,6 +1,6 @@
 # RECEIVE_SMS
 
-Allows receiving incoming SMS messages in real-time via a broadcast receiver. More valuable to attackers than `READ_SMS` because it captures messages the moment they arrive, enabling OTP interception before the user reads the notification.
+Allows receiving incoming SMS messages in real-time via a broadcast receiver. More valuable to attackers than [`READ_SMS`](read-sms.md) because it captures messages the moment they arrive, enabling [OTP interception](../../attacks/sms-interception.md) before the user reads the notification.
 
 ## Technical Details
 
@@ -58,7 +58,7 @@ The primary use case. Malware intercepts banking OTPs within milliseconds:
 1. Attacker initiates a fraudulent transaction on the victim's banking account
 2. Bank sends OTP via SMS
 3. Malware intercepts the SMS before the user reads it
-4. Malware forwards OTP to C2
+4. Malware forwards OTP to [C2](../../attacks/c2-techniques.md)
 5. Attacker completes the transaction
 
 ### SMS Worm Propagation
@@ -73,7 +73,7 @@ FluBot used `RECEIVE_SMS` + `SEND_SMS` to create a self-spreading worm:
 
 ### C2 via SMS
 
-Some malware uses SMS as a command-and-control channel. The C2 server sends commands via SMS, and the malware receives and executes them. This works even without internet connectivity and is harder to block with network-level security tools.
+Some malware uses SMS as a [command-and-control](../../attacks/c2-techniques.md) channel. The C2 server sends commands via SMS, and the malware receives and executes them. This works even without internet connectivity and is harder to block with network-level security tools.
 
 ## Android Version Changes
 

@@ -1,6 +1,6 @@
 # READ_CALL_LOG
 
-Grants read access to the device's call history via the CallLog content provider. Used by spyware for surveillance, social graph reconstruction, and behavioral profiling. Google Play has restricted this permission since January 2019, limiting distribution of apps that request it to those declared as the default dialer or with an approved use case.
+Grants read access to the device's call history via the CallLog content provider. Used by spyware for [surveillance](../../attacks/camera-mic-surveillance.md), social graph reconstruction, and behavioral profiling. Google Play has restricted this permission since January 2019, limiting distribution of apps that request it to those declared as the default dialer or with an approved use case.
 
 ## Technical Details
 
@@ -44,7 +44,7 @@ On most devices, the call log retains the last 500-1000 entries, depending on th
 
 ### Surveillance and Monitoring
 
-The primary use case in commercial spyware and stalkerware. Call logs provide a timestamped record of all voice communications. Spyware exfiltrates this data periodically to a C2 server, giving operators a real-time view of the target's calling activity.
+The primary use case in [commercial spyware](../../grayware/commercial-surveillance.md) and [stalkerware](../../grayware/stalkerware.md). Call logs provide a timestamped record of all voice communications. Spyware exfiltrates this data periodically to a [C2](../../attacks/c2-techniques.md) server, giving operators a real-time view of the target's calling activity.
 
 Notable families:
 
@@ -52,7 +52,7 @@ Notable families:
 |--------|--------------|
 | Pegasus (NSO) | Full call log exfiltration as part of comprehensive device surveillance |
 | Predator (Cytrox) | Call history collection alongside other communication data |
-| Hermit (RCS Lab) | Call log theft combined with call recording |
+| Hermit (RCS Lab) | Call log theft combined with [call recording](../../attacks/call-interception.md) |
 | [PhoneSpy](../../malware/families/phonespy.md) | Periodic call log dump to C2 |
 | Dracarys (Meta attribution) | Call log exfiltration with contact and SMS data |
 | GravityRAT | Call log theft targeting Indian and Pakistani users |

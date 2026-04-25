@@ -88,7 +88,7 @@ Providers exported without permission restrictions expose all their data:
     android:exported="true" />
 ```
 
-Any app on the device can query all data. [Oversecured's research on app protected components](https://blog.oversecured.com/Android-Access-to-app-protected-components/) found that more than 80% of apps contain content provider or intent redirection vulnerabilities.
+Any app on the device can query all data. [Oversecured's research on app protected components](https://blog.oversecured.com/Android-Access-to-app-protected-components/) found that more than 80% of apps contain content provider or [intent redirection](intent-hijacking.md) vulnerabilities.
 
 ### Permission Confusion
 
@@ -139,7 +139,7 @@ This exposes the entire filesystem. The default template from StackOverflow answ
 
 ### Inter-App Coordination via ContentProvider
 
-Ad fraud and analytics SDKs use exported ContentProviders as a device-level discovery mechanism. Each app running the SDK registers a ContentProvider that responds to queries with its package name and SDK version. Other instances of the same SDK can query known authorities to discover all SDK-equipped apps on the device:
+[Ad fraud](../grayware/ad-fraud.md) and analytics SDKs use exported ContentProviders as a device-level discovery mechanism. Each app running the SDK registers a ContentProvider that responds to queries with its package name and SDK version. Other instances of the same SDK can query known authorities to discover all SDK-equipped apps on the device:
 
 ```java
 @Override

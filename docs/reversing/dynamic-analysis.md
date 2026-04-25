@@ -1,6 +1,6 @@
 # Dynamic Analysis
 
-Running the app and observing its behavior at runtime. Bypasses packing and obfuscation since the code must decrypt itself to execute. Captures network traffic, API calls, file operations, and runtime behavior that static analysis cannot reveal.
+Running the app and observing its behavior at runtime. Bypasses packing and obfuscation since the code must decrypt itself to execute. Captures network traffic, API calls, file operations, and runtime behavior that [static analysis](static-analysis.md) cannot reveal.
 
 ## Setup
 
@@ -170,7 +170,7 @@ For heavily obfuscated native code (e.g., [Mandrake](../malware/families/mandrak
 
 ## Family-Specific Analysis Notes
 
-Certain malware families require specific dynamic analysis approaches due to their anti-analysis techniques:
+Certain malware families require specific dynamic analysis approaches due to their [anti-analysis techniques](../attacks/anti-analysis-techniques.md):
 
 | Family | Challenge | Approach |
 |--------|-----------|----------|

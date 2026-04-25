@@ -50,7 +50,7 @@ prompt.authenticate(info, new BiometricPrompt.CryptoObject(cipher));
 
 ### CryptoObject Binding
 
-When `CryptoObject` is used, the Keystore key is configured with `setUserAuthenticationRequired(true)`. The key becomes usable only after successful biometric authentication. The TEE/StrongBox releases the key material only when the biometric HAL reports a match.
+When `CryptoObject` is used, the [Keystore](../platform-abuse/keystore.md) key is configured with `setUserAuthenticationRequired(true)`. The key becomes usable only after successful biometric authentication. The TEE/StrongBox releases the key material only when the biometric HAL reports a match.
 
 Without `CryptoObject`, authentication is purely callback-based: the app trusts the `onAuthenticationSucceeded` callback without any cryptographic proof. This is the weakness that Frida-based bypasses and malware exploit.
 
@@ -134,7 +134,7 @@ Rather than spoofing biometrics, the attacker forces the device to fall back to 
 5. The device now requires PIN/password for all unlock operations
 6. Keylogger captures the PIN on next unlock
 
-This works on Android 13+ where the accessibility service has sufficient privileges. The user sees biometrics as "disabled" but may attribute it to a system update or glitch.
+This works on Android 13+ where the [accessibility service](accessibility-abuse.md) has sufficient privileges. The user sees biometrics as "disabled" but may attribute it to a system update or glitch.
 
 ### API-Level Downgrade
 

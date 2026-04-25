@@ -1,6 +1,6 @@
 # ACCESS_NETWORK_STATE
 
-Normal permission that allows an app to query the device's network connectivity status: whether WiFi or mobile data is active, the network type (4G, 5G, WiFi), and whether internet is reachable. Auto-granted at install with no user interaction. Present in virtually every malware manifest because it is the prerequisite for reliable C2 communication, sandbox detection, and network-aware payload delivery.
+Normal permission that allows an app to query the device's network connectivity status: whether WiFi or mobile data is active, the network type (4G, 5G, WiFi), and whether internet is reachable. Auto-granted at install with no user interaction. Present in virtually every malware manifest because it is the prerequisite for reliable [C2 communication](../../attacks/c2-techniques.md), [sandbox detection](../../attacks/anti-analysis-techniques.md), and network-aware payload delivery.
 
 ## Technical Details
 

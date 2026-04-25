@@ -691,7 +691,7 @@ This approach requires significant per-sample effort and is rarely worth pursuin
 
 ### Bypassing RASP
 
-Before any dynamic analysis can begin, the RASP checks must be neutralized. Virbox's RASP will terminate the process via `System.exit()` or `Runtime.exit()` when it detects debugging, rooting, emulation, or injection. The most reliable approach is to block all exit paths early in spawn mode.
+Before any [dynamic analysis](../reversing/dynamic-analysis.md) can begin, the RASP checks must be neutralized. Virbox's RASP will terminate the process via `System.exit()` or `Runtime.exit()` when it detects debugging, rooting, emulation, or injection. The most reliable approach is to block all exit paths early in spawn mode.
 
 #### Blocking Process Termination
 
@@ -720,7 +720,7 @@ Java.perform(function() {
 
 #### Defeating Anti-Frida Detection
 
-Virbox scans `/proc/self/maps` for Frida artifacts and checks for the Frida server port. Use [reFrida](https://github.com/zahidaz/refrida) to avoid common detection signatures, or manually patch the detection:
+Virbox scans `/proc/self/maps` for [Frida](../reversing/hooking.md) artifacts and checks for the Frida server port. Use [reFrida](https://github.com/zahidaz/refrida) to avoid common detection signatures, or manually patch the detection:
 
 ```javascript
 var openPtr = Module.findExportByName(null, "open");
@@ -867,7 +867,7 @@ This works for DEX encryption but not for DEX virtualization. For virtualized me
 
 ### Intercepting Network Calls from Virtualized Code
 
-Even when code is virtualized, its network communications pass through standard Android APIs. Hooking at the network layer captures C2 URLs, exfiltrated data, and command protocols regardless of code protection:
+Even when code is virtualized, its network communications pass through standard Android APIs. Hooking at the network layer captures [C2](../attacks/c2-techniques.md) URLs, exfiltrated data, and command protocols regardless of code protection:
 
 ```javascript
 Java.perform(function() {
@@ -911,7 +911,7 @@ When full unpacking is infeasible (which is the common case for Virbox-virtualiz
 - **Network traffic**: Use mitmproxy or Burp Suite with SSL pinning bypass to capture all HTTP/HTTPS traffic. C2 URLs, exfiltration endpoints, and command structures are all visible regardless of code protection.
 - **File system activity**: Monitor file creation, reads, and writes using `inotifywait` or Frida hooks on `open()`, `write()`, `unlink()`. Credential storage, configuration files, and staging directories become visible.
 - **IPC observation**: Hook `startActivity`, `startService`, `sendBroadcast`, and `ContentResolver` operations to map the application's interaction with other components and apps.
-- **Accessibility service abuse**: If the malware registers an AccessibilityService, hook `onAccessibilityEvent` to log every UI interaction the malware performs.
+- **Accessibility service abuse**: If the malware registers an [AccessibilityService](../attacks/accessibility-abuse.md), hook `onAccessibilityEvent` to log every UI interaction the malware performs.
 - **SharedPreferences**: Hook `SharedPreferences.Editor` methods to capture configuration values the malware stores locally.
 
 This behavioral approach often yields sufficient intelligence for threat reporting without ever recovering the original bytecode.
@@ -1017,7 +1017,7 @@ Deploy Frida hooks for the behavioral observation points described in the Partia
 - File system operations (credential storage, configuration drops)
 - IPC (inter-component communication, broadcasts)
 - Accessibility events (if the malware uses AccessibilityService)
-- SMS operations (interception, exfiltration)
+- SMS operations ([interception](../attacks/sms-interception.md), [exfiltration](../attacks/data-exfiltration.md))
 
 **Step 7: Report and Indicator Extraction**
 

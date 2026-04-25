@@ -1,6 +1,6 @@
 # Tencent Legu
 
-The most widely used Chinese packer. Free protection service integrated with Tencent's app distribution ecosystem. Frequently found on both legitimate Chinese apps and malware. The protection is adequate against automated AV scanning but yields to manual analysis with Frida-based unpacking.
+The most widely used Chinese packer. Free protection service integrated with Tencent's app distribution ecosystem. Frequently found on both legitimate Chinese apps and malware. The protection is adequate against automated AV scanning but yields to manual analysis with [Frida](../reversing/hooking.md)-based unpacking.
 
 ## Overview
 
@@ -56,7 +56,7 @@ Legu overrides `getPackageName()` with stack trace inspection to manipulate the 
 
 ## Unpacking
 
-Static unpacking is not feasible since the DEX is decrypted in memory by native code. Dynamic analysis is required.
+Static unpacking is not feasible since the DEX is decrypted in memory by native code. [Dynamic analysis](../reversing/dynamic-analysis.md) is required.
 
 ### Standard Approach
 

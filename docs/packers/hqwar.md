@@ -1,6 +1,6 @@
 # Hqwar
 
-Android malware packer/dropper sold as a service to malware operators. Kaspersky's collection contains 200,000+ Hqwar-packed trojans, approximately 80% of which are financial threats. Hqwar wraps a payload's DEX file in an RC4-encrypted shell and uses `DexClassLoader` to load the decrypted payload at runtime, evading static AV signatures. Peak activity in Q3 2018 (141,000 packages). The packer was a major driver of the 2018 record in mobile banking trojan attacks.
+Android malware packer/dropper sold as a service to malware operators. Kaspersky's collection contains 200,000+ Hqwar-packed trojans, approximately 80% of which are financial threats. Hqwar wraps a payload's DEX file in an RC4-encrypted shell and uses [`DexClassLoader`](../attacks/dynamic-code-loading.md) to load the decrypted payload at runtime, evading static AV signatures. Peak activity in Q3 2018 (141,000 packages). The packer was a major driver of the 2018 record in mobile banking trojan attacks.
 
 ## Overview
 

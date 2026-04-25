@@ -30,7 +30,7 @@ Free protection from Qihoo 360 (奇虎360), one of China's largest security comp
 - Function-level encryption (selected methods encrypted individually, decrypted on first call)
 - Anti-memory-dump techniques (mprotect manipulation)
 - XOR string obfuscation in stub classes (single-byte key, typically `0x10`)
-- Hidden API bypass on Android 9+: uses reflection to set `mHiddenApiWarningShown = true` on the current `ActivityThread`, disabling hidden API usage warnings for unrestricted reflection
+- [Hidden API bypass](../attacks/anti-analysis-techniques.md#hidden-api-bypass) on Android 9+: uses reflection to set `mHiddenApiWarningShown = true` on the current `ActivityThread`, disabling hidden API usage warnings for unrestricted reflection
 - Encrypted assets with non-Latin filenames to confuse analysis tools and file listings
 
 ## Runtime Loading Process

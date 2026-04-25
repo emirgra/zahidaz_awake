@@ -44,8 +44,8 @@ The `PhoneStateListener` (deprecated API 31, replaced by `TelephonyCallback`) pr
 
 IMEI and IMSI form a persistent device+SIM fingerprint that survives app reinstalls and factory resets (IMEI) or follows the user across devices (IMSI follows the SIM). Malware uses this to:
 
-- Uniquely identify victims in C2 databases
-- Detect analysis environments (emulators return all-zero or sequential IMEIs)
+- Uniquely identify victims in [C2](../../attacks/c2-techniques.md) databases
+- Detect analysis environments ([emulators](../../attacks/anti-analysis-techniques.md) return all-zero or sequential IMEIs)
 - Prevent re-enrollment when a device is wiped and re-infected
 - Track devices across different malware campaigns
 
@@ -67,7 +67,7 @@ Emulators and analysis sandboxes often return null, zeroed, or well-known defaul
 Monitoring `CALL_STATE_RINGING` and `CALL_STATE_OFFHOOK` allows malware to:
 
 - Detect when the user is busy on a call (timing attacks for social engineering)
-- Trigger call recording when combined with `RECORD_AUDIO`
+- Trigger call recording when combined with [`RECORD_AUDIO`](../microphone/record-audio.md)
 - Suppress malicious activity during calls to avoid detection
 
 ### SIM Swap Detection

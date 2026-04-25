@@ -1194,7 +1194,7 @@ From this pattern: registration happens once, polling occurs every 60 seconds, a
 
 ### Inject Kit URL Extraction
 
-Banking trojans download HTML/JS overlay pages (inject kits) from the C2 to display over legitimate banking apps. These URLs are high-value IOCs:
+Banking trojans download HTML/JS [overlay pages](../attacks/overlay-attacks.md) (inject kits) from the C2 to display over legitimate banking apps. These URLs are high-value IOCs:
 
 ```
 GET /injects/list?bot_id=abc123&apps=com.bank.app1,com.bank.app2

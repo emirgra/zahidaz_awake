@@ -27,7 +27,7 @@ See also: [Accessibility Abuse](accessibility-abuse.md), [Device Admin Abuse](de
 
 ## Root Exploits (Historical)
 
-Privilege escalation on Android historically meant getting root. Before modern SELinux enforcement and verified boot, a single kernel vulnerability could give an attacker uid 0 and full device control. These exploits remain relevant: millions of unpatched devices still run in the wild, and commercial spyware vendors maintain private exploit chains targeting current kernels.
+Privilege escalation on Android historically meant getting root. Before modern SELinux enforcement and [verified boot](../platform-abuse/verified-boot.md), a single kernel vulnerability could give an attacker uid 0 and full device control. These exploits remain relevant: millions of unpatched devices still run in the wild, and [commercial spyware](../grayware/commercial-surveillance.md) vendors maintain private exploit chains targeting current kernels.
 
 ### Framaroot (2013--2014)
 
@@ -214,7 +214,7 @@ From [notification listener](notification-listener-abuse.md) access:
 2. Suppress the notification so the user never sees it
 3. Forward the OTP to C2 for real-time use
 4. Attacker uses stolen credentials + OTP to take over banking/email accounts
-5. Account takeover enables further attacks (SIM swap, credential resets)
+5. Account takeover enables further attacks ([SIM swap](sim-carrier-attacks.md), credential resets)
 
 ### Device Owner Timed Permission Auto-Revoke
 

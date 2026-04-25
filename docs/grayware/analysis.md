@@ -65,7 +65,7 @@ Understanding the legal context matters for analysts because it determines how t
 
 ### Enforcement Actions
 
-**FTC vs. SpyFone (2021)**: FTC banned SpyFone and its CEO from the surveillance business, ordered deletion of all collected data. First FTC action banning a company from the stalkerware industry entirely.
+**FTC vs. SpyFone (2021)**: FTC banned SpyFone and its CEO from the surveillance business, ordered deletion of all collected data. First FTC action banning a company from the [stalkerware](stalkerware.md) industry entirely.
 
 **FTC vs. X-Mode / Outlogic (2024)**: FTC banned X-Mode from selling sensitive location data (near medical facilities, religious organizations, domestic violence shelters) and required deletion of previously collected data.
 
@@ -80,7 +80,7 @@ Google has progressively restricted data harvesting through Play Store policy ch
 - 2021: Banned X-Mode and similar location SDKs, required disclosure of all SDKs
 - 2022: Banned stalkerware distribution, restricted `QUERY_ALL_PACKAGES` usage
 - 2023: Expanded data safety section requirements, restricted background location access
-- 2024: Further SDK transparency requirements, restricted accessibility service use for non-accessibility purposes
+- 2024: Further SDK transparency requirements, restricted [accessibility service](../attacks/accessibility-abuse.md) use for non-accessibility purposes
 
 ### Why This Matters for Analysts
 

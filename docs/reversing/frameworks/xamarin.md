@@ -381,7 +381,7 @@ The shift from loose DLLs to blob storage and ELF-embedded payloads is not obfus
 
 ### McAfee Xamalicious Backdoor
 
-In late 2023, [McAfee discovered Xamalicious](https://www.mcafee.com/blogs/other-blogs/mcafee-labs/stealth-backdoor-android-xamalicious-actively-infecting-devices/), a backdoor built with Xamarin that had been active since mid-2020. Found in 25 Google Play apps with 327,000+ downloads, Xamalicious exploited the Xamarin build process itself as a packing mechanism. The malicious code was hidden in C# assemblies that standard Android scanners never inspect. After gaining accessibility service access, Xamalicious dynamically injected a second-stage assembly DLL from its C2 server for ad fraud. McAfee linked the operation to the Cash Magnet ad-fraud app, revealing the commercial motivation behind the technical investment in framework abuse.
+In late 2023, [McAfee discovered Xamalicious](https://www.mcafee.com/blogs/other-blogs/mcafee-labs/stealth-backdoor-android-xamalicious-actively-infecting-devices/), a backdoor built with Xamarin that had been active since mid-2020. Found in 25 Google Play apps with 327,000+ downloads, Xamalicious exploited the Xamarin build process itself as a packing mechanism. The malicious code was hidden in C# assemblies that standard Android scanners never inspect. After gaining [accessibility service](../../attacks/accessibility-abuse.md) access, Xamalicious dynamically injected a second-stage assembly DLL from its C2 server for [ad fraud](../../grayware/ad-fraud.md). McAfee linked the operation to the Cash Magnet ad-fraud app, revealing the commercial motivation behind the technical investment in framework abuse.
 
 ### McAfee .NET MAUI Malware Report
 

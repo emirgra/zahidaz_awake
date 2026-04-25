@@ -94,7 +94,7 @@ content://com.vulnerable.app.provider/../../../shared_prefs/secrets.xml
 
 ### CVE-2019-2215: Binder Use-After-Free
 
-The most significant Android sandbox escape in the wild. [Discovered by Project Zero](https://projectzero.google/2019/11/bad-binder-android-in-wild-exploit.html) in October 2019, this vulnerability was a use-after-free in the Binder kernel driver exploited by [NSO Group's Pegasus](../malware/families/pegasus.md) spyware.
+The most significant Android sandbox escape in the wild. [Discovered by Project Zero](https://projectzero.google/2019/11/bad-binder-android-in-wild-exploit.html) in October 2019, this vulnerability was a use-after-free in the Binder kernel driver exploited by [NSO Group's Pegasus](../malware/families/pegasus.md) [spyware](../grayware/commercial-surveillance.md).
 
 | Detail | Value |
 |--------|-------|

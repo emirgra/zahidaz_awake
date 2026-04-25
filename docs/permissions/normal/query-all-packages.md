@@ -1,6 +1,6 @@
 # QUERY_ALL_PACKAGES
 
-Allows an app to see all installed packages on the device. Used by malware for reconnaissance: identifying installed banking apps (to prepare overlays), detecting security software (to avoid or disable it), and fingerprinting the device.
+Allows an app to see all installed packages on the device. Used by malware for reconnaissance: identifying installed banking apps (to prepare [overlays](../../attacks/overlay-attacks.md)), detecting security software (to avoid or disable it), and fingerprinting the device.
 
 ## Technical Details
 
@@ -29,7 +29,7 @@ Apps can also use targeted `<queries>` elements instead of this broad permission
 
 ### Target List Matching
 
-Banking trojans use installed app enumeration to determine which overlay injections to download from C2. Instead of downloading templates for all 500+ supported banks, the malware only fetches overlays for apps actually installed on the device.
+Banking trojans use installed app enumeration to determine which overlay injections to download from [C2](../../attacks/c2-techniques.md). Instead of downloading templates for all 500+ supported banks, the malware only fetches overlays for apps actually installed on the device.
 
 ### Security Software Detection
 
@@ -44,7 +44,7 @@ Malware checks for the presence of antivirus, MDM, and security analysis tools:
 | `de.robv.android.xposed.*` | Xposed framework |
 | `eu.faircode.netguard` | NetGuard firewall |
 
-If detected, malware may avoid activating, attempt to uninstall the tool (via accessibility), or warn the C2 operator.
+If detected, malware may avoid activating, attempt to uninstall the tool (via [accessibility](../../attacks/accessibility-abuse.md)), or warn the C2 operator.
 
 ### Environment Detection
 

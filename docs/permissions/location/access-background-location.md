@@ -1,6 +1,6 @@
 # ACCESS_BACKGROUND_LOCATION
 
-Allows an app to receive location updates when it has no visible activity or foreground service. This is the permission that separates passive location checks from persistent tracking. Critical for stalkerware, spyware, and any implant that needs to log the victim's movements continuously without user interaction.
+Allows an app to receive location updates when it has no visible activity or foreground service. This is the permission that separates passive location checks from [persistent tracking](../../attacks/location-tracking.md). Critical for [stalkerware](../../grayware/stalkerware.md), [spyware](../../grayware/commercial-surveillance.md), and any implant that needs to log the victim's movements continuously without user interaction.
 
 ## Technical Details
 
@@ -42,14 +42,14 @@ Stalkerware logging pattern:
 1. Register `PendingIntent` for location updates every 5-15 minutes
 2. `BroadcastReceiver` fires on each update
 3. Location is written to a local database
-4. Periodic sync job pushes accumulated locations to C2
+4. Periodic sync job pushes accumulated locations to [C2](../../attacks/c2-techniques.md)
 5. If the process is killed, the `PendingIntent` re-triggers it
 
 ### Geofence-Based Payload Activation
 
 Advanced malware uses `GeofencingClient` with background location to trigger actions when the victim enters a specific area. Use cases:
 
-- Banking trojan activates overlay attacks only when the device is in the target country
+- Banking trojan activates [overlay attacks](../../attacks/overlay-attacks.md) only when the device is in the target country
 - Targeted implant begins full surveillance when the victim arrives at a location of interest
 - Ransomware holds off deployment until the victim is in a jurisdiction where payment is likely
 

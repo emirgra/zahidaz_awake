@@ -115,7 +115,7 @@ For group chats, `EXTRA_TEXT` typically contains "Sender: message" format, givin
 - Hide OTP notifications after extracting the code, preventing the user from noticing the 2FA attempt
 - Suppress banking transaction alerts that would reveal unauthorized transfers
 - Dismiss antivirus detection notifications
-- Remove Google Play Protect warnings
+- Remove Google [Play Protect](play-store-evasion.md) warnings
 
 The user sees nothing -- the notification appears and vanishes within milliseconds.
 

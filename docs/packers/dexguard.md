@@ -106,7 +106,7 @@ The decryption method uses XOR, AES, or custom algorithms. Keys may be derived f
 
 ### Class Encryption
 
-Selected classes are encrypted and stored in assets or resources. At runtime, a custom class loader decrypts and loads them. This defeats static analysis of protected classes entirely.
+Selected classes are encrypted and stored in assets or resources. At runtime, a custom class loader decrypts and loads them. This defeats [static analysis](../reversing/static-analysis.md) of protected classes entirely.
 
 ### Resource and Asset Encryption
 
@@ -137,7 +137,7 @@ Critical methods can be converted to a proprietary bytecode format executed by a
 
 Each DexGuard build produces a structurally unique output. Encryption keys, obfuscated class names, string decryption routines, and control flow transformations all vary between builds of the same application. Two APKs built from identical source with identical DexGuard configuration will have different bytecode.
 
-This is DexGuard's most significant defensive property. A Frida script written to hook string decryption in build A will fail on build B because the decryption class name, method signature, and key derivation have all changed. Attackers must re-analyze each build individually. Automated tooling that relies on fixed class names or method patterns breaks across versions.
+This is DexGuard's most significant defensive property. A [Frida](../reversing/hooking.md) script written to hook string decryption in build A will fail on build B because the decryption class name, method signature, and key derivation have all changed. Attackers must re-analyze each build individually. Automated tooling that relies on fixed class names or method patterns breaks across versions.
 
 For malware analysis, this means samples from different campaigns or distribution waves require separate unpacking effort even when the underlying malware is identical. Contrast this with [DexProtector](dexprotector.md) or [Chinese packers](tencent-legu.md), where a single unpacking script transfers across all protected samples.
 
@@ -373,7 +373,7 @@ Hook and return false for all detection methods. Objection's `android sslpinning
 
 ## Malware Usage
 
-DexGuard is less commonly seen in malware than Chinese packers (Bangcle, Tencent Legu, Qihoo 360) due to its commercial licensing model. However, cracked or leaked versions have appeared in:
+DexGuard is less commonly seen in malware than Chinese packers ([Bangcle](bangcle.md), [Tencent Legu](tencent-legu.md), [Qihoo 360](qihoo-360-jiagu.md)) due to its commercial licensing model. However, cracked or leaked versions have appeared in:
 
 - Banking trojans targeting European institutions
 - Samples where the original app was legitimately DexGuard-protected and then repackaged with malicious code

@@ -108,7 +108,7 @@ This is effective because users inherently trust push notifications from install
 
 ## Social Engineering for Permission Grants
 
-Obtaining dangerous permissions ([Accessibility](accessibility-abuse.md), Device Admin, Notification Listener) requires convincing the victim to manually toggle settings. Common strategies:
+Obtaining dangerous permissions ([Accessibility](accessibility-abuse.md), [Device Admin](device-admin-abuse.md), [Notification Listener](notification-listener-abuse.md)) requires convincing the victim to manually toggle settings. Common strategies:
 
 | Technique | Implementation | Target Permission |
 |-----------|---------------|-------------------|

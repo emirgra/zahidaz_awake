@@ -236,7 +236,7 @@ Cross-platform frameworks increase supply chain attack surface through their dep
 | Pre-built binary dependencies | Flutter, Unity, React Native | Native `.so` libraries from third-party packages may contain backdoors |
 | OTA code injection | React Native (CodePush), Cordova (Hot Code Push) | Runtime code updates bypass Play Store review and app signing |
 
-OTA update mechanisms are particularly concerning. React Native's CodePush and similar systems allow downloading and executing new JavaScript at runtime, completely bypassing Google Play review. A compromised update server or MITM attack on the update channel can inject arbitrary code into deployed apps.
+OTA update mechanisms are particularly concerning. React Native's CodePush and similar systems allow downloading and executing new JavaScript at runtime, completely bypassing Google Play review. A compromised update server or [MITM attack](../network-analysis.md) on the update channel can inject arbitrary code into deployed apps.
 
 ## SSL Pinning Bypass by Framework
 

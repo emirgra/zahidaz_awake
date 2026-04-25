@@ -41,7 +41,7 @@ The most effective Android supply chain vector. A malicious SDK presents itself 
 
 **[SpinOk](../malware/families/spinok.md)** (2023): A malicious SDK distributed as a minigame/engagement component. [Discovered by Dr.Web](https://news.drweb.com/show?i=14705&lng=en) in May 2023, then [expanded by CloudSEK](https://www.cloudsek.com/threatintelligence/supply-chain-attack-infiltrates-android-apps-with-malicious-sdk) to 193 affected apps. The SDK collected files, images, clipboard content, and could hijack cryptocurrency payments. Over 421 million combined downloads across 101+ apps. 43 apps were still active on the Play Store at time of discovery.
 
-**[Goldoson](../malware/families/goldoson.md)** (2023): Malicious third-party library in 60+ legitimate South Korean apps. [Discovered by McAfee](https://www.mcafee.com/blogs/other-blogs/mcafee-labs/goldoson-privacy-invasive-and-clicker-android-adware-found-in-popular-apps-in-south-korea/) in April 2023. Collected installed app data, WiFi/Bluetooth device info, GPS locations, and performed background ad click fraud. Over 100 million combined downloads.
+**[Goldoson](../malware/families/goldoson.md)** (2023): Malicious third-party library in 60+ legitimate South Korean apps. [Discovered by McAfee](https://www.mcafee.com/blogs/other-blogs/mcafee-labs/goldoson-privacy-invasive-and-clicker-android-adware-found-in-popular-apps-in-south-korea/) in April 2023. Collected installed app data, WiFi/Bluetooth device info, GPS locations, and performed background [ad click fraud](../grayware/ad-fraud.md). Over 100 million combined downloads.
 
 **[Necro](../malware/families/necro.md) / Coral SDK** (2024): Malicious advertising SDK using [image steganography](play-store-evasion.md#steganographic-payloads) to hide payloads in PNG files. [Kaspersky found it](https://securelist.com/necro-trojan-is-back-on-google-play/113881/) in Wuta Camera (10M+) and Max Browser (1M+) on Google Play. Native library obfuscated with OLLVM, modular plugin architecture for ad fraud and proxy tunneling. 11M+ total infections. The original 2019 Necro variant hit CamScanner (100M+ installs) through a different SDK ("AdHub").
 
@@ -197,7 +197,7 @@ Malware built using the Xamarin framework, hiding malicious behavior in Xamarin 
     - PNG/JPEG downloads followed by class loading (steganographic payload delivery)
     - SDK network traffic to domains unrelated to the declared SDK vendor
     - `DexClassLoader` invocations from within SDK code paths
-    - Data exfiltration (contacts, location, device IDs) from code paths outside the app's core functionality
+    - [Data exfiltration](data-exfiltration.md) (contacts, location, device IDs) from code paths outside the app's core functionality
     - Random activation thresholds (SDK generates random number, only activates on certain values)
 
 ??? example "OEM Pre-installed Indicators"

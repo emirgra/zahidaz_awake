@@ -9,7 +9,7 @@ Apps offering quick microloans that demand excessive permissions, then weaponize
 3. Request [contacts](../permissions/contacts/read-contacts.md), [camera](../permissions/camera/camera.md), [SMS](../permissions/sms/read-sms.md), [location](../permissions/location/access-fine-location.md), [storage](../permissions/storage/read-external-storage.md) during "verification"
 4. Approve microloans at 300-500% APR with hidden fees
 5. When borrowers miss payments: contact their entire phone book with threatening messages, share personal photos, send fake legal notices to employers
-6. Data exfiltration begins immediately on permission grant, retained server-side even if app is uninstalled
+6. [Data exfiltration](../attacks/data-exfiltration.md) begins immediately on permission grant, retained server-side even if app is uninstalled
 
 ## Scale and Impact
 

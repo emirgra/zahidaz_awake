@@ -1,6 +1,6 @@
 # DISABLE_KEYGUARD
 
-Normal permission that allows an app to dismiss the lock screen (keyguard) programmatically. Auto-granted at install. Malware uses this to keep the device unlocked during remote fraud operations, ensure overlays remain visible, and prevent the lock screen from interrupting automated transfer sessions. While Android has progressively restricted what this permission can do, it remains relevant for older devices and complements other lock screen manipulation techniques.
+Normal permission that allows an app to dismiss the lock screen (keyguard) programmatically. Auto-granted at install. Malware uses this to keep the device unlocked during remote fraud operations, ensure [overlays](../../attacks/overlay-attacks.md) remain visible, and prevent the lock screen from interrupting [automated transfer](../../attacks/automated-transfer-systems.md) sessions. While Android has progressively restricted what this permission can do, it remains relevant for older devices and complements other lock screen manipulation techniques.
 
 ## Technical Details
 
@@ -36,7 +36,7 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
 }
 ```
 
-`requestDismissKeyguard()` shows the lock screen authentication UI rather than bypassing it. The user must still enter their PIN/pattern. However, `setShowWhenLocked(true)` allows an activity to display on top of the lock screen, enabling overlay attacks before the user unlocks.
+`requestDismissKeyguard()` shows the lock screen authentication UI rather than bypassing it. The user must still enter their PIN/pattern. However, `setShowWhenLocked(true)` allows an activity to display on top of the lock screen, enabling [overlay attacks](../../attacks/overlay-attacks.md) before the user unlocks.
 
 ## Abuse in Malware
 
@@ -45,7 +45,7 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
 During [ATS](../../attacks/automated-transfer-systems.md) fraud, the device must remain unlocked while the operator navigates banking apps. Malware combines `DISABLE_KEYGUARD` with:
 
 - `WAKE_LOCK` to keep the screen on
-- Accessibility service to prevent lock screen activation
+- [Accessibility service](../../attacks/accessibility-abuse.md) to prevent lock screen activation
 - `FLAG_KEEP_SCREEN_ON` on malicious activities
 
 ### Lock Screen Overlays
@@ -60,7 +60,7 @@ Using `setShowWhenLocked(true)`, malware can display activities over the lock sc
 
 ### Device Admin Lock Screen Abuse
 
-While `DISABLE_KEYGUARD` dismisses the lock screen, Device Admin API can set or change it. Combined:
+While `DISABLE_KEYGUARD` dismisses the lock screen, [Device Admin](../../attacks/device-admin-abuse.md) API can set or change it. Combined:
 
 1. `DevicePolicyManager.resetPassword()` sets a new PIN (pre-Android 8.0)
 2. `DISABLE_KEYGUARD` dismisses the lock screen for the malware's own operations
@@ -103,7 +103,7 @@ The progressive restrictions mean `DISABLE_KEYGUARD` is most dangerous on Androi
 
 ### Behavioral Signals
 
-- `KeyguardLock.disableKeyguard()` calls during active C2 sessions
+- `KeyguardLock.disableKeyguard()` calls during active [C2](../../attacks/c2-techniques.md) sessions
 - `setShowWhenLocked(true)` in activities displaying credential forms or alerts
 - Repeated screen wake + keyguard dismiss cycles indicating automated operations
 

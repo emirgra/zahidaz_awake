@@ -1,6 +1,6 @@
 # POST_NOTIFICATIONS
 
-Runtime permission introduced in Android 13 (API 33) that controls whether an app can display notifications. Before Android 13, any app could post notifications without asking. This permission directly impacts malware operations: foreground services require a visible notification on Android 8+, phishing attacks use fake notifications to lure users back into the app, and notification suppression techniques require the ability to post notifications first. Malware that cannot obtain this permission on Android 13+ loses a core persistence and social engineering channel.
+Runtime permission introduced in Android 13 (API 33) that controls whether an app can display notifications. Before Android 13, any app could post notifications without asking. This permission directly impacts malware operations: foreground services require a visible notification on Android 8+, phishing attacks use fake notifications to lure users back into the app, and [notification suppression](../../attacks/notification-suppression.md) techniques require the ability to post notifications first. Malware that cannot obtain this permission on Android 13+ loses a core [persistence](../../attacks/persistence-techniques.md) and social engineering channel.
 
 ## Technical Details
 
@@ -102,6 +102,6 @@ On Android 8+, apps create notification channels that users can individually con
 
 ### Behavioral Signals
 
-- Notification content containing URLs or deep links to WebView-based overlays
+- Notification content containing URLs or [deep links](../../attacks/deep-link-exploitation.md) to [WebView](../../attacks/webview-exploitation.md)-based overlays
 - Notifications posted immediately after app install requesting further permissions
 - Rapid notification posting followed by notification cancellation (flash notifications)

@@ -44,9 +44,9 @@ No known malware families abuse `USE_SIP` directly. The native SIP stack is rare
 
 **Unauthorized VoIP Calls**: An app with `USE_SIP` could silently register a SIP account and place VoIP calls to premium-rate SIP URIs, generating charges on the attacker's SIP provider revenue share.
 
-**Call Eavesdropping**: If the device is already registered with a SIP account, malware could listen for incoming SIP calls and record them. However, spyware families like [Hermit](../../malware/families/hermit.md), [Pegasus](../../malware/families/pegasus.md), and [FinSpy](../../malware/families/finspy.md) that record VoIP conversations do so by hooking into the audio subsystem or using accessibility services rather than the SIP API. These families intercept VoIP audio from apps like WhatsApp, Skype, and Viber at the audio mixer level, making `USE_SIP` irrelevant to their approach.
+**Call Eavesdropping**: If the device is already registered with a SIP account, malware could listen for incoming SIP calls and record them. However, spyware families like [Hermit](../../malware/families/hermit.md), [Pegasus](../../malware/families/pegasus.md), and [FinSpy](../../malware/families/finspy.md) that record VoIP conversations do so by hooking into the audio subsystem or using [accessibility services](../../attacks/accessibility-abuse.md) rather than the SIP API. These families intercept VoIP audio from apps like WhatsApp, Skype, and Viber at the audio mixer level, making `USE_SIP` irrelevant to their approach.
 
-**Covert Communication Channel**: A malware C2 channel over SIP would blend with legitimate VoIP traffic, but in practice no families use this technique because HTTP/HTTPS and WebSocket provide more reliable and flexible C2 communication.
+**Covert Communication Channel**: A malware [C2 channel](../../attacks/c2-techniques.md) over SIP would blend with legitimate VoIP traffic, but in practice no families use this technique because HTTP/HTTPS and WebSocket provide more reliable and flexible C2 communication.
 
 ## Android Version Changes
 

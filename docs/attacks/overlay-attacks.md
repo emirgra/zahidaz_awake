@@ -140,7 +140,7 @@ The trend is away from pure overlay attacks toward on-device fraud using accessi
 | [RatOn](../malware/families/raton.md) | WebView | Czech banks | Yes |
 | [DeVixor](../malware/families/devixor.md) | WebView | Iranian banks | No |
 
-Notable exceptions: [Gigabud](../malware/families/gigabud.md) and [Vultur](../malware/families/vultur.md) v1 deliberately avoid overlay attacks, using screen recording instead to capture credentials as the victim interacts with their real banking app. [NGate](../malware/families/ngate.md) uses a phishing WebView for card PIN entry rather than traditional banking overlays.
+Notable exceptions: [Gigabud](../malware/families/gigabud.md) and [Vultur](../malware/families/vultur.md) v1 deliberately avoid overlay attacks, using [screen recording](screen-capture.md) instead to capture credentials as the victim interacts with their real banking app. [NGate](../malware/families/ngate.md) uses a phishing WebView for card PIN entry rather than traditional banking overlays.
 
 ## Detection During Analysis
 

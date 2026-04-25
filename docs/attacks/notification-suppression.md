@@ -64,7 +64,7 @@ This avoids registering a new suspicious component in the manifest. The only man
 
 ## Play Protect Suppression
 
-Google Play Protect displays warnings when it detects potentially harmful apps. Malware suppresses these warnings to prevent the user from uninstalling it.
+Google [Play Protect](play-store-evasion.md) displays warnings when it detects potentially harmful apps. Malware suppresses these warnings to prevent the user from uninstalling it.
 
 ### Accessibility-Based Dismissal
 

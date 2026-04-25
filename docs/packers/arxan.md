@@ -166,11 +166,11 @@ Java.perform(function() {
 });
 ```
 
-For native-level CRC bypass, trampolines can redirect CRC check functions to return expected values. This requires identifying the CRC function addresses first through static analysis.
+For native-level CRC bypass, trampolines can redirect CRC check functions to return expected values. This requires identifying the CRC function addresses first through [static analysis](../reversing/static-analysis.md).
 
 #### ZygiskFrida for Stealth Injection
 
-Standard Frida injection modifies the APK or attaches via ptrace, both detectable by Arxan. ZygiskFrida injects the Frida gadget through Zygisk at process spawn, avoiding APK modification (signature checks pass) and ptrace-based detection.
+Standard [Frida](../reversing/hooking.md) injection modifies the APK or attaches via ptrace, both detectable by Arxan. ZygiskFrida injects the Frida gadget through Zygisk at process spawn, avoiding APK modification (signature checks pass) and ptrace-based detection.
 
 #### Timing-Aware Hooking
 

@@ -81,7 +81,7 @@ Detects ptrace-based debuggers, JDWP connections, and common debugging tools. Th
 
 ### Anti-Decompile
 
-Inserts invalid bytecode sequences and malformed headers that cause decompilers (JADX, JEB, Procyon) to fail on protected classes. This is a static analysis impediment only and does not affect runtime execution.
+Inserts invalid bytecode sequences and malformed headers that cause decompilers (JADX, JEB, Procyon) to fail on protected classes. This is a [static analysis](../reversing/static-analysis.md) impediment only and does not affect runtime execution.
 
 ### Root and Emulator Detection
 

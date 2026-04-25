@@ -28,7 +28,7 @@ The app can create windows using `WindowManager.addView()` with layout types tha
 Overlays can be configured in three primary ways:
 
 - **Fully opaque**: replaces the visible UI entirely, used for phishing screens that mimic banking app login pages
-- **Transparent/passthrough**: invisible layer capturing touch events or routing them to the window beneath (tapjacking)
+- **Transparent/passthrough**: invisible layer capturing touch events or routing them to the window beneath ([tapjacking](../../attacks/tapjacking.md))
 - **Partial**: covers only specific input fields, buttons, or dialog regions to intercept targeted interactions
 
 ### Overlay Injection Code
@@ -63,7 +63,7 @@ Modern banking trojans do not hardcode phishing screens. Instead, they use a dyn
 2. **Foreground monitoring**: the malware detects which app is in the foreground using `UsageStatsManager.queryUsageStats()` or accessibility events
 3. **Inject retrieval**: when a target app launches, the malware requests the corresponding HTML template ("webfake" or "inject") from C2
 4. **Overlay rendering**: the HTML is loaded in a `WebView` overlay that exactly matches the target app's login screen
-5. **Credential exfiltration**: form data entered by the user is intercepted via JavaScript bridges or `WebViewClient` callbacks and sent to C2
+5. **Credential exfiltration**: form data entered by the user is intercepted via JavaScript bridges or `WebViewClient` callbacks and sent to [C2](../../attacks/c2-techniques.md)
 
 These inject templates are maintained as HTML/CSS/JS archives on C2 infrastructure, often covering hundreds of banking apps across multiple countries. Threat actors sell inject packs on underground forums, and families like [Cerberus](../../malware/families/cerberus.md) and [Ermac](../../malware/families/ermac.md) popularized the model of operators providing inject updates as part of a MaaS subscription.
 

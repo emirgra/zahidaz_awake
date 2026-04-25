@@ -55,7 +55,7 @@ The attack flow:
 3. Malware detects the banking app's package name in the foreground
 4. Malware immediately launches a `TYPE_SYSTEM_ALERT` overlay matching the bank's login screen
 5. User enters credentials into the overlay, thinking it's the real app
-6. Credentials are sent to C2
+6. Credentials are sent to [C2](../../attacks/c2-techniques.md)
 
 ### Historical Significance
 

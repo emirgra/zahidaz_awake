@@ -28,7 +28,7 @@ The mobile threat landscape is split across several roles that rarely overlap.
 
 The naming lifecycle works roughly as follows:
 
-1. **Sample acquisition.** A researcher obtains an APK through a dropper on Play Store, a phishing SMS campaign, a C2 panel crawl, or VirusTotal hunting rules (YARA/VT Intelligence).
+1. **Sample acquisition.** A researcher obtains an APK through a dropper on Play Store, a phishing SMS campaign, a [C2](../attacks/c2-techniques.md) panel crawl, or VirusTotal hunting rules (YARA/VT Intelligence).
 2. **Triage and clustering.** The sample is decompiled, and its code structure, C2 protocol, overlay injection pattern, and string artifacts are compared against known families. If it does not match, it is a candidate for a new family name.
 3. **Naming and publication.** The discovering firm publishes a blog post with the chosen name, IOCs (hashes, C2 domains), and a technical breakdown. This becomes the de facto name.
 4. **VirusTotal propagation.** Other engines gradually pick up the sample. Each assigns its own detection label. There is no standard mapping.
@@ -46,7 +46,7 @@ A standard MaaS package includes:
 - **Inject kit.** A library of HTML overlay pages that mimic banking apps. Sold per-region or as a full global set. Some sellers offer custom inject creation as an upsell.
 - **Builder / APK generator.** Allows the operator to produce new APK variants with unique signing keys, package names, and obfuscation profiles.
 - **Support channel.** Private Telegram group or forum thread where the developer provides updates, troubleshooting, and feature announcements.
-- **Updates.** Ongoing patches for detection evasion, new Android version compatibility, and feature additions (VNC, keylogging, SMS forwarding, push notification interception).
+- **Updates.** Ongoing patches for detection evasion, new Android version compatibility, and feature additions (VNC, [keylogging](../attacks/keylogging.md), [SMS forwarding](../attacks/sms-interception.md), push notification interception).
 
 ### Pricing
 

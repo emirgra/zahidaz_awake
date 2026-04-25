@@ -70,7 +70,7 @@ The stub `ProxyApplication` boots the packer:
 
 ### Why Standard Decompilers Fail
 
-The inner DEX has valid structure (class definitions, method signatures, string tables) but every method body contains garbage opcodes. Decompilers parse the structure successfully but crash or produce nonsense when interpreting method bytecode. This makes DPT Shell effective against static analysis while being fully reversible through the `OoooooOooo` file.
+The inner DEX has valid structure (class definitions, method signatures, string tables) but every method body contains garbage opcodes. Decompilers parse the structure successfully but crash or produce nonsense when interpreting method bytecode. This makes DPT Shell effective against [static analysis](../reversing/static-analysis.md) while being fully reversible through the `OoooooOooo` file.
 
 ## OoooooOooo File Format
 

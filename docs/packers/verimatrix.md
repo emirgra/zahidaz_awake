@@ -139,7 +139,7 @@ Multi-layer debugger detection covering both Java-level (JDWP) and native-level 
 
 ### Anti-Hook
 
-Detects function hooking frameworks including Frida, Xposed, and Cydia Substrate through process memory inspection, loaded library scanning, and runtime class enumeration.
+Detects function [hooking frameworks](../reversing/hooking.md) including Frida, Xposed, and Cydia Substrate through process memory inspection, loaded library scanning, and runtime class enumeration.
 
 ### Anti-Clone
 
@@ -151,7 +151,7 @@ Verimatrix supports OTA-updatable detection rules. New threat signatures (root h
 
 ### Accessibility Abuse Detection
 
-Detects when other applications are using Android's Accessibility Service to interact with the protected application. This counters overlay attacks and automated UI interaction from malware.
+Detects when other applications are using Android's [Accessibility Service](../attacks/accessibility-abuse.md) to interact with the protected application. This counters [overlay attacks](../attacks/overlay-attacks.md) and automated UI interaction from malware.
 
 ### RASP
 

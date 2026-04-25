@@ -134,7 +134,7 @@ Extract the HBC file the same way, then use specialized tooling to decompile:
     hbctool disasm assets/index.android.bundle output_dir/
     ```
 
-    [hbctool](https://github.com/bongtrop/hbctool) disassembles to a textual Hermes assembly format and supports reassembly -- enabling binary patching of the bytecode. Modify the disassembly, reassemble with `hbctool asm`, and repackage the APK.
+    [hbctool](https://github.com/bongtrop/hbctool) disassembles to a textual Hermes assembly format and supports reassembly -- enabling [binary patching](../patching.md) of the bytecode. Modify the disassembly, reassemble with `hbctool asm`, and repackage the APK.
 
 === "hermes_rs"
 
@@ -354,7 +354,7 @@ Open-source alternatives to Jscrambler use the Metro bundler's transform pipelin
 - [obfuscator-io-metro-plugin](https://github.com/whoami-shubham/obfuscator-io-metro-plugin) -- wraps [javascript-obfuscator](https://obfuscator.io/) as a Metro transformer
 - `react-native-obfuscating-transformer` -- basic identifier mangling
 
-These produce weaker obfuscation than Jscrambler but still complicate static analysis.
+These produce weaker obfuscation than Jscrambler but still complicate [static analysis](../static-analysis.md).
 
 ### ProGuard / R8
 

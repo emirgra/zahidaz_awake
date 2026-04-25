@@ -138,7 +138,7 @@ All variable names match the component names assigned in the visual editor (e.g.
 4. **Read `$define()`** to enumerate all components and their initial configuration (URLs, phone numbers, API keys)
 5. **Read `dispatchEvent()`** to map UI events to handler methods
 6. **Trace handler methods** for data exfiltration (Web component), SMS abuse (Texting component), file access (File component)
-7. **Search for hardcoded URLs** -- C2 endpoints are almost always plaintext string literals
+7. **Search for hardcoded URLs** -- [C2](../../attacks/c2-techniques.md) endpoints are almost always plaintext string literals
 
 ### Key Components to Watch
 
@@ -230,15 +230,15 @@ App Inventor and its derivatives are the primary tool for non-programmer threat 
 
 ### Characteristics of App Inventor Malware
 
-- **Low sophistication** -- no accessibility abuse, no overlay injection, no ATS, no dynamic code loading
+- **Low sophistication** -- no [accessibility abuse](../../attacks/accessibility-abuse.md), no overlay injection, no ATS, no [dynamic code loading](../../attacks/dynamic-code-loading.md)
 - **Plaintext C2** -- server URLs and API keys are always visible in decompiled source
 - **Identifiable authors** -- the `appinventor.ai_<email>` package prefix often contains the author's real email address
-- **No persistence** -- no boot receivers, no foreground services, no device admin abuse
+- **No persistence** -- no boot receivers, no foreground services, no [device admin abuse](../../attacks/device-admin-abuse.md)
 - **Single-purpose** -- each sample typically does one thing (track location, send SMS, steal contacts)
 - **High volume, low impact** -- Google Play Protect catches most of these; they survive primarily on sideloading and third-party stores
 
 !!! info "Prevalence"
-    App Inventor-based malware accounts for a significant portion of low-sophistication Android threats seen on third-party app stores and sideloading sites. The `appinventor.ai_*` package prefix is a reliable triage signal for classifying a sample as low-skill, likely stalkerware or scam.
+    App Inventor-based malware accounts for a significant portion of low-sophistication Android threats seen on third-party app stores and sideloading sites. The `appinventor.ai_*` package prefix is a reliable triage signal for classifying a sample as low-skill, likely [stalkerware](../../grayware/stalkerware.md) or scam.
 
 ## RE Difficulty Assessment
 

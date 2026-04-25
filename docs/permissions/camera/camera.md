@@ -1,6 +1,6 @@
 # CAMERA
 
-Grants access to device cameras (front and rear) for photo and video capture. Used by spyware for covert environmental surveillance, capturing the victim's face, surroundings, and any documents or screens in view. One of the most privacy-invasive permissions, and a standard capability in both commercial spyware and stalkerware.
+Grants access to device cameras (front and rear) for photo and video capture. Used by spyware for covert environmental [surveillance](../../attacks/camera-mic-surveillance.md), capturing the victim's face, surroundings, and any documents or screens in view. One of the most privacy-invasive permissions, and a standard capability in both [commercial spyware](../../grayware/commercial-surveillance.md) and [stalkerware](../../grayware/stalkerware.md).
 
 ## Technical Details
 
@@ -59,7 +59,7 @@ The primary abuse case. Malware captures still images silently:
 1. Open camera in a foreground service or with a transparent overlay
 2. Use a 1x1 pixel preview surface or `ImageReader`-only output
 3. Capture image to memory
-4. Compress and exfiltrate to C2 via HTTPS
+4. Compress and [exfiltrate](../../attacks/data-exfiltration.md) to [C2](../../attacks/c2-techniques.md) via HTTPS
 5. Release camera to avoid the in-use indicator on Android 12+
 
 Timing matters. Sophisticated spyware captures when the screen is on (camera quality is better, and the user is likely facing the front camera) or on C2 command.
@@ -71,7 +71,7 @@ Sustained video capture generates large files and keeps the camera session open,
 - Recording short clips (10-30 seconds) rather than continuous video
 - Compressing aggressively before exfiltration
 - Recording only when triggered by C2 or on a schedule
-- Combining with `RECORD_AUDIO` for video with sound
+- Combining with [`RECORD_AUDIO`](../microphone/record-audio.md) for video with sound
 
 ### Environmental Surveillance
 

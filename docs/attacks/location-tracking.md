@@ -297,7 +297,7 @@ private boolean isMockLocation(Location location) {
 
 Analysts frequently use mock location apps (Fake GPS, GPS Joystick) or emulator location spoofing to trigger geofenced malware. If the malware checks `isFromMockProvider()`, mock location will not work. Workarounds:
 
-- Use Frida to hook `isFromMockProvider()` and return `false`
+- Use [Frida](../reversing/hooking.md) to hook `isFromMockProvider()` and return `false`
 - Use a rooted device with Magisk module that patches the mock location flag at framework level
 - Use a physical device with a SIM from the target country instead of mock GPS
 - Modify the emulator's location through the emulator controls (not via mock provider API)

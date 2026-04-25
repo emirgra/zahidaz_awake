@@ -181,7 +181,7 @@ This requires a valid leaked or extracted attestation key from a device with the
 
 ## Malware Detection of Rooted Devices
 
-Malware uses Play Integrity as one signal among many to detect analysis environments:
+Malware uses Play Integrity as one signal among many to [detect analysis environments](../attacks/anti-analysis-techniques.md):
 
 ```java
 private boolean isAnalysisEnvironment() {
@@ -221,7 +221,7 @@ Banking trojans like [Cerberus](../malware/families/cerberus.md) and [Hook](../m
 The trend toward hardware attestation narrows the gap for researchers. Practical workarounds:
 
 - Using Pixel devices with locked bootloaders and Magisk installed via boot image patching
-- Patching target apps to remove integrity checks (static analysis + smali patching)
+- Patching target apps to remove integrity checks ([static analysis](../reversing/static-analysis.md) + [smali patching](../reversing/patching.md))
 - Using instrumentation frameworks that don't require root (Objection on debug builds)
 - Maintaining separate stock analysis devices alongside rooted research devices
 

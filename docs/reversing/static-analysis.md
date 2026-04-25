@@ -203,7 +203,7 @@ jadx base.apk -d output_java/
 apktool d base.apk -o output_smali/
 ```
 
-[apktool](https://github.com/iBotPeaches/Apktool) disassembles to Smali (Dalvik assembly). Preserves all code structure. Required for patching.
+[apktool](https://github.com/iBotPeaches/Apktool) disassembles to Smali (Dalvik assembly). Preserves all code structure. Required for [patching](patching.md).
 
 #### JADX Deep Dive
 

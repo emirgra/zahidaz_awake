@@ -1,6 +1,6 @@
 # ANSWER_PHONE_CALLS
 
-Allows programmatically answering incoming phone calls. Can be used to silently answer calls from specific numbers (e.g., from a C2 operator) or to intercept calls.
+Allows programmatically answering incoming phone calls. Can be used to silently answer calls from specific numbers (e.g., from a [C2](../../attacks/c2-techniques.md) operator) or to [intercept calls](../../attacks/call-interception.md).
 
 ## Technical Details
 
@@ -19,7 +19,7 @@ TelecomManager tm = (TelecomManager) getSystemService(TELECOM_SERVICE);
 tm.acceptRingingCall();
 ```
 
-Auto-answers the currently ringing call. Combined with audio recording, enables call wiretapping.
+Auto-answers the currently ringing call. Combined with [audio recording](../microphone/record-audio.md), enables call wiretapping.
 
 ## Abuse in Malware
 
@@ -86,7 +86,7 @@ The malware registers as an `InCallService` or uses `TelecomManager.acceptRingin
 
 ## Android Version Changes
 
-**Android 8.0 (API 26)**: `ANSWER_PHONE_CALLS` permission introduced. Before this, answering calls programmatically required workarounds using reflection or accessibility services.
+**Android 8.0 (API 26)**: `ANSWER_PHONE_CALLS` permission introduced. Before this, answering calls programmatically required workarounds using reflection or [accessibility services](../../attacks/accessibility-abuse.md).
 
 **Android 9.0 (API 28)**: `TelecomManager.acceptRingingCall()` deprecated in favor of `TelecomManager.acceptRingingCall(int videoState)`. Both still function but the parameterized version provides more control.
 

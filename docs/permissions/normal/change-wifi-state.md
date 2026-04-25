@@ -1,6 +1,6 @@
 # CHANGE_WIFI_STATE
 
-Normal permission allowing an app to modify WiFi network configuration, enable/disable WiFi, and manipulate proxy settings. Auto-granted at install. Malware uses this to set network proxies for traffic interception, disable WiFi to force cellular connections (avoiding corporate network monitoring), and modify saved network configurations to redirect traffic through attacker-controlled infrastructure.
+Normal permission allowing an app to modify WiFi network configuration, enable/disable WiFi, and manipulate proxy settings. Auto-granted at install. Malware uses this to set network proxies for [traffic interception](../../attacks/network-traffic-interception.md), disable WiFi to force cellular connections (avoiding corporate network monitoring), and modify saved network configurations to redirect traffic through attacker-controlled infrastructure.
 
 ## Technical Details
 

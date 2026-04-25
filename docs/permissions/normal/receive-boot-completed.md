@@ -1,6 +1,6 @@
 # RECEIVE_BOOT_COMPLETED
 
-The primary persistence mechanism on Android. This normal-protection-level permission is granted silently at install time -- no user prompt, no settings toggle, no review hurdle. It allows an app to receive a broadcast when the device finishes booting, at which point the app can start services, schedule tasks, and establish C2 connections. Virtually every persistent Android malware uses this permission. Without it, the malware would die on reboot, requiring the user to manually re-launch it.
+The primary [persistence](../../attacks/persistence-techniques.md) mechanism on Android. This normal-protection-level permission is granted silently at install time -- no user prompt, no settings toggle, no review hurdle. It allows an app to receive a broadcast when the device finishes booting, at which point the app can start services, schedule tasks, and establish [C2](../../attacks/c2-techniques.md) connections. Virtually every persistent Android malware uses this permission. Without it, the malware would die on reboot, requiring the user to manually re-launch it.
 
 ## Technical Details
 

@@ -151,7 +151,7 @@ Bring Your Own Device deployments expand the attack surface because personal-sid
 | Network monitoring | VPN or proxy on personal side | Intercept work profile network traffic |
 | DNS manipulation | Change DNS to attacker-controlled server | Redirect corporate URLs |
 
-The accessibility service is particularly dangerous in BYOD because it operates at the system level, spanning both personal and work profiles. A malicious app installed on the personal side with accessibility enabled can read and interact with work profile app UIs.
+The [accessibility service](accessibility-abuse.md) is particularly dangerous in BYOD because it operates at the system level, spanning both personal and work profiles. A malicious app installed on the personal side with accessibility enabled can read and interact with work profile app UIs.
 
 ## Android Enterprise Security Model Limitations
 

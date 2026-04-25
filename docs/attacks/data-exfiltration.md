@@ -1,6 +1,6 @@
 # Data Exfiltration
 
-Stealing data from compromised Android devices and transmitting it to attacker-controlled infrastructure. Data exfiltration is the operational objective behind most Android malware -- permissions, persistence, and evasion exist to support it. The scope ranges from targeted credential theft (banking trojans) to bulk surveillance (state-sponsored spyware) to opportunistic harvesting (adware SDKs collecting more than they should).
+Stealing data from compromised Android devices and transmitting it to attacker-controlled infrastructure. Data exfiltration is the operational objective behind most Android malware -- permissions, persistence, and evasion exist to support it. The scope ranges from targeted credential theft (banking trojans) to bulk surveillance ([state-sponsored spyware](../grayware/commercial-surveillance.md)) to opportunistic harvesting (adware SDKs collecting more than they should).
 
 See also: [C2 Communication](c2-techniques.md), [SMS Interception](sms-interception.md), [Keylogging](keylogging.md), [Screen Capture](screen-capture.md)
 
@@ -287,7 +287,7 @@ Banking trojans and RATs with root access target:
 - SharedPreferences files containing auth tokens
 - SQLite databases with cached credentials
 - JWT tokens stored in app internal storage
-- Android Keystore entries (requires root + additional exploitation since Keystore is hardware-backed on modern devices)
+- [Android Keystore](../platform-abuse/keystore.md) entries (requires root + additional exploitation since Keystore is hardware-backed on modern devices)
 
 ## Device Information Collection
 
@@ -384,7 +384,7 @@ intent.putExtra("device_id", androidId);
 sendBroadcast(intent);
 ```
 
-This pattern evades network-based detection: the data-collecting component never makes a network call. The upload responsibility is distributed across multiple apps, making attribution difficult. Ad fraud SDKs use this to coordinate data aggregation across all apps on the device running the same SDK.
+This pattern evades network-based detection: the data-collecting component never makes a network call. The upload responsibility is distributed across multiple apps, making attribution difficult. [Ad fraud](../grayware/ad-fraud.md) SDKs use this to coordinate data aggregation across all apps on the device running the same SDK.
 
 ### Geo-Targeted Exfiltration
 

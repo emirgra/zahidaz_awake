@@ -66,7 +66,7 @@ A more powerful variant where a vulnerable app is tricked into launching its own
 2. The exported activity extracts the inner intent and calls `startActivity()` with it
 3. Since the call originates from within the app's own process, non-exported components are reachable
 
-This is particularly dangerous because it grants access to content providers, WebViews, and internal activities that were never designed for external interaction. [Oversecured's Samsung research](https://blog.oversecured.com/Two-weeks-of-securing-Samsung-devices-Part-1/) used this to access system-level components on Samsung devices, and their [Google apps audit](https://blog.oversecured.com/Oversecured-Apps-Care-Part-1-Vulnerability-disclosure-of-225-Google-apps/) found widespread intent redirection across 225 Google applications.
+This is particularly dangerous because it grants access to [content providers](content-provider-attacks.md), [WebViews](webview-exploitation.md), and internal activities that were never designed for external interaction. [Oversecured's Samsung research](https://blog.oversecured.com/Two-weeks-of-securing-Samsung-devices-Part-1/) used this to access system-level components on Samsung devices, and their [Google apps audit](https://blog.oversecured.com/Oversecured-Apps-Care-Part-1-Vulnerability-disclosure-of-225-Google-apps/) found widespread intent redirection across 225 Google applications.
 
 ### Arbitrary Code Execution via Package Contexts
 

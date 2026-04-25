@@ -85,7 +85,7 @@ Families including [Cerberus](../malware/families/cerberus.md), [Anubis](../malw
 
 ## Session-Based Installer Bypass (Android 13+)
 
-Android 13 introduced "Restricted Settings" to block sideloaded apps from enabling accessibility services and notification listeners. Apps installed via `ACTION_VIEW` (the standard sideload path) are flagged as restricted. However, apps installed via `PackageInstaller` session-based API are treated as marketplace-installed and exempt.
+Android 13 introduced "Restricted Settings" to block sideloaded apps from enabling accessibility services and [notification listeners](notification-listener-abuse.md). Apps installed via `ACTION_VIEW` (the standard sideload path) are flagged as restricted. However, apps installed via `PackageInstaller` session-based API are treated as marketplace-installed and exempt.
 
 ### How Droppers Exploit This
 

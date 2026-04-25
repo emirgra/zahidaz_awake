@@ -1,6 +1,6 @@
 # SCHEDULE_EXACT_ALARM
 
-Permission controlling access to exact-time alarm scheduling via `AlarmManager`. Malware uses exact alarms for reliable C2 callback scheduling, periodic data exfiltration, and persistent task execution that survives Doze mode restrictions. On Android 12 (API 31) this became a special permission requiring user opt-in through Settings. On Android 13+ (`USE_EXACT_ALARM`) it was re-simplified for certain app categories. The shift from unrestricted to gated access directly impacts malware persistence strategies.
+Permission controlling access to exact-time alarm scheduling via `AlarmManager`. Malware uses exact alarms for reliable [C2](../../attacks/c2-techniques.md) callback scheduling, periodic [data exfiltration](../../attacks/data-exfiltration.md), and persistent task execution that survives Doze mode restrictions. On Android 12 (API 31) this became a special permission requiring user opt-in through Settings. On Android 13+ (`USE_EXACT_ALARM`) it was re-simplified for certain app categories. The shift from unrestricted to gated access directly impacts malware [persistence](../../attacks/persistence-techniques.md) strategies.
 
 ## Technical Details
 

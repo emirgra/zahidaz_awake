@@ -121,7 +121,7 @@ The C2 kill switch is the most effective: the dropper app calls home, and the se
 
 Planting malicious code under legitimate SDK package names so analysts skip it during triage. The attacker creates a package that closely resembles a trusted SDK namespace but with a subtle variation (e.g., `com.chartboost.roshx.ads` mimicking the real `com.chartboost.sdk`, or `com.android.providers.media` imitating a system provider).
 
-Analysts reviewing decompiled code routinely skip classes under recognized SDK namespaces. The spoofed package exploits this by hiding device profiling DTOs, encrypted C2 communication structures, and ad fraud logic under a name that looks like a standard third-party SDK.
+Analysts reviewing decompiled code routinely skip classes under recognized SDK namespaces. The spoofed package exploits this by hiding device profiling DTOs, encrypted C2 communication structures, and [ad fraud](../grayware/ad-fraud.md) logic under a name that looks like a standard third-party SDK.
 
 A related technique is `com.android.*` namespace squatting, where the app uses package prefixes reserved for system apps to appear as a system component in process listings, `dumpsys` output, and analysis tools.
 
@@ -146,7 +146,7 @@ This technique differs from [Necro's PNG steganography](../malware/families/necr
 
 ### Runtime String Decryption
 
-[Anatsa](../malware/families/anatsa.md) decrypts each string at runtime using a dynamically generated DES key, preventing static extraction of C2 URLs, package names, or other indicators. Combined with emulation checks and device model verification, this defeats both static and dynamic analysis in automated sandboxes.
+[Anatsa](../malware/families/anatsa.md) decrypts each string at runtime using a dynamically generated DES key, preventing static extraction of C2 URLs, package names, or other indicators. Combined with emulation checks and device model verification, this defeats both [static](../reversing/static-analysis.md) and [dynamic analysis](../reversing/dynamic-analysis.md) in automated sandboxes.
 
 ### Manifest Corruption
 

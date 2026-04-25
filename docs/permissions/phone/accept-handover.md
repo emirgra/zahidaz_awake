@@ -44,7 +44,7 @@ No known malware families abuse `ACCEPT_HANDOVER`. The permission has minimal at
 
 ### Theoretical Abuse Scenarios
 
-**Call Hijacking During Handover**: A malicious app registered as a `ConnectionService` could intercept calls during the cellular-to-Wi-Fi handover transition. When a user moves from cellular coverage to Wi-Fi, their carrier may initiate a handover. A malicious app could accept this handover, silently routing the call through attacker infrastructure for eavesdropping or manipulation. This is conceptually similar to the call interception in [Fakecalls](../../malware/families/fakecalls.md), but triggered by a handover event rather than an outgoing dial.
+**Call Hijacking During Handover**: A malicious app registered as a `ConnectionService` could intercept calls during the cellular-to-Wi-Fi handover transition. When a user moves from cellular coverage to Wi-Fi, their carrier may initiate a handover. A malicious app could accept this handover, silently routing the call through attacker infrastructure for eavesdropping or manipulation. This is conceptually similar to the [call interception](../../attacks/call-interception.md) in [Fakecalls](../../malware/families/fakecalls.md), but triggered by a handover event rather than an outgoing dial.
 
 **MitM on Call Audio**: After accepting a handover, the `ConnectionService` controls the audio path. The app could record the conversation, inject audio, or silently bridge the call through a relay server.
 

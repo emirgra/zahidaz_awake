@@ -58,7 +58,7 @@ The "Dex Relocation" plugin applies multiple obfuscation layers:
 
 - Call obfuscation -- indirect method invocations replace direct calls
 - Function call modification -- original call sites are rewritten
-- Dummy code injection -- non-functional code paths inserted to complicate static analysis
+- Dummy code injection -- non-functional code paths inserted to complicate [static analysis](../reversing/static-analysis.md)
 - Control flow flattening within protected methods
 
 ### Native Library Encryption
@@ -71,7 +71,7 @@ Appdome implements certificate pinning that actively detects bypass attempts rat
 
 ### Anti-Frida
 
-Appdome's Frida detection covers multiple injection vectors:
+Appdome's [Frida](../reversing/hooking.md) detection covers multiple injection vectors:
 
 | Detection Vector | Description |
 |-----------------|-------------|
@@ -115,7 +115,7 @@ Detects when the APK has been decompiled, modified, and rebuilt by verifying str
 
 ### Malware and Overlay Detection
 
-Detects malicious overlay attacks and identifies known malware patterns running alongside the protected application.
+Detects malicious [overlay attacks](../attacks/overlay-attacks.md) and identifies known malware patterns running alongside the protected application.
 
 ## Unpacking Methodology
 

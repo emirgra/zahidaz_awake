@@ -105,7 +105,7 @@ Detects debugging through ptrace status checks, TracerPid monitoring in `/proc/s
 
 ### Anti-Hooking (Syscall-Based)
 
-zShield uses direct syscalls rather than libc wrappers for security-critical operations. This bypasses Frida's `Interceptor.attach` on libc functions like `open`, `read`, `fopen` because the hooked libc functions are never called. The syscall-based approach is identified by APKiD as `anti_hook : syscalls`.
+zShield uses direct syscalls rather than libc wrappers for security-critical operations. This bypasses [Frida](../reversing/hooking.md)'s `Interceptor.attach` on libc functions like `open`, `read`, `fopen` because the hooked libc functions are never called. The syscall-based approach is identified by APKiD as `anti_hook : syscalls`.
 
 ### Integrity Checks
 
@@ -146,7 +146,7 @@ After removing the XXTEA encryption, the analyst faces two remaining layers:
 
 **Control flow flattening**: The OLLVM-style dispatcher pattern must be manually or semi-automatically deflattened. Tools like D-810 (IDA plugin) or custom Ghidra scripts can partially recover original control flow, but results vary by sample.
 
-**String encryption**: With a 32-bit key space, the string cipher is brute-forceable if the cipher algorithm and ciphertext can be identified within the binary. Alternatively, dynamic analysis with Frida can intercept decrypted strings at runtime.
+**String encryption**: With a 32-bit key space, the string cipher is brute-forceable if the cipher algorithm and ciphertext can be identified within the binary. Alternatively, [dynamic analysis](../reversing/dynamic-analysis.md) with Frida can intercept decrypted strings at runtime.
 
 ### Bypassing Syscall-Based Anti-Hooking
 

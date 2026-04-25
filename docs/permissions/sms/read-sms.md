@@ -1,6 +1,6 @@
 # READ_SMS
 
-Grants access to all SMS messages stored on the device. The primary use in malware is OTP interception -- reading one-time passwords sent by banks and online services to complete unauthorized transactions or account takeovers. Also used for SMS forwarding (exfiltrating entire message history to C2), contact harvesting from message metadata, and confirming premium service subscriptions. Despite years of platform restrictions and Google Play policy changes, SMS-based 2FA remains widespread enough that this permission is still a high-value target for banking trojans.
+Grants access to all SMS messages stored on the device. The primary use in malware is [OTP interception](../../attacks/sms-interception.md) -- reading one-time passwords sent by banks and online services to complete unauthorized transactions or account takeovers. Also used for SMS forwarding (exfiltrating entire message history to [C2](../../attacks/c2-techniques.md)), contact harvesting from message metadata, and confirming premium service subscriptions. Despite years of platform restrictions and Google Play policy changes, SMS-based 2FA remains widespread enough that this permission is still a high-value target for banking trojans.
 
 ## Technical Details
 
@@ -78,7 +78,7 @@ Two complementary approaches:
 | Retroactive | `READ_SMS` | Query `content://sms/inbox` for recent messages | After OTP arrives, with slight delay |
 | Real-time | `RECEIVE_SMS` | `BroadcastReceiver` with `SMS_RECEIVED` action and high priority | Immediate, can suppress notification |
 
-Most families use both: `RECEIVE_SMS` for real-time interception with notification suppression, and `READ_SMS` as a fallback to scan the inbox if the broadcast receiver misses a message.
+Most families use both: [`RECEIVE_SMS`](receive-sms.md) for real-time interception with [notification suppression](../../attacks/notification-suppression.md), and `READ_SMS` as a fallback to scan the inbox if the broadcast receiver misses a message.
 
 ### SMS Forwarding to C2
 

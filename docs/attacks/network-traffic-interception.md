@@ -90,7 +90,7 @@ Android 9 introduced Private DNS (DNS-over-TLS), and Android 13 added DNS-over-H
 
 ### WiFi Proxy Manipulation
 
-Malware with accessibility service or device admin privileges can modify WiFi proxy settings to route HTTP(S) traffic through an attacker-controlled proxy:
+Malware with [accessibility service](accessibility-abuse.md) or [device admin](device-admin-abuse.md) privileges can modify WiFi proxy settings to route HTTP(S) traffic through an attacker-controlled proxy:
 
 1. **Accessibility-based**: Navigate `Settings > WiFi > [Network] > Proxy` and configure manual proxy pointing to attacker server
 2. **Device admin**: Use `DevicePolicyManager` global proxy setting

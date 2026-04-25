@@ -1,6 +1,6 @@
 # INTERNET
 
-Allows opening network sockets. Required by virtually all Android malware for C2 communication, data exfiltration, payload download, and inject kit retrieval. Granted silently at install time.
+Allows opening network sockets. Required by virtually all Android malware for [C2 communication](../../attacks/c2-techniques.md), [data exfiltration](../../attacks/data-exfiltration.md), payload download, and inject kit retrieval. Granted silently at install time.
 
 ## Technical Details
 

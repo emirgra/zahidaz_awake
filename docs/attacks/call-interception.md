@@ -36,7 +36,7 @@ The most powerful technique. When the malware becomes the default call handler, 
 5. The call is routed to an attacker-controlled number
 6. A human operator or pre-recorded IVR answers as the bank
 
-The [fake call UI mimics the native Android dialer](https://www.bleepingcomputer.com/news/security/android-malware-fakecall-now-reroutes-bank-calls-to-attackers/) so convincingly that the victim sees their bank's name and number on screen while actually speaking to the attacker. [Zimperium's 2024 analysis](https://zimperium.com/blog/mishing-in-motion-uncovering-the-evolving-functionality-of-fakecall-malware/) documented expanded capabilities including accessibility service abuse for automatic permission grants, `MediaProjection` for screen streaming, and camera/photo capabilities.
+The [fake call UI mimics the native Android dialer](https://www.bleepingcomputer.com/news/security/android-malware-fakecall-now-reroutes-bank-calls-to-attackers/) so convincingly that the victim sees their bank's name and number on screen while actually speaking to the attacker. [Zimperium's 2024 analysis](https://zimperium.com/blog/mishing-in-motion-uncovering-the-evolving-functionality-of-fakecall-malware/) documented expanded capabilities including [accessibility service](accessibility-abuse.md) abuse for automatic permission grants, `MediaProjection` for screen streaming, and camera/photo capabilities.
 
 ### CallRedirectionService (Android 10+)
 

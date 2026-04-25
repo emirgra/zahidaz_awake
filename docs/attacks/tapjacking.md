@@ -166,7 +166,7 @@ For a more thorough test, use a minimal overlay app or the `WindowManager` shell
 dz> run app.activity.info -a com.target.app
 ```
 
-Check for activities that handle sensitive actions and cross-reference with static analysis for `filterTouchesWhenObscured` usage. Drozer does not directly test tapjacking, but it identifies the attack surface (exported activities with sensitive functionality) that you then test manually with an overlay.
+Check for activities that handle sensitive actions and cross-reference with [static analysis](../reversing/static-analysis.md) for `filterTouchesWhenObscured` usage. Drozer does not directly test tapjacking, but it identifies the attack surface (exported activities with sensitive functionality) that you then test manually with an overlay.
 
 ### What to Look For
 

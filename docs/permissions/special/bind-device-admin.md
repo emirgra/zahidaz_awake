@@ -1,6 +1,6 @@
 # BIND_DEVICE_ADMIN
 
-Grants device administration capabilities: locking the screen, wiping data, enforcing password policies, and preventing its own uninstallation. Early Android malware (2013-2016) used device admin heavily for ransomware and persistence. Modern malware prefers accessibility services, but device admin still appears in some families.
+Grants device administration capabilities: locking the screen, wiping data, enforcing password policies, and preventing its own uninstallation. Early Android malware (2013-2016) used [device admin](../../attacks/device-admin-abuse.md) heavily for [ransomware](../../attacks/device-wipe-ransomware.md) and persistence. Modern malware prefers [accessibility services](../../attacks/accessibility-abuse.md), but device admin still appears in some families.
 
 ## Technical Details
 

@@ -1,6 +1,6 @@
 # ACCESS_COARSE_LOCATION
 
-Grants network-based approximate location with roughly 1-2km accuracy using WiFi access points and cell tower data. Less useful than fine location for stalkerware but sufficient for country/city-level victim profiling, geofenced payload activation, and sandbox evasion.
+Grants network-based approximate location with roughly 1-2km accuracy using WiFi access points and cell tower data. Less useful than [fine location](access-fine-location.md) for [stalkerware](../../grayware/stalkerware.md) but sufficient for country/city-level victim profiling, [geofenced](../../attacks/location-tracking.md) payload activation, and [sandbox evasion](../../attacks/anti-analysis-techniques.md).
 
 ## Technical Details
 
@@ -52,7 +52,7 @@ Coarse location is sufficient for determining which country or city the victim i
 - Select the right overlay injection target from their phishing kit
 - Choose the correct language for social engineering prompts
 - Decide whether to activate at all (avoid non-target regions)
-- Report victim geography to C2 for campaign segmentation
+- Report victim geography to [C2](../../attacks/c2-techniques.md) for campaign segmentation
 
 ### Sandbox Evasion
 

@@ -374,8 +374,8 @@ In practice, distinguishing the tool rarely matters for analysis. The deobfuscat
 
 Many Android malware families ship with only R8 or ProGuard obfuscation and no additional packing. This is the lowest tier of protection:
 
-- All strings (C2 URLs, API keys, target app lists) are plaintext in the DEX
-- All API calls are visible to static analysis tools
+- All strings ([C2](../attacks/c2-techniques.md) URLs, API keys, target app lists) are plaintext in the DEX
+- All API calls are visible to [static analysis](../reversing/static-analysis.md) tools
 - Behavioral analysis is possible without any unpacking or decryption
 - Automated scanners (VirusTotal, Google Play Protect) can pattern-match directly
 
@@ -405,7 +405,7 @@ More sophisticated malware operations use R8/ProGuard as a base layer and add pr
 R8/ProGuard (name obfuscation, shrinking)
   + Custom string encryption (XOR/AES of sensitive strings)
   + Dynamic class loading (second-stage DEX from assets or network)
-  + Native code for critical logic (C2 communication, credential theft)
+  + Native code for critical logic ([C2 communication](../attacks/c2-techniques.md), credential theft)
 ```
 
 This layered approach is cheaper than licensing DexGuard and gives operators more control. Analysts should not assume that R8/ProGuard-level obfuscation is the only protection present -- always check for custom encryption methods and dynamic loading patterns.

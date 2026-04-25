@@ -150,7 +150,7 @@ Some families support modular architecture where individual capabilities are loa
 
 ## Reflection-Based Instantiation
 
-After loading a class, malware uses reflection to instantiate and invoke methods without compile-time dependencies. This also defeats static analysis since there are no direct references to the payload classes.
+After loading a class, malware uses reflection to instantiate and invoke methods without compile-time dependencies. This also defeats [static analysis](../reversing/static-analysis.md) since there are no direct references to the payload classes.
 
 ```java
 Class<?> cls = loader.loadClass("com.payload.EntryPoint");

@@ -190,7 +190,7 @@ public void onCreate(Bundle savedInstanceState) {
 }
 ```
 
-The variable names (`edittext_username`, `btn_login`) are the exact names the user typed in the Sketchware block editor. C2 URLs and API endpoints are always inline string literals -- never encrypted, never fetched dynamically unless the user explicitly added those blocks.
+The variable names (`edittext_username`, `btn_login`) are the exact names the user typed in the Sketchware block editor. [C2](../../attacks/c2-techniques.md) URLs and API endpoints are always inline string literals -- never encrypted, never fetched dynamically unless the user explicitly added those blocks.
 
 ### Obfuscation
 

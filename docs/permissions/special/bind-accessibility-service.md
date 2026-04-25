@@ -12,7 +12,7 @@ The single most powerful permission in Android malware. An accessibility service
 | Introduced | API 16 (Android 4.1) |
 | MITRE ATT&CK | [T1453 - Abuse Accessibility Features](https://attack.mitre.org/techniques/T1453/) |
 
-The `signature` protection level means only the system can bind to an accessibility service. The app declares the service in its manifest; the user enables it manually through system settings. No runtime permission dialog appears. Android shows a full-screen warning explaining the access being granted, but malware relies on social engineering overlays to rush users past this screen.
+The `signature` protection level means only the system can bind to an accessibility service. The app declares the service in its manifest; the user enables it manually through system settings. No runtime permission dialog appears. Android shows a full-screen warning explaining the access being granted, but malware relies on social engineering [overlays](../../attacks/overlay-attacks.md) to rush users past this screen.
 
 ## What It Enables
 
@@ -76,7 +76,7 @@ Nearly every modern Android banking trojan requires accessibility. The typical f
 1. App installed (sideloaded or via dropper on Play Store)
 2. Social engineering overlay prompts user to enable accessibility
 3. Once enabled, malware auto-grants itself remaining permissions
-4. Malware operates autonomously: overlay attacks, OTP interception, automated transactions
+4. Malware operates autonomously: overlay attacks, [OTP interception](../../attacks/sms-interception.md), automated transactions
 
 ### Notable Families
 

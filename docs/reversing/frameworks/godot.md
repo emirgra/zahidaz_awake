@@ -270,7 +270,7 @@ The attack works because the Godot engine binary itself is legitimate and signed
 1. Extract the `.pck` from the distribution package
 2. Use gdsdecomp to recover the GDScript source
 3. Look for `OS.execute()`, `OS.shell_open()`, `HTTPRequest` nodes, and filesystem operations
-4. Trace C2 URLs in string literals and HTTP request targets
+4. Trace [C2](../../attacks/c2-techniques.md) URLs in string literals and HTTP request targets
 5. Check for sandbox detection logic (VM detection, debugger checks)
 
 ## RE Difficulty Assessment

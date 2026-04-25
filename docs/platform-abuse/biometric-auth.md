@@ -95,7 +95,7 @@ When configured this way, the AES key is locked inside the [TEE/StrongBox](keyst
 
 ### Why Most Apps Get This Wrong
 
-The majority of banking apps use BiometricPrompt without CryptoObject. They call `authenticate()` without passing a `CryptoObject`, receive the boolean success callback, and then proceed to release a stored token or credential. This pattern is vulnerable to Frida bypass because the security decision is made in software, not in hardware.
+The majority of banking apps use BiometricPrompt without CryptoObject. They call `authenticate()` without passing a `CryptoObject`, receive the boolean success callback, and then proceed to release a stored token or credential. This pattern is vulnerable to [Frida bypass](../reversing/hooking.md) because the security decision is made in software, not in hardware.
 
 [SEC Consult's research on biometric bypass](https://sec-consult.com/blog/detail/bypassing-android-biometric-authentication/) and [OWASP's MASTG guidance](https://mas.owasp.org/MASTG/knowledge/android/MASVS-STORAGE/MASTG-KNOW-0043/) both document this as the most common weakness in Android biometric implementations.
 
@@ -113,7 +113,7 @@ This is a design-level downgrade: a device PIN is typically 4-6 digits and can b
 
 ### Exploiting Biometric Timeout
 
-Keystore keys with `setUserAuthenticationValidityDurationSeconds()` remain unlocked for a time window after authentication. During this window, any code running in the app's process can use the key without re-authentication. If the timeout is too long (e.g., 300 seconds), an attacker who gains code execution in the app's process (through a WebView vulnerability, deep link exploit, or library compromise) can use the key freely.
+Keystore keys with `setUserAuthenticationValidityDurationSeconds()` remain unlocked for a time window after authentication. During this window, any code running in the app's process can use the key without re-authentication. If the timeout is too long (e.g., 300 seconds), an attacker who gains code execution in the app's process (through a [WebView vulnerability](../attacks/webview-exploitation.md), [deep link exploit](../attacks/deep-link-exploitation.md), or library compromise) can use the key freely.
 
 ## Malware Techniques
 
@@ -135,7 +135,7 @@ This attack is not a biometric bypass -- it captures the device credential that 
 
 [TsarBot](../malware/families/tsarbot.md), discovered by [Cyble in March 2025](https://cyble.com/blog/tsarbot-using-overlay-attacks-targeting-bfsi-sector/), implements a similar lockscreen capture with additional sophistication:
 
-1. TsarBot uses `LockTypeDetector` to determine the device's lock type via accessibility service
+1. TsarBot uses `LockTypeDetector` to determine the device's lock type via [accessibility service](../attacks/accessibility-abuse.md)
 2. It reads on-screen text and descriptions ("PIN area", "Device password", pattern grid elements) to identify whether the device uses PIN, password, or pattern
 3. On the first `USER_PRESENT` broadcast, TsarBot loads a fake lockscreen matched to the detected lock type
 4. Captured credentials are exfiltrated to the C2 server

@@ -48,7 +48,7 @@ Requires physical access to the target device. Installers guide the abuser throu
 
 - Hidden [accessibility services](../permissions/special/bind-accessibility-service.md) with generic names
 - Elevated battery consumption from continuous location and sensor polling
-- Background data usage to stalkerware C2 servers
+- Background data usage to stalkerware [C2 servers](../attacks/c2-techniques.md)
 - Device administrator registered to unknown app
 - Coalition Against Stalkerware maintains detection signatures shared with AV vendors
 - Check `Settings > Accessibility > Installed Services` for unknown entries

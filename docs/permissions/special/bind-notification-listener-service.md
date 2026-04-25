@@ -1,6 +1,6 @@
 # BIND_NOTIFICATION_LISTENER_SERVICE
 
-Allows reading the content of all notifications posted by any app. Increasingly used as an alternative to `READ_SMS` for OTP interception: banks send OTP codes that appear in notifications, and a notification listener captures them without needing SMS permissions.
+Allows reading the content of all notifications posted by any app. Increasingly used as an alternative to [`READ_SMS`](../sms/read-sms.md) for [OTP interception](../../attacks/sms-interception.md): banks send OTP codes that appear in notifications, and a [notification listener](../../attacks/notification-listener-abuse.md) captures them without needing SMS permissions.
 
 ## Technical Details
 
@@ -11,7 +11,7 @@ Allows reading the content of all notifications posted by any app. Increasingly 
 | Grant Method | Settings > Apps > Special access > Notification access |
 | Introduced | API 18 (Android 4.3) |
 
-Like accessibility services, only the system can bind to a notification listener. The user must manually enable it in settings.
+Like [accessibility services](../../attacks/accessibility-abuse.md), only the system can bind to a notification listener. The user must manually enable it in settings.
 
 ## What It Enables
 
@@ -41,13 +41,13 @@ Capabilities:
 
 ### OTP Interception (SMS Alternative)
 
-Many banks and services include the OTP code directly in the notification text. A notification listener grabs it without needing `READ_SMS` or `RECEIVE_SMS`:
+Many banks and services include the OTP code directly in the notification text. A notification listener grabs it without needing `READ_SMS` or [`RECEIVE_SMS`](../sms/receive-sms.md):
 
 1. User triggers a login/transaction that requires 2FA
 2. Bank sends SMS with OTP
 3. Phone displays notification: "Your code is 123456"
 4. Notification listener reads the notification text
-5. Malware forwards the code to C2
+5. Malware forwards the code to [C2](../../attacks/c2-techniques.md)
 
 This bypasses Google Play's SMS permission restrictions, since notification access is not subject to the same policy scrutiny.
 
@@ -65,7 +65,7 @@ Malware can dismiss notifications to hide its activity:
 
 ### Foreground App Detection
 
-Notifications from apps reveal which apps are active, serving as an alternative to `UsageStatsManager` for timing overlay attacks.
+Notifications from apps reveal which apps are active, serving as an alternative to `UsageStatsManager` for timing [overlay attacks](../../attacks/overlay-attacks.md).
 
 ### Notable Families
 

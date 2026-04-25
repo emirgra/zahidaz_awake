@@ -1,6 +1,6 @@
 # WRITE_CALL_LOG
 
-Allows inserting, modifying, and deleting call log entries. Can be used to hide evidence of calls made by malware (e.g., premium number calls, C2 voice calls) or to inject fake call records.
+Allows inserting, modifying, and deleting call log entries. Can be used to hide evidence of calls made by malware (e.g., premium number calls, [C2](../../attacks/c2-techniques.md) voice calls) or to inject fake call records.
 
 ## Technical Details
 
@@ -38,7 +38,7 @@ Inject fake call records or modify timestamps to create alibis or frame targets.
 
 | Family | Usage |
 |--------|-------|
-| [Fakecalls](../../malware/families/fakecalls.md) | Manipulates call logs as part of its vishing operation -- after intercepting calls to Korean banks and playing fake IVR audio, evidence of the intercepted calls must be cleaned |
+| [Fakecalls](../../malware/families/fakecalls.md) | Manipulates call logs as part of its vishing operation -- after [intercepting calls](../../attacks/call-interception.md) to Korean banks and playing fake IVR audio, evidence of the intercepted calls must be cleaned |
 | [GriftHorse](../../malware/families/grifthorse.md) | Premium SMS/call fraud family where call log cleanup hides evidence of premium-rate call charges |
 
 Fakecalls is the most relevant family for `WRITE_CALL_LOG` abuse. Its call interception mechanism involves answering and redirecting calls to Korean bank numbers, and cleaning the call log is essential to preventing the victim from noticing that their outbound call to the bank was never actually connected. GriftHorse enrolled victims in premium services and cleaning call evidence reduced discovery speed.

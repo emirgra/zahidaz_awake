@@ -1,6 +1,6 @@
 # GoldCrypt (Golden Encryption)
 
-GoldCrypt (also marketed as Golden Encryption or Golden Crypt) is a commercial-grade Android packer promoted on underground malware forums. Unlike legitimate packers sold by security vendors, GoldCrypt is purpose-built for malware evasion and sold directly to threat actors. It uses RC4-encrypted DEX payloads hidden in deeply nested directory structures with uncommon characters to defeat static analysis tools and automated sandboxes. The packer has been observed in [Mirax](../malware/families/mirax.md) and [Albiriox](../malware/families/albiriox.md) campaigns.
+GoldCrypt (also marketed as Golden Encryption or Golden Crypt) is a commercial-grade Android packer promoted on underground malware forums. Unlike legitimate packers sold by security vendors, GoldCrypt is purpose-built for malware evasion and sold directly to threat actors. It uses RC4-encrypted DEX payloads hidden in deeply nested directory structures with uncommon characters to defeat [static analysis](../reversing/static-analysis.md) tools and automated sandboxes. The packer has been observed in [Mirax](../malware/families/mirax.md) and [Albiriox](../malware/families/albiriox.md) campaigns.
 
 ## Overview
 

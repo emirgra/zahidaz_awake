@@ -1,6 +1,6 @@
 # ACCESS_WIFI_STATE
 
-Normal permission granting read access to WiFi network information including SSID, BSSID, signal strength, connection state, and historically MAC addresses. Auto-granted at install with no user prompt. Spyware and data broker SDKs use this for device fingerprinting and coarse location inference (WiFi-based positioning), while banking trojans use it for network environment profiling to detect sandboxes and researcher networks.
+Normal permission granting read access to WiFi network information including SSID, BSSID, signal strength, connection state, and historically MAC addresses. Auto-granted at install with no user prompt. Spyware and data broker SDKs use this for device fingerprinting and coarse location inference (WiFi-based positioning), while banking trojans use it for network environment profiling to detect [sandboxes](../../attacks/anti-analysis-techniques.md) and researcher networks.
 
 ## Technical Details
 

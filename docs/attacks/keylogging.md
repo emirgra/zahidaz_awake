@@ -198,7 +198,7 @@ In families with VNC/remote access (Hook, Octo), the attacker may skip keyloggin
 ??? example "Dynamic Indicators"
 
     - Accessibility service actively receiving events from banking app packages
-    - Data exfiltration spikes correlating with text input activity
+    - [Data exfiltration](data-exfiltration.md) spikes correlating with text input activity
     - Custom IME registered in `Settings.Secure.DEFAULT_INPUT_METHOD`
     - Outbound POST requests containing form field names and values
 

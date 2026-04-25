@@ -138,8 +138,8 @@ The beautified JavaScript is fully readable application source code. Search for:
 - API endpoints and hardcoded URLs
 - Authentication tokens, API keys, secrets
 - Business logic and data handling
-- C2 endpoints in malicious apps
-- Data exfiltration routines
+- [C2](../../attacks/c2-techniques.md) endpoints in malicious apps
+- [Data exfiltration](../../attacks/data-exfiltration.md) routines
 
 ### 4. Map Plugin Usage
 

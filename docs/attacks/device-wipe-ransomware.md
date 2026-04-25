@@ -61,7 +61,7 @@ The earliest Android ransomware displayed persistent full-screen overlays that t
 
 **Koler** (April 2014): [Police-themed ransomware](https://www.kaspersky.com/resource-center/threats/koler-police-ransomware-virus) that displayed a localized law enforcement warning based on the victim's geographic location. A US victim saw an FBI warning; European victims saw Europol branding. Distributed primarily through adult content sites. Demanded $100-$300 via MoneyPak. [Infected approximately 200,000 Android devices](https://www.knowbe4.com/ransomware-knowledgebase/kolera), with 75% in the United States.
 
-Screen lockers used `SYSTEM_ALERT_WINDOW` to display persistent overlays. Early variants could be removed by booting into safe mode and uninstalling the app. More sophisticated variants registered as device administrators to resist uninstall.
+Screen lockers used `SYSTEM_ALERT_WINDOW` to display persistent overlays. Early variants could be removed by booting into safe mode and uninstalling the app. More sophisticated variants registered as [device administrators](device-admin-abuse.md) to resist uninstall.
 
 ### PIN Lockers (2015-2017)
 

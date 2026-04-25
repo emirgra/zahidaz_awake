@@ -1,6 +1,6 @@
 # READ_CONTACTS
 
-Grants read access to the device's contact database via the Contacts content provider. Primary use in malware: bulk exfiltration of contact data for social graph mapping, building SMS worm target lists, and harvesting personal details for identity theft. FluBot famously used this to read all contacts and send phishing SMS to every number found.
+Grants read access to the device's contact database via the Contacts content provider. Primary use in malware: bulk [exfiltration](../../attacks/data-exfiltration.md) of contact data for social graph mapping, building SMS worm target lists, and harvesting personal details for identity theft. FluBot famously used this to read all contacts and send phishing SMS to every number found.
 
 ## Technical Details
 
@@ -48,7 +48,7 @@ The contact database is relational. A single query can join across tables to ext
 
 ### Contact Exfiltration
 
-The most common abuse pattern. Malware dumps all contacts and sends them to C2. This provides:
+The most common abuse pattern. Malware dumps all contacts and sends them to [C2](../../attacks/c2-techniques.md). This provides:
 
 - Personal details for identity theft
 - Phone numbers and emails for phishing campaigns
@@ -81,13 +81,13 @@ Contacts reveal relationship structures. Malware or spyware operators can recons
 
 ### Targeted Phishing
 
-With access to contact names, an attacker can craft SMS or email messages that appear to come from a known contact. Combining `READ_CONTACTS` with `SEND_SMS` allows sending messages that reference the target by name, dramatically increasing phishing success rates.
+With access to contact names, an attacker can craft SMS or email messages that appear to come from a known contact. Combining `READ_CONTACTS` with [`SEND_SMS`](../sms/send-sms.md) allows sending messages that reference the target by name, dramatically increasing phishing success rates.
 
 ## Android Version Changes
 
 **Android 6.0 (API 23)**: runtime permission required. Prior to this, contacts access was granted at install time with no user interaction.
 
-**Android 8.0 (API 26)**: granting `READ_CONTACTS` no longer automatically grants `GET_ACCOUNTS`. These were split into separate permissions, reducing the data exposed by a single grant.
+**Android 8.0 (API 26)**: granting `READ_CONTACTS` no longer automatically grants [`GET_ACCOUNTS`](get-accounts.md). These were split into separate permissions, reducing the data exposed by a single grant.
 
 **Android 11 (API 30)**: no functional changes, but the permissions auto-reset feature can revoke `READ_CONTACTS` for unused apps, limiting long-term passive collection.
 

@@ -164,7 +164,7 @@ TWAs run inside Chrome's sandbox with no JavaScript bridge to native Android API
 
 ### Phishing Surface
 
-TWAs are effective phishing vectors because the thin APK passes static analysis (no malicious native code), web content can change after app store review, full-screen mode hides the URL bar making origin verification impossible for the user, and the app icon/splash screen mimic legitimate applications.
+TWAs are effective phishing vectors because the thin APK passes [static analysis](../static-analysis.md) (no malicious native code), web content can change after app store review, full-screen mode hides the URL bar making origin verification impossible for the user, and the app icon/splash screen mimic legitimate applications.
 
 ## Hooking Strategy
 
@@ -184,7 +184,7 @@ Java.perform(function() {
 
 ### Network-Level Interception
 
-Proxy-based interception is the most effective approach. Use mitmproxy or Burp Suite with iptables on a rooted device to force traffic through the proxy:
+Proxy-based interception is the most effective approach. Use [mitmproxy or Burp Suite](../network-analysis.md) with iptables on a rooted device to force traffic through the proxy:
 
 ```bash
 adb shell iptables -t nat -A OUTPUT -p tcp --dport 443 -j DNAT --to-destination 192.168.1.100:8080

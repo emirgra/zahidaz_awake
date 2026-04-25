@@ -56,7 +56,7 @@ The attack runs in the background or at night when the user is unlikely to notic
 
 USSD codes interact directly with the carrier network. Malware uses them to:
 
-- **Forward calls**: redirect all incoming calls to an attacker number, enabling interception of voice-based OTPs and authentication callbacks
+- **Forward calls**: redirect all incoming calls to an attacker number, enabling [interception](../../attacks/call-interception.md) of voice-based OTPs and authentication callbacks
 - **Drain balance**: execute carrier-specific USSD codes that purchase premium services or transfer prepaid credit
 - **Wipe device**: on older Samsung devices, the USSD code `*2767*3855#` triggered a factory reset when processed through the dialer. This was demonstrated in 2012 by Ravi Borgaonkar and patched, but showed the destructive potential
 

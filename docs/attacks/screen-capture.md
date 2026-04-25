@@ -163,7 +163,7 @@ Most malware relies on accessibility tree reading as the FLAG_SECURE bypass sinc
     - `FOREGROUND_SERVICE_MEDIA_PROJECTION` in `AndroidManifest.xml`
     - `MediaProjectionManager` or `createScreenCaptureIntent` in decompiled code
     - `VirtualDisplay`, `ImageReader`, or `MediaCodec` usage
-    - `AccessibilityNodeInfo` tree traversal with data exfiltration
+    - `AccessibilityNodeInfo` tree traversal with [data exfiltration](data-exfiltration.md)
     - WebSocket or raw socket connections combined with media encoding classes
 
 ??? example "Frida: Hook MediaProjection Creation"

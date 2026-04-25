@@ -20,7 +20,7 @@ Receive MMS messages containing multimedia content. The app can intercept and pr
 
 ### Content Interception
 
-Intercept MMS messages containing photos, videos, or documents. Relevant for surveillance and data exfiltration.
+Intercept MMS messages containing photos, videos, or documents. Relevant for [surveillance](../../attacks/camera-mic-surveillance.md) and [data exfiltration](../../attacks/data-exfiltration.md).
 
 ### Historical: Stagefright
 

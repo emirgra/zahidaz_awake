@@ -1,6 +1,6 @@
 # FOREGROUND_SERVICE
 
-Allows running a service with a persistent notification that the system prioritizes over background processes. Used by malware to maintain long-running operations: C2 connections, screen monitoring, SMS interception, and data exfiltration that must survive Android's background execution limits.
+Allows running a service with a persistent notification that the system prioritizes over background processes. Used by malware to maintain long-running operations: [C2](../../attacks/c2-techniques.md) connections, screen monitoring, [SMS interception](../../attacks/sms-interception.md), and [data exfiltration](../../attacks/data-exfiltration.md) that must survive Android's background execution limits.
 
 ## Technical Details
 
@@ -29,7 +29,7 @@ startForeground(1, notification);
 
 ### Persistent Background Operation
 
-Combined with `RECEIVE_BOOT_COMPLETED`, this creates persistent malware that:
+Combined with [`RECEIVE_BOOT_COMPLETED`](receive-boot-completed.md), this creates [persistent](../../attacks/persistence-techniques.md) malware that:
 
 1. Starts on boot via boot receiver
 2. Launches a foreground service

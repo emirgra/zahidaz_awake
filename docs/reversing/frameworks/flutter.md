@@ -135,7 +135,7 @@ blutter_output/
   └── blutter_frida.js  # Auto-generated Frida hook stubs
 ```
 
-The `asm/` directory contains per-library disassembly with class names, method names, and pool references resolved. The `pp.txt` file dumps all object pool entries -- search it for API endpoints, encryption keys, and C2 URLs.
+The `asm/` directory contains per-library disassembly with class names, method names, and pool references resolved. The `pp.txt` file dumps all object pool entries -- search it for API endpoints, encryption keys, and [C2](../../attacks/c2-techniques.md) URLs.
 
 !!! tip "Dart SDK Version Matching"
     blutter must compile against the exact Dart SDK version. If the version detection fails (custom Flutter engine builds, stripped version strings), use `--dart-version X.X.X_android_arm64` to specify manually. The [flutter-versions](https://github.com/hadysata/flutter-versions) repository maps snapshot hashes to SDK versions.

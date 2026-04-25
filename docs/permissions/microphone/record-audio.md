@@ -1,6 +1,6 @@
 # RECORD_AUDIO
 
-Grants access to the device microphone for audio capture. Used by spyware for ambient room recording, call recording, and environmental surveillance. Captures conversations, meetings, phone calls, and any sound within microphone range. A primary collection capability in both state-sponsored spyware and commercial stalkerware.
+Grants access to the device microphone for audio capture. Used by spyware for ambient room recording, [call recording](../../attacks/call-interception.md), and environmental [surveillance](../../attacks/camera-mic-surveillance.md). Captures conversations, meetings, phone calls, and any sound within microphone range. A primary collection capability in both [state-sponsored spyware](../../grayware/commercial-surveillance.md) and commercial [stalkerware](../../grayware/stalkerware.md).
 
 ## Technical Details
 
@@ -64,7 +64,7 @@ The primary abuse case. Malware activates the microphone on schedule or on C2 co
 
 Typical implementation:
 
-1. C2 sends record command with duration
+1. [C2](../../attacks/c2-techniques.md) sends record command with duration
 2. Foreground service starts with minimal notification
 3. `AudioRecord` captures raw PCM at 8kHz mono (minimizes file size)
 4. Audio encoded to AMR-NB or Opus for compression (8kHz AMR-NB produces roughly 1KB/second)

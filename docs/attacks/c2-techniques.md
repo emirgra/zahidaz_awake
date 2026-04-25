@@ -175,7 +175,7 @@ Used by: [BankBot](../malware/families/bankbot.md), early [Anubis](../malware/fa
 
 ### SFTP/FTP Exfiltration
 
-Direct file upload for exfiltrating large data: screen recordings, keylog files, photo archives. The malware connects to an attacker-controlled SFTP server and uploads files on a schedule or when triggered.
+Direct file upload for exfiltrating large data: [screen recordings](screen-capture.md), keylog files, photo archives. The malware connects to an attacker-controlled SFTP server and uploads files on a schedule or when triggered.
 
 [Vultur](../malware/families/vultur.md) uses SFTP (via JSch library) specifically for uploading screen recordings, keeping its HTTP C2 channel separate for commands.
 

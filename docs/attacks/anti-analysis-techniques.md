@@ -40,7 +40,7 @@ private boolean isEmulator() {
 }
 ```
 
-Families like [Cerberus](../malware/families/cerberus.md), [Anatsa](../malware/families/anatsa.md), and [Hook](../malware/families/hook.md) check 10-20+ build properties. The check is trivial to implement but also trivial to bypass via Frida property spoofing on a physical device.
+Families like [Cerberus](../malware/families/cerberus.md), [Anatsa](../malware/families/anatsa.md), and [Hook](../malware/families/hook.md) check 10-20+ build properties. The check is trivial to implement but also trivial to bypass via [Frida](../reversing/hooking.md) property spoofing on a physical device.
 
 ### Telephony Checks
 

@@ -1,6 +1,6 @@
 # REQUEST_INSTALL_PACKAGES
 
-The dropper permission. Allows an app to initiate APK installations on the device, making it the key enabler for multi-stage malware delivery. The first-stage app (dropper) passes Google Play Protect because it contains no malicious code. After installation, it downloads the real payload from C2 and triggers installation. The user sees an install confirmation dialog, but social engineering handles that. This permission is central to the dropper-as-a-service (DaaS) model that dominates the Android malware ecosystem.
+The dropper permission. Allows an app to initiate APK installations on the device, making it the key enabler for multi-stage malware delivery. The first-stage app (dropper) passes Google Play Protect because it contains no malicious code. After installation, it downloads the real payload from [C2](../../attacks/c2-techniques.md) and triggers installation. The user sees an install confirmation dialog, but social engineering handles that. This permission is central to the dropper-as-a-service (DaaS) model that dominates the Android malware ecosystem.
 
 ## Technical Details
 
@@ -71,7 +71,7 @@ graph TD
 
 Key characteristics of the dropper model:
 
-- **Delayed activation**: droppers wait hours or days before contacting C2, evading sandbox analysis with short execution windows
+- **Delayed activation**: droppers wait hours or days before contacting C2, evading [sandbox analysis](../../attacks/anti-analysis-techniques.md) with short execution windows
 - **Server-side control**: C2 decides whether to deliver the payload based on device location, carrier, language, and installed apps
 - **Clean initial submission**: the app submitted to Play Store review contains zero malicious code
 - **Legitimate disguise**: droppers pose as PDF readers, file managers, QR scanners, phone cleaners -- utility apps that justify `REQUEST_INSTALL_PACKAGES`
@@ -116,7 +116,7 @@ This bypass was [first documented by ThreatFabric](https://www.threatfabric.com/
 3. An update is pushed that adds the dropper code
 4. The app contacts C2 to retrieve the Anatsa payload
 5. Payload is installed via session-based API
-6. Anatsa requests accessibility service and begins overlay attacks on banking apps
+6. Anatsa requests [accessibility service](../../attacks/accessibility-abuse.md) and begins [overlay attacks](../../attacks/overlay-attacks.md) on banking apps
 
 A single Anatsa dropper published in May 2025 accumulated approximately 90,000 downloads before the malicious update was deployed in late June 2025.
 

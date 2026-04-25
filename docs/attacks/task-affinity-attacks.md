@@ -124,7 +124,7 @@ The shift happened because overlays are more flexible (can trigger on any app la
 
 ### Ad Fraud Activity Isolation
 
-Task affinity manipulation is also used by ad fraud SDKs to hide ad activities from the user's Recent Apps screen. All ad-related activities are declared with a custom `taskAffinity` (separate from the host app's package), `excludeFromRecents="true"`, and `finishOnCloseSystemDialogs="true"`:
+Task affinity manipulation is also used by [ad fraud](../grayware/ad-fraud.md) SDKs to hide ad activities from the user's Recent Apps screen. All ad-related activities are declared with a custom `taskAffinity` (separate from the host app's package), `excludeFromRecents="true"`, and `finishOnCloseSystemDialogs="true"`:
 
 ```xml
 <activity

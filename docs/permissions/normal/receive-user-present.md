@@ -76,7 +76,7 @@ The overlay appears instantly after unlock, before the user can interact with an
 1. `USER_PRESENT` broadcast fires on device unlock
 2. TsarBot immediately displays a fake lock screen overlay matching the device's real lock screen
 3. The victim sees what appears to be the lock screen again and re-enters their PIN/pattern
-4. TsarBot captures the PIN/pattern and exfiltrates it to C2
+4. TsarBot captures the PIN/pattern and exfiltrates it to [C2](../../attacks/c2-techniques.md)
 5. The fake lock screen dismisses, showing the real home screen
 6. The victim assumes the first unlock "didn't work" and continues normally
 
@@ -94,7 +94,7 @@ This triple-redundancy pattern is documented on the [Persistence Techniques](../
 
 ### Ransomware Display
 
-Ransomware families use `USER_PRESENT` to ensure the ransom note is always visible:
+Ransomware families use `USER_PRESENT` to ensure the [ransom note](../../attacks/device-wipe-ransomware.md) is always visible:
 
 1. User unlocks device
 2. `USER_PRESENT` fires

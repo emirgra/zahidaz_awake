@@ -18,7 +18,7 @@ Allatori is a commercial Java obfuscator developed by Smardec, available since 2
 
 ### String Encryption
 
-Allatori replaces string literals with encrypted byte arrays or encoded values, decrypted at runtime through generated static methods. Unlike R8/ProGuard, which leaves all strings as plaintext, Allatori's string encryption hides C2 URLs, API keys, and configuration data from static analysis.
+Allatori replaces string literals with encrypted byte arrays or encoded values, decrypted at runtime through generated static methods. Unlike R8/ProGuard, which leaves all strings as plaintext, Allatori's string encryption hides [C2](../attacks/c2-techniques.md) URLs, API keys, and configuration data from [static analysis](../reversing/static-analysis.md).
 
 Encrypted strings typically appear as calls to a generated decryption method:
 

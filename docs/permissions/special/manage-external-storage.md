@@ -39,7 +39,7 @@ Write malicious APKs or DEX files to shared storage for later execution or socia
 
 ### File Manipulation
 
-Replace legitimate files with modified versions (supply chain attack at the file level).
+Replace legitimate files with modified versions ([supply chain attack](../../attacks/supply-chain-attacks.md) at the file level).
 
 ## Android Version Changes
 

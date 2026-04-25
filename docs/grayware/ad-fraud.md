@@ -37,7 +37,7 @@ Apps that generate fake ad impressions, clicks, or installs in the background to
 
 ## C2-Tasked HTTP Click Fraud
 
-A bot architecture where the compromised device is a dumb executor of tasks issued by a C2 server. Unlike WebView-based ad fraud (which loads pages and relies on the ad SDK), the device makes direct HTTP requests with attacker-supplied URLs, methods, headers, cookies, and bodies — generating clicks, impressions, or attribution events that flow through the attacker's affiliate infrastructure. [Trend Micro](https://www.trendmicro.com/en_us/research/25/j/badbox-2.0.html) and [HUMAN Security](https://www.humansecurity.com/learn/blog/satori-threat-intelligence-alert-badbox-2-0-targets-consumer-devices-with-multiple-fraud-schemes) have documented this pattern at scale in BADBOX 2.0.
+A bot architecture where the compromised device is a dumb executor of tasks issued by a [C2 server](../attacks/c2-techniques.md). Unlike WebView-based ad fraud (which loads pages and relies on the ad SDK), the device makes direct HTTP requests with attacker-supplied URLs, methods, headers, cookies, and bodies — generating clicks, impressions, or attribution events that flow through the attacker's affiliate infrastructure. [Trend Micro](https://www.trendmicro.com/en_us/research/25/j/badbox-2.0.html) and [HUMAN Security](https://www.humansecurity.com/learn/blog/satori-threat-intelligence-alert-badbox-2-0-targets-consumer-devices-with-multiple-fraud-schemes) have documented this pattern at scale in BADBOX 2.0.
 
 ### Architecture
 

@@ -272,7 +272,7 @@ Beyond hooking functions, Frida provides direct memory manipulation APIs for nat
 
 ## Anti-Frida Detection and Bypass
 
-Malware actively detects Frida to prevent dynamic analysis. Understanding each detection vector is necessary to bypass them.
+Malware actively detects Frida to prevent dynamic analysis. Understanding each detection vector is necessary to bypass them. See [anti-analysis techniques](../attacks/anti-analysis-techniques.md) for detection mechanisms across the broader malware landscape.
 
 ### Detection Techniques
 
@@ -476,7 +476,7 @@ Certain malware families require targeted hooks to extract key data:
 
 ### Accessibility Service Monitoring
 
-For families using accessibility-based ATS, hook the accessibility service to observe the full fraud sequence:
+For families using accessibility-based ATS, hook the [accessibility service](../attacks/accessibility-abuse.md) to observe the full fraud sequence:
 
 ```javascript
 Java.perform(function() {
@@ -546,4 +546,4 @@ Beyond family-specific hooks, certain analysis goals map to standard hook points
 
 ## SSL Pinning: Current State
 
-Google now recommends against SSL pinning in Android security best practices. [8kSec's analysis](https://8ksec.io/why-you-should-remove-ssl-pinning-from-your-mobile-apps-in-2025/) covers why: pinning is trivially bypassed with Frida, creates maintenance burden, and provides minimal security benefit for most threat models since the Android platform's certificate transparency and Play Integrity checks provide stronger guarantees. For malware analysis, pinning bypass remains a routine first step (see SSL Pinning Bypass above).
+Google now recommends against SSL pinning in Android security best practices. [8kSec's analysis](https://8ksec.io/why-you-should-remove-ssl-pinning-from-your-mobile-apps-in-2025/) covers why: pinning is trivially bypassed with Frida, creates maintenance burden, and provides minimal security benefit for most threat models since the Android platform's certificate transparency and [Play Integrity](../platform-abuse/play-integrity.md) checks provide stronger guarantees. For malware analysis, pinning bypass remains a routine first step (see SSL Pinning Bypass above).

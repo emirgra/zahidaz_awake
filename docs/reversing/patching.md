@@ -1,6 +1,6 @@
 # Patching
 
-Modifying an APK's code or resources, then repackaging and signing it for installation. Used to remove security checks (root detection, SSL pinning, integrity verification), inject instrumentation, or alter app behavior for analysis.
+Modifying an APK's code or resources, then repackaging and signing it for installation. Used to remove security checks ([root detection](../attacks/anti-analysis-techniques.md), SSL pinning, integrity verification), inject instrumentation, or alter app behavior for analysis.
 
 ## Workflow
 

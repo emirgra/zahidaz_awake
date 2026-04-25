@@ -1,6 +1,6 @@
 # ACCESS_FINE_LOCATION
 
-Grants GPS-precision location access (within ~3 meters) using GPS, GLONASS, WiFi positioning, cell tower triangulation, and the fused location provider. The single most valuable permission for stalkerware and a common request in banking trojans that use geofencing to activate in target regions.
+Grants GPS-precision location access (within ~3 meters) using GPS, GLONASS, WiFi positioning, cell tower triangulation, and the fused location provider. The single most valuable permission for [stalkerware](../../grayware/stalkerware.md) and a common request in banking trojans that use [geofencing](../../attacks/location-tracking.md) to activate in target regions.
 
 ## Technical Details
 
@@ -46,7 +46,7 @@ With `ACCESS_FINE_LOCATION`, an app can:
 
 ### Stalkerware and Domestic Surveillance
 
-Stalkerware families poll `FusedLocationProviderClient` at intervals between 1 and 15 minutes, logging each fix with timestamp, accuracy, speed, and bearing. Logs are exfiltrated to C2 or stored locally for later retrieval. Some families (FlexiSPY, mSpy, Cerberus) offer real-time location streaming to the operator's dashboard.
+Stalkerware families poll `FusedLocationProviderClient` at intervals between 1 and 15 minutes, logging each fix with timestamp, accuracy, speed, and bearing. Logs are exfiltrated to [C2](../../attacks/c2-techniques.md) or stored locally for later retrieval. Some families (FlexiSPY, mSpy, Cerberus) offer real-time location streaming to the operator's dashboard.
 
 ### Geofenced Banking Trojans
 

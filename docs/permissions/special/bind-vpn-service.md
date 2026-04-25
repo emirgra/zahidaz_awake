@@ -67,7 +67,7 @@ Malicious VPNs can redirect DNS queries:
 - Redirect banking domains to phishing servers
 - Block security update and AV signature domains
 - Inject ads by redirecting content domains
-- Exfiltrate DNS query logs (full browsing history)
+- [Exfiltrate](../../attacks/data-exfiltration.md) DNS query logs (full browsing history)
 
 ### Malicious VPN App Scale
 

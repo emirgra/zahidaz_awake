@@ -45,7 +45,7 @@ The primary abuse case. Malware polls `UsageStatsManager` every 1-2 seconds to c
 2. Check if the foreground package matches a target (banking app)
 3. If match found, display overlay immediately
 
-This is the non-accessibility method for triggering overlays. Less efficient than accessibility events (requires polling) but doesn't require the user to enable an accessibility service.
+This is the non-accessibility method for triggering overlays. Less efficient than accessibility events (requires polling) but doesn't require the user to enable an [accessibility service](../../attacks/accessibility-abuse.md).
 
 ### User Behavior Profiling
 

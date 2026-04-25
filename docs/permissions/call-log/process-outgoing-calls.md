@@ -32,11 +32,11 @@ public class OutgoingCallReceiver extends BroadcastReceiver {
 
 ### Call Redirection
 
-Redirect calls to the bank's customer service number to an attacker-controlled number. The victim dials their bank, but the call goes to the attacker's call center.
+Redirect calls to the bank's customer service number to an attacker-controlled number. The victim dials their bank, but the call goes to the attacker's [call center](../../attacks/call-interception.md).
 
 ### Call Monitoring
 
-Log all outgoing calls (number, time) for surveillance.
+Log all outgoing calls (number, time) for [surveillance](../../attacks/camera-mic-surveillance.md).
 
 ### Premium Number Substitution
 

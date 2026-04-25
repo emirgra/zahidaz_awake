@@ -71,7 +71,7 @@ recorder.start();
 
 Recording phone calls is increasingly restricted. See [Call Interception](call-interception.md#call-recording) for the full Android version timeline. Malware workarounds include:
 
-1. **Speakerphone + MIC**: Force speakerphone via accessibility service, then record ambient audio via microphone
+1. **Speakerphone + MIC**: Force speakerphone via [accessibility service](accessibility-abuse.md), then record ambient audio via microphone
 2. **MediaProjection audio**: Capture system audio output including call audio (requires one-time consent dialog)
 3. **Accessibility + MediaRecorder**: Detect call state via accessibility, start foreground service recording via `AudioSource.MIC`
 

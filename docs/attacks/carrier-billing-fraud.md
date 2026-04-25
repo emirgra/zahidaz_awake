@@ -78,7 +78,7 @@ When subscription pages present CAPTCHA challenges, the malware:
 
 DCB fraud engines are typically Stage 2 or Stage 3 payloads in multi-stage dropper architectures:
 
-- **Stage 1**: Clean-looking utility app passes Play Store review
+- **Stage 1**: Clean-looking utility app passes [Play Store review](play-store-evasion.md)
 - **Stage 2**: Orchestrator loaded via [dynamic code loading](dynamic-code-loading.md), sets up [notification hijacking](notification-suppression.md), [background activity launch bypass](anti-analysis-techniques.md#background-activity-launch-bypass-mediasession), and [WebView package spoofing](../grayware/ad-fraud.md#webview-package-name-spoofing)
 - **Stage 3**: DCB fraud engine downloaded from C2 or decrypted from embedded fallback
 

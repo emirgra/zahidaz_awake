@@ -225,7 +225,7 @@ This makes accessibility the most reliable persistence mechanism available witho
 
 ### Device Admin
 
-Activating as a device administrator prevents uninstallation. The user must deactivate the admin first, but the malware can use accessibility to block navigation to the deactivation screen.
+Activating as a [device administrator](device-admin-abuse.md) prevents uninstallation. The user must deactivate the admin first, but the malware can use accessibility to block navigation to the deactivation screen.
 
 [Cerberus](../malware/families/cerberus.md) combined device admin with accessibility: any attempt to open device admin settings triggers the accessibility service to press Home, making deactivation nearly impossible without ADB or safe mode.
 
@@ -340,7 +340,7 @@ BroadcastReceivers can declare `android:priority` up to `Integer.MAX_VALUE` (214
 </receiver>
 ```
 
-Ad fraud SDKs use these to detect competing app installs and trigger ad displays. The receiver bodies are often empty stubs at build time, populated dynamically via remote configuration at runtime.
+[Ad fraud](../grayware/ad-fraud.md) SDKs use these to detect competing app installs and trigger ad displays. The receiver bodies are often empty stubs at build time, populated dynamically via remote configuration at runtime.
 
 ## MessageQueue.IdleHandler
 

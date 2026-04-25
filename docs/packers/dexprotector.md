@@ -104,7 +104,7 @@ Entire DEX files or selected classes are encrypted and stored within the APK. At
 
 ### String Encryption
 
-String literals are replaced with native bridge calls that accept an encrypted index parameter. DexProtector uses strong cryptographic algorithms with dynamic keys derived from multiple runtime parameters, making key extraction from static analysis infeasible. White-box cryptography protects the key material from memory inspection.
+String literals are replaced with native bridge calls that accept an encrypted index parameter. DexProtector uses strong cryptographic algorithms with dynamic keys derived from multiple runtime parameters, making key extraction from [static analysis](../reversing/static-analysis.md) infeasible. White-box cryptography protects the key material from memory inspection.
 
 ### Hide Access (Method/Field Virtualization)
 
@@ -183,7 +183,7 @@ The Licel vTEE (Virtual Trusted Execution Environment) is a software-based secur
 
 ### RASP Bypass as Prerequisite
 
-DexProtector's RASP checks run before the application fully initializes. If Frida, root, or an emulator is detected, the app terminates immediately. Bypassing these checks is the first step in any analysis.
+DexProtector's RASP checks run before the application fully initializes. If [Frida](../reversing/hooking.md), root, or an emulator is detected, the app terminates immediately. Bypassing these checks is the first step in any analysis.
 
 Spawn the application with Frida in spawn mode and hook early:
 

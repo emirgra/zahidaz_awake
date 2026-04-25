@@ -1,6 +1,6 @@
 # SEND_SMS
 
-Allows sending SMS messages programmatically without user interaction. Used for premium SMS fraud (sending messages to premium-rate numbers), phishing distribution (sending malicious links to victim's contacts), and covert C2 communication.
+Allows sending SMS messages programmatically without user interaction. Used for premium SMS fraud (sending messages to premium-rate numbers), phishing distribution (sending malicious links to victim's contacts), and covert [C2](../../attacks/c2-techniques.md) communication.
 
 ## Technical Details
 
@@ -40,7 +40,7 @@ This was the dominant Android malware monetization method from 2010-2014 before 
 
 Sending phishing messages from the victim's phone to their contacts:
 
-1. Malware reads contact list (via `READ_CONTACTS`)
+1. Malware reads contact list (via [`READ_CONTACTS`](../contacts/read-contacts.md))
 2. Sends SMS to each contact with a malicious link
 3. Recipients trust the message because it comes from a known number
 4. Recipients click the link and install the malware

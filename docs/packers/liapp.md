@@ -51,7 +51,7 @@ Beyond encryption, LIAPP applies obfuscation transforms to the DEX bytecode incl
 
 ### String Encryption
 
-Strings are encrypted using XOR-based schemes implemented in the native layer. String decryption happens through JNI calls from Java code into the native library, which decrypts and returns the plaintext. The XOR keys are embedded in the native binary with their own layer of obfuscation, requiring IDA Pro or Ghidra analysis to extract.
+Strings are encrypted using XOR-based schemes implemented in the native layer. String decryption happens through JNI calls from Java code into the native library, which decrypts and returns the plaintext. The XOR keys are embedded in the native binary with their own layer of obfuscation, requiring IDA Pro or Ghidra [static analysis](../reversing/static-analysis.md) to extract.
 
 ### JNI Library Protection
 
@@ -73,7 +73,7 @@ Native `.so` files shipped with the application are encrypted within the APK. LI
 
 ### Anti-Hooking
 
-- Detects Frida through multiple vectors (port scanning, `/proc/maps` inspection, named pipe checks)
+- Detects [Frida](../reversing/hooking.md) through multiple vectors (port scanning, `/proc/maps` inspection, named pipe checks)
 - Xposed framework detection (class presence, stack trace analysis)
 - Substrate/Cydia detection on older devices
 - Inline hook detection on native functions

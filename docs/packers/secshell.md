@@ -125,7 +125,7 @@ The control-flow flattening is the primary obstacle. Every function is transform
 
 ### Frida Hook (Recommended)
 
-Hook the decrypt function at runtime to extract the 16-byte key and decrypted DEX. The `.so` self-unpacks at runtime, so the function offset needs to be resolved dynamically.
+Hook the decrypt function at runtime to extract the 16-byte key and decrypted DEX via [Frida](../reversing/hooking.md). The `.so` self-unpacks at runtime, so the function offset needs to be resolved dynamically.
 
 ```javascript
 var base = Module.findBaseAddress("libSecShell.so");

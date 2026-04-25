@@ -41,7 +41,7 @@ Knowing the exact email addresses allows crafting targeted phishing emails that 
 
 ### Account Enumeration for Overlay Targeting
 
-Banking trojans use `GET_ACCOUNTS` to determine which financial services the victim uses, then load the corresponding overlay injection pages from C2. This avoids downloading inject templates for all targets and reduces network footprint.
+Banking trojans use `GET_ACCOUNTS` to determine which financial services the victim uses, then load the corresponding [overlay injection](../../attacks/overlay-attacks.md) pages from [C2](../../attacks/c2-techniques.md). This avoids downloading inject templates for all targets and reduces network footprint.
 
 ```java
 AccountManager am = AccountManager.get(context);

@@ -143,11 +143,11 @@ The syscall-based file access makes it harder to intercept with standard Java ho
 
 ### Overlay Detection
 
-Detects if another application draws over the protected app's window. Prevents [tapjacking](../attacks/tapjacking.md) and phishing overlays that attempt to capture user input. The app can block interaction, alert the user, or terminate when an overlay is detected.
+Detects if another application draws over the protected app's window. Prevents [tapjacking](../attacks/tapjacking.md) and [phishing overlays](../attacks/overlay-attacks.md) that attempt to capture user input. The app can block interaction, alert the user, or terminate when an overlay is detected.
 
 ### Screen Capture Prevention
 
-Blocks screenshots, screen recordings, and screen mirroring of the protected app. Uses `FLAG_SECURE` and additional native-level enforcement to prevent data leakage through screen capture.
+Blocks screenshots, screen recordings, and screen mirroring of the protected app. Uses `FLAG_SECURE` and additional native-level enforcement to prevent data leakage through [screen capture](../attacks/screen-capture.md).
 
 ### Dynamic Imports and Syscalls
 

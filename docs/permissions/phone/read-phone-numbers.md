@@ -25,7 +25,7 @@ Returns the phone number(s) associated with the device's SIM card(s). Note: this
 
 ### Device Identification
 
-The phone number serves as a persistent identifier for the victim. Malware sends this to C2 during initial registration to uniquely identify the infected device and enable targeted operations (e.g., sending SMS-based C2 commands to this number).
+The phone number serves as a persistent identifier for the victim. Malware sends this to [C2](../../attacks/c2-techniques.md) during initial registration to uniquely identify the infected device and enable targeted operations (e.g., sending SMS-based C2 commands to this number).
 
 ### Account Correlation
 
@@ -46,7 +46,7 @@ Most of these families use `READ_PHONE_STATE` rather than `READ_PHONE_NUMBERS` b
 
 ### Banking Trojans
 
-The phone number is combined with other identifiers (IMEI, Android ID, device model) to create a unique victim profile. This allows operators to correlate the infected device with the victim's banking accounts and target them with region-specific overlay injection pages.
+The phone number is combined with other identifiers (IMEI, Android ID, device model) to create a unique victim profile. This allows operators to correlate the infected device with the victim's banking accounts and target them with region-specific [overlay injection](../../attacks/overlay-attacks.md) pages.
 
 The phone number also serves as a routing mechanism: operators can send SMS-based C2 commands to the victim's number, providing a fallback communication channel if HTTP-based C2 infrastructure is taken down.
 

@@ -52,7 +52,7 @@ This effectively escalates from one permission (accessibility) to all permission
 
 ### On-Device Fraud (ATS)
 
-Automated Transfer System ([T1516](https://attack.mitre.org/techniques/T1516/)): the malware operates the real banking app to initiate transfers. MITRE ATT&CK has no standalone technique for ATS; it is a compound behavior combining T1453 (accessibility abuse) and T1516 (input injection). Steps:
+[Automated Transfer System](automated-transfer-systems.md) ([T1516](https://attack.mitre.org/techniques/T1516/)): the malware operates the real banking app to initiate transfers. MITRE ATT&CK has no standalone technique for ATS; it is a compound behavior combining T1453 (accessibility abuse) and T1516 (input injection). Steps:
 
 1. Wait for user to log into banking app (or use stolen credentials via overlay)
 2. Navigate to transfer screen using accessibility gestures

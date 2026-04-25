@@ -228,7 +228,7 @@ Common indicators of malicious uni-app samples:
 
 - Heavy use of `plus.contacts`, `plus.camera`, `plus.io` for data collection
 - API endpoints pointing to recently registered domains or IP addresses
-- Obfuscated C2 URLs constructed by string concatenation in `app-service.js`
+- Obfuscated [C2](../../attacks/c2-techniques.md) URLs constructed by string concatenation in `app-service.js`
 - Permission requests disproportionate to stated app functionality
 - Multiple app IDs cycling through the same C2 infrastructure
 

@@ -1,6 +1,6 @@
 # REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
 
-Allows requesting exemption from Android's battery optimization (Doze mode). When granted, the app's background processes are not restricted by the system, allowing persistent operation. Used by malware to maintain C2 connections and background monitoring without being killed by the OS.
+Allows requesting exemption from Android's battery optimization (Doze mode). When granted, the app's background processes are not restricted by the system, allowing [persistent](../../attacks/persistence-techniques.md) operation. Used by malware to maintain [C2](../../attacks/c2-techniques.md) connections and background monitoring without being killed by the OS.
 
 ## Technical Details
 
@@ -27,8 +27,8 @@ Battery optimization (Doze mode) kills background processes to save battery. Mal
 
 - Maintaining C2 connections
 - Monitoring for target apps (overlay timing)
-- SMS interception
-- Continuous data exfiltration
+- [SMS interception](../../attacks/sms-interception.md)
+- Continuous [data exfiltration](../../attacks/data-exfiltration.md)
 
 Without this exemption, the OS may kill the malware's background service after minutes of inactivity.
 

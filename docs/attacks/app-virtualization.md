@@ -74,7 +74,7 @@ When the victim launches the real banking app, the malware's accessibility servi
 
 ### Credential Capture via Hooking
 
-Inside the virtual container, a hooking framework (Xposed, Frida, or custom hooks) injects into the guest app's process:
+Inside the virtual container, a [hooking framework](../reversing/hooking.md) (Xposed, Frida, or custom hooks) injects into the guest app's process:
 
 - **UI hooks**: Capture text entered into login fields
 - **Network hooks**: Intercept OkHttpClient, HttpURLConnection, and WebView network calls to read credentials in transit

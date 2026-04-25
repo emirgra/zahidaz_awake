@@ -246,7 +246,7 @@ Modern malware rarely uses Titanium due to the framework's decline. Encountering
 | Patching | Edit JS, repackage | Requires bytecode manipulation |
 | Overall difficulty | **Very Easy** | **Moderate** |
 
-Titanium apps with plaintext JavaScript are among the easiest Android targets to reverse engineer. The preserved file structure, readable code, and well-defined Kroll bridge make both static and dynamic analysis straightforward. The primary challenge arises only with precompiled V8 builds, which are uncommon.
+Titanium apps with plaintext JavaScript are among the easiest Android targets to reverse engineer. The preserved file structure, readable code, and well-defined Kroll bridge make both [static](../static-analysis.md) and [dynamic analysis](../dynamic-analysis.md) straightforward. The primary challenge arises only with precompiled V8 builds, which are uncommon.
 
 ## References
 

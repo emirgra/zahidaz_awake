@@ -8,10 +8,10 @@
 
 <br><br>
 
-[![Website](https://img.shields.io/website?url=https%3A%2F%2Fzahidaz.github.io%2Fawake%2F&style=for-the-badge&label=Browse%20AWAKE&color=e53935)](https://zahidaz.github.io/awake/)&nbsp;
-[![License](https://img.shields.io/github/license/zahidaz/awake?style=for-the-badge)](LICENSE)&nbsp;
-[![Last Commit](https://img.shields.io/github/last-commit/zahidaz/awake?style=for-the-badge&color=blue)](https://github.com/zahidaz/awake/commits/main)&nbsp;
-[![Stars](https://img.shields.io/github/stars/zahidaz/awake?style=for-the-badge&color=yellow)](https://github.com/zahidaz/awake/stargazers)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fawakewiki.org%2F&style=for-the-badge&label=Browse%20AWAKE&color=e53935)](https://awakewiki.org/)&nbsp;
+[![License](https://img.shields.io/gitea/license/zahidaz/awake?gitea_url=https%3A%2F%2Fcodeberg.org&style=for-the-badge)](LICENSE)&nbsp;
+[![Last Commit](https://img.shields.io/gitea/last-commit/zahidaz/awake?gitea_url=https%3A%2F%2Fcodeberg.org&style=for-the-badge&color=blue)](https://codeberg.org/zahidaz/awake/commits/branch/main)&nbsp;
+[![Stars](https://img.shields.io/gitea/stars/zahidaz/awake?gitea_url=https%3A%2F%2Fcodeberg.org&style=for-the-badge&color=yellow)](https://codeberg.org/zahidaz/awake/stars)
 
 <br>
 
@@ -79,7 +79,7 @@ Android's security mechanisms from the offense side. App sandbox, SELinux, verif
 
 ### Browse the full wiki
 
-**[https://zahidaz.github.io/awake/](https://zahidaz.github.io/awake/)**
+**[https://awakewiki.org/](https://awakewiki.org/)**
 
 </div>
 

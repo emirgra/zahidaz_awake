@@ -1,7 +1,7 @@
 site_name: AWAKE
 site_description: Android Wiki of Attacks, Knowledge & Exploits
-site_url: https://zahidaz.github.io/awake/
-repo_url: https://github.com/zahidaz/awake
+site_url: https://awakewiki.org/
+repo_url: https://codeberg.org/zahidaz/awake
 repo_name: zahidaz/awake
 
 theme:

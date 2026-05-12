@@ -13,7 +13,7 @@ Obfuscators are a lighter category: they transform code to make it harder to rea
 | [360 Jiagu](qihoo-360-jiagu.md) | Qihoo 360 | China | Documented |
 | [APKProtect](apkprotect.md) | Nagain | China | Documented |
 | [Arxan (Digital.ai)](arxan.md) | Digital.ai | USA | Documented |
-| [Baidu Reinforcement](tencent-legu.md) | Baidu | China | Documented |
+| [Baidu Reinforcement](baidu.md) | Baidu | China | Documented |
 | [Bangcle (SecNeo)](bangcle.md) | Bangcle | China | Documented |
 | [Kiwisec (几维安全)](kiwisec.md) | Kiwisec | China | Documented |
 | [SecShell](secshell.md) | Bangcle / SecNeo (梆梆安全) | China | Documented |
@@ -21,8 +21,9 @@ Obfuscators are a lighter category: they transform code to make it harder to rea
 | [GoldCrypt](goldcrypt.md) | Unknown (underground) | Russia (forums) | Documented |
 | [DexGuard](dexguard.md) | Guardsquare | Belgium | Documented |
 | [DexProtector](dexprotector.md) | Licel | Netherlands | Documented |
-| [iJiami](tencent-legu.md) | iJiami | China | Documented |
-| [NeteaseYiDun](tencent-legu.md) | NetEase | China | Documented |
+| [Hqwar](hqwar.md) | Unknown (underground) | Russia | Documented |
+| [iJiami](ijiami.md) | iJiami | China | Documented |
+| [NeteaseYiDun](netease-yidun.md) | NetEase | China | Documented |
 | [Promon SHIELD](promon.md) | Promon | Norway | Documented |
 | [Tencent Legu](tencent-legu.md) | Tencent | China | Documented |
 | [Virbox](virbox.md) | SenseShield Technology | China | Documented |
@@ -37,7 +38,7 @@ Obfuscators are a lighter category: they transform code to make it harder to rea
 | Obfuscator | Type | Notes |
 |-----------|------|-------|
 | [R8 / ProGuard](r8-proguard.md) | Free (Google/open source) | Default Android build tools. Name obfuscation, dead code removal, optimization. R8 replaced ProGuard. |
-| Allatori | Commercial | Java/Android obfuscator. String encryption, flow obfuscation, watermarking. |
+| [Allatori](allatori.md) | Commercial | Java/Android obfuscator. String encryption, flow obfuscation, watermarking. |
 | DashO | Commercial | PreEmptive Solutions. Obfuscation + tamper detection + analytics. |
 | Zelix KlassMaster | Commercial | Aggressive flow obfuscation, string encryption, stack trace obfuscation. |
 | OLLVM | Open source | Obfuscator-LLVM. Control flow flattening, bogus control flow, string encryption for native code. Used by [Mandrake](../malware/families/mandrake.md). |

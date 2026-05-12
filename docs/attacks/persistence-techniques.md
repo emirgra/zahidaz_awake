@@ -103,6 +103,14 @@ The service is not completely undetectable: Android 13 introduced the [FGS Task 
 
 This is simpler and more effective than `IMPORTANCE_MIN` tricks. Adware families exploit it at scale: every app in a fleet starts its foreground service while `TOP`, then relies on the denied notification permission to run with no drawer notification.
 
+### Audio-Loop Keep-Alive (`mediaPlayback`)
+
+A foreground service declared with the `mediaPlayback` service type keeps the process classified as actively playing media, which the OS treats as a higher-priority foreground state. Malware loops an almost-inaudible short MP3 to satisfy the runtime "actually playing media" condition without producing audible output. [Kaspersky describes this for the BeatBanker dropper](https://securelist.com/beatbanker-miner-and-banker/119121/) ("keeps the service active in the foreground using a notification and loads a small, continuous audio file"), and [Ostorlab confirms](https://blog.ostorlab.co/beatbanker-btmob-tv-v-23-static-analysis.html) the implementation as a bundled `output8.mp3` looped at runtime while the service "periodically reacquires Android wake locks", keeping the process classified as actively playing media.
+
+The `mediaPlayback` foreground-service type is also one of the categories exempt from the 20-hour foreground-service notification reminder ([Android documentation](https://developer.android.com/about/versions/13/changes/fgs-manager)), so combining the audio loop with `POST_NOTIFICATIONS` denial (see above) yields a foreground service that runs indefinitely without producing any user-visible notification or system reminder.
+
+Detection during analysis: look for `FOREGROUND_SERVICE_MEDIA_PLAYBACK` in the manifest paired with bundled audio assets (often a single short MP3 looped via `MediaPlayer.setLooping(true)`), and audit foreground-service types against actual user-facing media affordances.
+
 ## Scheduled Execution
 
 ### JobScheduler
@@ -364,6 +372,19 @@ pm.setComponentEnabledSetting(
 ```
 
 The app disappears from the launcher but remains findable in Settings > Apps. The `INFO` category alias keeps the app discoverable by the system for deep links and intents, maintaining functionality while being invisible to the user.
+
+### No-Launcher Dropper with Companion-App Trigger
+
+A related architecture: the dropper has no `LAUNCHER` category at all (typically `INFO` or `BROWSABLE` only). It cannot be started by the user from the app drawer and does not appear there. Instead, a companion app installed alongside it invokes the dropper's activity directly, often via an explicit `Intent` or Android `Messenger` IPC carrying a magic shibboleth that the dropper checks before executing. [anir0y documented this](https://classroom.anir0y.in/post/blog-dissecting-rto-echallan-banking-trojan/) in the RTO eChallan banking trojan as a "category.INFO with MAIN action for launcher hiding" plus a two-app architecture where "the dropper decrypts and silently installs a second APK, with the encrypted payload stored in nested directories within the dropper's data directory."
+
+Operationally:
+
+- The companion app is the user-visible decoy (often a fake utility, a fake app store, or a legitimate-looking branded install page).
+- The companion holds permission prompts, accessibility nags, and any social-engineering UI.
+- After the user grants permissions to the companion, it explicitly starts the dropper component via the IPC handshake. The dropper then performs the malicious install or runs the trojan.
+- Once the dropper is no longer needed, the companion can `setComponentEnabledSetting` it to `DISABLED` or simply stop calling it.
+
+The analyst impact: sandbox runs that only launch APKs with the `LAUNCHER` category never invoke the dropper at all. Static-analysis pipelines that pivot on "main activity" miss the entire dropper-side payload because its entry point is not an activity-with-`LAUNCHER`. The malicious chain only becomes visible if you specifically launch the dropper component or run the companion alongside it.
 
 ## MAX_INT Priority Receivers
 

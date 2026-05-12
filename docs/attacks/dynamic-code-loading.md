@@ -96,6 +96,8 @@ Index-0 placement is the key detail: appended elements never resolve before the 
 
 Hunting tip: a manifest service named `androidx.work.impl.foreground.SystemForegroundService` whose declaring DEX is *not* the AndroidX library DEX (or whose containing classloader element sits at index 0 of `pathList.dexElements` at runtime) is shadow-DEX impersonation, not normal AndroidX integration.
 
+Worked example: [Ostorlab's BTMOB static analysis](https://blog.ostorlab.co/beatbanker-btmob-tv-v-23-static-analysis.html) documents an `installer.dex` that uses `makeInMemoryDexElements` for API ≥ 29 combined with reflective manipulation of the parent classloader's `dexElements` array to splice decrypted DEX byte buffers into the running app's classloader, so the decrypted trojan code never touches disk as a regular DEX file.
+
 ### PathClassLoader Manipulation
 
 The default `PathClassLoader` loads the APK's own classes. Malware can manipulate its internal `DexPathList` to inject additional DEX files into the existing class loader rather than creating a new one. This makes the loaded code appear as part of the original APK to reflection-based inspection.
@@ -170,6 +172,16 @@ loader.loadClass("com.payload.Main")
     .getMethod("start", Context.class)
     .invoke(null, this);
 ```
+
+### Stage 2 variant: Session-Based Installer Bypass
+
+When the second-stage payload is a full APK rather than a DEX, droppers use the [`PackageInstaller.Session`](https://developer.android.com/reference/android/content/pm/PackageInstaller.Session) API rather than `ACTION_INSTALL_PACKAGE` to install it silently from inside the dropper process. This requires only the `REQUEST_INSTALL_PACKAGES` permission and skips the explicit installation UI that older intent-based installers triggered.
+
+[ThreatFabric documented SecuriDropper](https://www.threatfabric.com/blogs/droppers-bypassing-android-13-restrictions) as the canonical example: a dropper-as-a-service that uses session-based install specifically to bypass Android 13's Restricted Settings, which only restrict apps installed through "non-session-based installer APIs". The session-based path remains unaffected by the restriction, so the dropped malware can request Accessibility and other dangerous permissions exactly as it could on pre-Android-13 devices.
+
+[Kaspersky's BeatBanker writeup](https://securelist.com/beatbanker-miner-and-banker/119121/) describes the same primitive in a Brazilian banker dropper: "The malware uses the `REQUEST_INSTALL_PACKAGES` permission to install APK files directly into its memory, bypassing Google Play."
+
+The combination of session-based install plus split APK abuse (see [Distribution Channels](../malware/distribution.md)) means droppers can deliver a multi-split trojan APK that never goes through Play Protect and never triggers the Android 13 Restricted Settings dialog.
 
 ### Stage 3: C2 Modules
 

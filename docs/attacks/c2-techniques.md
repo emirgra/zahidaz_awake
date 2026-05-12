@@ -223,6 +223,14 @@ Common dead drop platforms:
 
     When you find a dead drop resolver, check if the attacker is still actively updating the public profile. Extracting historical dead drop values (via Wayback Machine or platform-specific caches) can reveal the full list of C2 servers used over the campaign's lifetime.
 
+### Self-Hosted Analytics SDKs (Aptabase, others)
+
+Operators run a self-hosted copy of a legitimate open-source analytics SDK and use it as a campaign telemetry channel and dead-drop endpoint. [Aptabase](https://aptabase.com/) (open-source product analytics) is the recurring example: the operator stands up `aptabase.<random-string>.xyz` and the malware POSTs install / activation events to it as if it were a benign analytics service. Documented by [Kaspersky for BeatBanker](https://securelist.com/beatbanker-miner-and-banker/119121/) (IoCs include `aptabase.fud2026[.]com` and `aptabase.khwdji319[.]xyz`) and corroborated by [Ostorlab](https://blog.ostorlab.co/beatbanker-btmob-tv-v-23-static-analysis.html), which observed the same operator template at `aptabase.jesfeoqrj3.xyz:8443`.
+
+The pattern is attractive to operators because the traffic mimics a developer-grade telemetry tool: HTTPS POST with a JSON event body, plausible domain prefix, and a self-hosted backend that the analyst cannot easily distinguish from a benign Aptabase deployment without inspecting payloads. Some campaigns reuse the same endpoint to serve secondary payloads (e.g., miner binaries) alongside the analytics ingest, doubling the host's role as both telemetry beacon and distribution.
+
+Detection: any TLS host matching `aptabase.<sub>.xyz` or `aptabase.<sub>.com` that does not resolve to Aptabase's own infrastructure should be treated as operator-controlled. Pivoting on the `aptabase.` subdomain prefix across passive DNS surfaces sibling operator domains quickly.
+
 ### DNS Tunneling and DNS-over-HTTPS
 
 Encodes C2 data inside DNS queries. The malware makes DNS lookups for subdomains like `base64data.evil.com`, and the authoritative DNS server decodes the subdomain to extract data. Responses come back as TXT or CNAME records.

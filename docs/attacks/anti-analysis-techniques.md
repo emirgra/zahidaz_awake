@@ -78,7 +78,7 @@ private boolean checkEmulatorFiles() {
 
 ### Sensor-Based Detection
 
-[Trend Micro documented](https://www.trendmicro.com/en_us/research.html) malware using motion sensor data to distinguish real phones from emulators. BatterySaverMobi and Currency Converter (discovered on Play Store) checked accelerometer readings -- emulators return static or zero values because they don't simulate physical motion. The malware only activated its dropper payload after detecting non-zero accelerometer variance over time.
+[Trend Micro documented](https://www.trendmicro.com/en_us/research.html) malware using motion sensor data to distinguish real phones from emulators. BatterySaverMobi and Currency Converter (discovered on Play Store) checked accelerometer readings; emulators return static or zero values because they don't simulate physical motion. The malware only activated its dropper payload after detecting non-zero accelerometer variance over time. [ThreatFabric documented the same pattern in Cerberus](https://www.threatfabric.com/blogs/cerberus-a-new-banking-trojan-from-the-underworld), which "uses the device accelerometer sensor [as] a simple pedometer" and only continues to install its payload after the step counter passes a preconfigured threshold, defeating short-duration sandbox runs.
 
 [SpinOk](../malware/families/spinok.md) SDK used gyroscope and magnetometer data as anti-emulation checks before activating its data harvesting across 193 apps with 451 million downloads.
 
@@ -527,6 +527,23 @@ The provider's `query`, `insert`, `update`, and `delete` methods return null/zer
 
 Hunting tip: any `<provider>` whose `onCreate()` does not touch `ContentResolver`/URI but instead reads `/proc`, starts threads, or loads native libraries is doing early-lifecycle anti-analysis work. Cross-reference with [Content Provider Attacks](content-provider-attacks.md).
 
+## Runtime Component Toggling
+
+[`PackageManager.setComponentEnabledSetting()`](https://developer.android.com/reference/android/content/pm/PackageManager#setComponentEnabledSetting(android.content.ComponentName,%20int,%20int)) lets an app flip any of its own activities, receivers, services, or providers between `ENABLED`, `DISABLED`, and `DEFAULT` at runtime without re-installation. The setting persists across reboots until the app changes it again.
+
+Malware uses this primitive beyond the well-known launcher-icon-hiding case ([Layakk](https://www.layakk.com/blog/android-malware-iii-hidden-malware/) documents `setComponentEnabledSetting` "to hide the application icon from the user's eyes"; [Kaspersky's Loapi writeup](https://securelist.com/jack-of-all-trades/83470/) describes the icon-hiding step happening immediately after admin privileges are granted). Broader uses observed:
+
+| Target | Effect |
+|--------|--------|
+| Launcher activity (or activity-alias) | App disappears from app drawer; covered in [Launcher Icon Toggle](persistence-techniques.md#launcher-icon-toggle) |
+| `BOOT_COMPLETED` / system-event receivers | Receiver declared in manifest is disabled at install; runtime code enables it only after the C2 check-in succeeds, so static scanners see a wired-up boot receiver that never actually fires until activation |
+| FCM-message or accessibility services | Malicious service is `enabled="false"` in the manifest, enabled by the dropper after the install gate clears. The static manifest looks dormant; the runtime app is fully active |
+| Sibling activities used as decoys | A benign-looking activity is the only one enabled at install time to satisfy review; the real malicious entry points are enabled later |
+
+The static-analysis blind spot is that `apktool` / `jadx` inspection of the manifest shows the `android:enabled="false"` attribute, but most automated triage pipelines do not correlate it with the runtime `setComponentEnabledSetting` call site that re-enables it. The runtime call is often guarded by a server response, a sensor check, or a time delay, so sandbox runs that don't satisfy the gate observe a dormant component set.
+
+Hunting heuristic: enumerate manifest components with `android:enabled="false"` and grep the DEX for the matching `setComponentEnabledSetting(... COMPONENT_ENABLED_STATE_ENABLED ...)` call. Any disabled-at-rest component with a runtime enable path is a candidate stealth component.
+
 ## Phantom Manifest Components
 
 The manifest declares activities, services, or receivers whose class names are **absent from every packaged DEX**. These ghost components are placeholders for runtime-resolved classes — they get their implementations from a second-stage DEX dropped by the packer, native loader, or downloader. Static analysis sees a fully wired manifest pointing at classes that do not exist; dynamic analysis only sees them after the loader has run.
@@ -620,6 +637,10 @@ Detection: `<instrumentation>` elements in the manifest where `targetPackage` ma
 
 [SoumniBot](../malware/families/soumnibot.md) injects malformed compression parameters into `AndroidManifest.xml`. Android's parser tolerates the corruption; analysis tools crash. [Kaspersky documented three specific techniques](https://securelist.com/soumnibot-android-trojan-evades-analysis/112296/): invalid compression method values, invalid manifest size declarations, and oversized namespace strings.
 
+### Konfety ZIP General Purpose Flag Trick
+
+The 2025 Konfety variant sets bit 0 of the General Purpose Flags field ("encrypted") on `AndroidManifest.xml` and `resources.arsc` inside the APK ZIP. Android's parser ignores the flag and installs normally; Python `zipfile`, `unzip`, `apktool`, and `jadx` all refuse the entries or fail outright because they treat them as encrypted ZIP entries with no available password. [Zimperium documented](https://zimperium.com/blog/konfety-returns-classic-mobile-threat-with-new-evasion-techniques) this technique alongside a complementary BZIP fake-compression-method trick that crashes tools relying on standard ZIP libraries. The original Konfety family was disclosed in 2024 by [HUMAN Security's Satori team](https://www.humansecurity.com/learn/blog/satori-threat-intelligence-alert-konfety-spreads-evil-twin-apps-for-multiple-fraud-schemes/) as an ad-fraud "evil twin" operation; the ZIP-flag evasion is a 2025 addition.
+
 ### Oversized DEX Headers
 
 Some families pad DEX files with junk data that exceeds parser buffer sizes in analysis tools but is safely ignored by ART.
@@ -651,6 +672,7 @@ The majority of Android string obfuscation uses XOR with a repeating key. Variat
 | Hex + XOR | Hex string to byte pairs, XOR with repeating key | Parse hex, XOR with key |
 | Single-byte XOR | Each character XOR'd with a constant (e.g., `0x10`) | Trivial: XOR all strings with the constant |
 | Nibble swap + XOR | `((b & 0x0F) << 4) \| ((b >> 4) & 0x0F)` then XOR | Reverse nibble swap after XOR decode |
+| Method-wrapped repeating XOR | Single decoder method (often a two-character obfuscated name like `m70.a()` / `rf0.a()`) called from thousands of sites across the DEX, taking a ciphertext byte array and a per-call key; used by [BTMOB](../malware/families/btmob.md) (over 1,000 trojan call sites per v3.4.1 sample per [Ostorlab](https://blog.ostorlab.co/beatbanker-btmob-tv-v-23-static-analysis.html)) | Identify decoder by its arity and return type, then enumerate every call site with smali / Soot, evaluate, and substitute |
 
 #### StringFog
 
@@ -757,6 +779,18 @@ Unlike legitimate code expansion from library bundling, DEX bloat classes follow
 ### Domain Generation Algorithms
 
 [Octo2](../malware/families/octo.md) introduced DGA-based C2 resolution, generating domain names algorithmically so that blocking individual domains is ineffective. The DGA seed and algorithm are embedded in a dynamically loaded native library, adding another analysis layer.
+
+### Per-Build Identifier Randomization
+
+Operator builders regenerate identifiers per build so that hash and string-based IoCs (package name, native library filename, AES-key seed) do not pivot across operators or campaigns. Documented in [Ostorlab's BTMOB static analysis](https://blog.ostorlab.co/beatbanker-btmob-tv-v-23-static-analysis.html), where every stage of a three-stage chain carries a different package name (`com.bitmavrick.lumolight` → `com.yqzg.parrnell` → `com.sywo.chelingas`) and different native library names per stage. Combined with `SHA-1(basename)[:16]` AES key derivation (see [Filename-Derived AES Keys](#filename-derived-aes-keys) below), the renamed asset naturally produces a unique decryption key per build, so even a leaked key from one sample does not decrypt sibling samples.
+
+The defensive impact is that the only reliable cross-build pivot for these families is a structural similarity hash (e.g., VirusTotal `vhash`, `ssdeep`) rather than any concrete identifier.
+
+### Filename-Derived AES Keys
+
+A recurring pattern in Brazilian banker droppers: the AES key for an encrypted payload is derived as `SHA-1(filename)[:16]`, with either a null IV or an SHA-256-derived IV from the same seed. [Kaspersky's BeatBanker writeup](https://securelist.com/beatbanker-miner-and-banker/119121/) explicitly documents the scheme: "The decryption key being derived from the SHA-1 hash of the downloaded file's name, ensuring that each version of the file is encrypted with a unique key." [Ostorlab confirms](https://blog.ostorlab.co/beatbanker-btmob-tv-v-23-static-analysis.html) the implementation as `AES/CBC/PKCS5Padding`, key = `SHA-1(basename)[:16]`, zero IV.
+
+The trade-off is operator-friendly key management (no per-build secret to distribute, key is implicit in the filename) at the cost of trivial recoverability for any analyst who has the file. Combined with per-build randomization of the filename itself, this defeats key-based IoC sharing without protecting any individual sample.
 
 ## Families by Anti-Analysis Depth
 

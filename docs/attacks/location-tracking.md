@@ -15,6 +15,10 @@ See also: [`ACCESS_FINE_LOCATION`](../permissions/location/access-fine-location.
 
     T1430 covers GPS, cell tower, and WiFi-based location collection. T1627.001 covers SIM/locale/IP geofencing used to restrict malware activation to target regions.
 
+??? example "Public PoC"
+
+    [location-tracker-background](https://github.com/safetysystemtechnology/location-tracker-background) -- Background GPS location-tracking PoC
+
 ??? warning "Requirements"
 
     | Requirement | Details |
@@ -298,7 +302,7 @@ private boolean isMockLocation(Location location) {
 Analysts frequently use mock location apps (Fake GPS, GPS Joystick) or emulator location spoofing to trigger geofenced malware. If the malware checks `isFromMockProvider()`, mock location will not work. Workarounds:
 
 - Use [Frida](../reversing/hooking.md) to hook `isFromMockProvider()` and return `false`
-- Use a rooted device with Magisk module that patches the mock location flag at framework level
+- Use a rooted device with [Magisk](https://github.com/topjohnwu/Magisk) module that patches the mock location flag at framework level
 - Use a physical device with a SIM from the target country instead of mock GPS
 - Modify the emulator's location through the emulator controls (not via mock provider API)
 

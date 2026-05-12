@@ -12,6 +12,10 @@ See also: [Device Wipe & Ransomware](device-wipe-ransomware.md), [Persistence Te
 
     T1626.001 covers abuse of the Android Device Administration API for preventing removal, factory reset, password reset, and camera disabling.
 
+??? example "Public PoC"
+
+    [SARA](https://github.com/termuxhackers-id/SARA) -- Simple Android ransomware PoC using DevicePolicyManager to lock the device
+
 ??? warning "Requirements"
 
     | Requirement | Details |

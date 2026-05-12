@@ -11,6 +11,10 @@ Drawing a fake UI on top of a legitimate app to steal credentials. The defining 
 
     T1417.002 explicitly covers overlay attacks using `SYSTEM_ALERT_WINDOW` and fake login screens. T1453 applies when accessibility services trigger the overlay based on foreground app detection.
 
+??? example "Public PoC"
+
+    [android-overlay-malware-example](https://github.com/geeksonsecurity/android-overlay-malware-example) -- Overlay credential-stealer PoC using SYSTEM_ALERT_WINDOW
+
 ??? warning "Requirements"
 
     | Requirement | Details |

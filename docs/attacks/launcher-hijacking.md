@@ -2,6 +2,10 @@
 
 Replacing the device's home screen with a malicious launcher that traps the user in a controlled environment. The malware registers as a HOME intent handler and actively prevents the user from reverting to the original launcher by killing Settings apps and blocking navigation.
 
+??? example "Public PoC"
+
+    [taskHijacker](https://github.com/akabe1/taskHijacker) -- Practical task/launch hijacking PoC letting attacker masquerade as victim's home screen
+
 ## HOME Intent Registration
 
 The malware declares an Activity with `CATEGORY_HOME` and `CATEGORY_DEFAULT` intent filters, making it eligible as a home screen replacement:

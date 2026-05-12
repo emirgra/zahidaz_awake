@@ -10,6 +10,10 @@ Exploiting exposed or misconfigured `ContentProvider` components to read, modify
 
     No dedicated MITRE technique for content provider exploitation. T1409 covers accessing data stored by applications, which includes insecure content providers. MITRE treats content provider access as a data collection vector rather than a standalone technique.
 
+??? example "Public PoC"
+
+    [AOSP-DownloadProviderDbDumper](https://github.com/IOActive/AOSP-DownloadProviderDbDumper) -- Working exploit for SQL injection in Android's DownloadProvider (CVE-2018-9493)
+
 ??? warning "Requirements"
 
     | Requirement | Details |

@@ -13,6 +13,10 @@ See also: [Notification Suppression](notification-suppression.md#sms-notificatio
 
     T1636.004 covers passive collection and active interception of SMS. T1582 covers sending, modifying, and deleting SMS (premium fraud, worm propagation, C2 channel).
 
+??? example "Public PoC"
+
+    [Android-SMS-Interceptor](https://github.com/wirespecter/Android-SMS-Interceptor) -- Hidden SMS interceptor PoC that silently forwards every incoming SMS
+
 ??? warning "Requirements"
 
     | Requirement | Details |

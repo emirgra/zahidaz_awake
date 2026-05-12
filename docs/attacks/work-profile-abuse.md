@@ -6,6 +6,10 @@ Exploiting Android Enterprise features to access corporate data, bypass MDM cont
 
     MITRE ATT&CK Mobile does not have a dedicated technique for work profile or Android Enterprise abuse. The closest mappings are [T1626.001](https://attack.mitre.org/techniques/T1626/001/) (Device Administrator Permissions) for DPC API abuse and [T1404](https://attack.mitre.org/techniques/T1404/) (Exploitation for Privilege Escalation) for CVE-2025-22442. This is an area where AWAKE provides coverage that ATT&CK does not.
 
+??? example "Public PoC"
+
+    [TestDPC](https://github.com/googlesamples/android-testdpc) -- Google's reference DPC exercising work-profile policies (basis for studying DPC abuse)
+
 ??? warning "Requirements"
 
     | Requirement | Details |

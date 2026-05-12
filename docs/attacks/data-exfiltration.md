@@ -16,6 +16,10 @@ See also: [C2 Communication](c2-techniques.md), [SMS Interception](sms-intercept
 
     T1646 covers HTTP/HTTPS exfiltration to C2 servers. T1639 covers cloud service abuse (Telegram, Firebase, Discord) and SMS-based exfiltration. T1532 covers ZIP compression before upload. T1636 and its sub-techniques cover collection of contacts (.003), SMS (.004), call logs (.002), and calendar (.001).
 
+??? example "Public PoC"
+
+    [Android-Data-Exfiltration](https://github.com/Arjunkalidas/Android-Data-Exfiltration) -- Silently captures camera photos and uploads to attacker S3
+
 ??? warning "Requirements"
 
     | Requirement | Details |

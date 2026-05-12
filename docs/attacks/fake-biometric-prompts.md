@@ -11,6 +11,10 @@ Stealing device unlock credentials through fake lockscreens and abusing the Biom
 
     T1417.002 covers the overlay-based capture of device unlock credentials (PIN, pattern, password). T1516 covers the accessibility-driven biometric downgrade that forces PIN entry. MITRE does not have a dedicated technique for fake lockscreen overlays; this is an AWAKE-specific coverage area.
 
+??? example "Public PoC"
+
+    [android-fingerprint-bypass](https://github.com/ax/android-fingerprint-bypass) -- Frida script fabricating BiometricPrompt AuthenticationResult to bypass biometric auth
+
 ??? warning "Requirements"
 
     | Requirement | Details |

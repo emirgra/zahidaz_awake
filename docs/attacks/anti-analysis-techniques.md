@@ -19,6 +19,10 @@ See also: [Play Store Evasion](play-store-evasion.md), [Dynamic Code Loading](dy
 
     T1633 covers emulator/sandbox detection via build properties, telephony, sensors, and filesystem artifacts. T1627 covers execution guardrails including geofencing, delayed activation, and SIM checks. T1406 covers string encryption, packing, and code obfuscation. T1628/T1630 cover hiding the app icon, clearing logs, and removing forensic artifacts. T1629 covers disabling Play Protect and security tools.
 
+??? example "Public PoC"
+
+    [FridaBypassKit](https://github.com/okankurtuluss/FridaBypassKit) -- Frida script bypassing root, SSL pinning, emulator and debugger detection
+
 ## Emulator Detection
 
 The most common first check. Emulators expose artifacts through build properties, hardware fingerprinting, telephony state, and sensor data that differ from physical devices.
@@ -121,7 +125,7 @@ Nexus 5X is Google's reference test device; OnePlus 8 Pro / Pixel 4 are common i
 | Battery temperature | Static (usually 0) | Varies with use |
 | Battery status | Always `CHARGING` | Varies |
 
-## Root and Magisk Detection
+## Root and [Magisk](https://github.com/topjohnwu/Magisk) Detection
 
 Banking trojans detect rooted devices for two reasons: to avoid analysis environments (analysts use rooted devices), and to determine available exploitation paths.
 
@@ -405,7 +409,7 @@ This pattern targets regions with weaker privacy enforcement while avoiding coun
 
 ### HTTP Proxy Detection
 
-Ad fraud and data exfiltration SDKs check for HTTP proxies as an anti-analysis measure. Security researchers commonly route traffic through intercepting proxies (Burp Suite, mitmproxy) for analysis:
+Ad fraud and data exfiltration SDKs check for HTTP proxies as an anti-analysis measure. Security researchers commonly route traffic through intercepting proxies ([Burp Suite](https://portswigger.net/burp), [mitmproxy](https://mitmproxy.org/)) for analysis:
 
 ```java
 boolean isProxied() {
@@ -545,9 +549,9 @@ Any declared component whose class is missing from every DEX is either dynamical
 
 ## Decompiler-Crash Traps
 
-Surgical bytecode injection that breaks specific decompilers without obfuscating the class hierarchy itself. Unlike DexGuard-style whole-class control-flow flattening, the trap leaves the class structure clean (so analysts can navigate the call graph) but injects unreachable `goto L4; goto L4` loops in every method body that trigger known decompiler bugs — most commonly `BlockSplitter.addTempConnectionsForExcHandlers` in JADX. Method bodies fail to decompile to readable Java; raw smali is still available but slower to read.
+Surgical bytecode injection that breaks specific decompilers without obfuscating the class hierarchy itself. Unlike DexGuard-style whole-class control-flow flattening, the trap leaves the class structure clean (so analysts can navigate the call graph) but injects unreachable `goto L4; goto L4` loops in every method body that trigger known decompiler bugs — most commonly `BlockSplitter.addTempConnectionsForExcHandlers` in [JADX](https://github.com/skylot/jadx). Method bodies fail to decompile to readable Java; raw smali is still available but slower to read.
 
-The traps are typically inserted post-build via `dexlib 2.x` (smali round-trip), so APKiD reports `compiler: dexlib 2.x` on `classes.dex` paired with high JADX failure rate concentrated in one namespace. Add a row to the Code-Level Obfuscation table when triaging:
+The traps are typically inserted post-build via `dexlib 2.x` (smali round-trip), so [APKiD](https://github.com/rednaga/APKiD) reports `compiler: dexlib 2.x` on `classes.dex` paired with high JADX failure rate concentrated in one namespace. Add a row to the Code-Level Obfuscation table when triaging:
 
 | Indicator | Cause |
 |-----------|-------|

@@ -11,6 +11,10 @@ Tricking the user into tapping on something they didn't intend to by placing a t
 
     Tapjacking is a variant of overlay-based input capture (T1417.002) where clicks are simulated or redirected via T1516.
 
+??? example "Public PoC"
+
+    [tapjacking-poc](https://github.com/frankheat/tapjacking-poc) -- Android tapjacking PoC demonstrating full and partial-screen overlay click-through
+
 ??? warning "Requirements"
 
     | Requirement | Details |
@@ -155,12 +159,12 @@ adb shell settings put system show_touches 1
 
 For a more thorough test, use a minimal overlay app or the `WindowManager` shell commands available on rooted devices. The steps:
 
-1. Install a simple overlay app (or use an existing screen dimmer/filter app)
+1. Install a purpose-built PoC such as [frankheat/tapjacking-poc](https://github.com/frankheat/tapjacking-poc) or [dzmitry-savitski/tapjacker](https://github.com/dzmitry-savitski/tapjacker), or any app holding `SYSTEM_ALERT_WINDOW` (most screen-filter / blue-light apps qualify)
 2. Activate the overlay so it covers the target app's UI
 3. Attempt to tap through the overlay onto sensitive buttons
 4. If the taps register, the app does not filter obscured touches
 
-### Automated Detection with Drozer
+### Automated Detection with [Drozer](https://github.com/WithSecureLabs/drozer)
 
 ```bash
 dz> run app.activity.info -a com.target.app

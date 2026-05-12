@@ -13,6 +13,10 @@ Intercepting or redirecting intents meant for another app component. Possible wh
 
     Intent hijacking as a general IPC attack surface is not explicitly modeled in ATT&CK. T1635.001 covers intent-based URI interception; T1624.001 covers intercepting broadcast intents.
 
+??? example "Public PoC"
+
+    [malware-apk](https://github.com/ivan-sincek/malware-apk) -- Hands-on PoC APK for intent injection, deep-link hijacking, exported component abuse
+
 ??? warning "Requirements"
 
     | Requirement | Details |
@@ -182,7 +186,7 @@ Android 12 (API 31) requires explicit mutability declaration (`FLAG_MUTABLE` or 
 
 ### Enumerating Exported Components with Drozer
 
-Drozer is the standard tool for auditing Android IPC attack surfaces. Install it on a test device or emulator and connect via ADB.
+[Drozer](https://github.com/WithSecureLabs/drozer) is the standard tool for auditing Android IPC attack surfaces. Install it on a test device or emulator and connect via ADB.
 
 List all exported activities:
 

@@ -25,6 +25,10 @@ See also: [Play Store Evasion](play-store-evasion.md), [Dynamic Code Loading](dy
     | Build dependency | [MavenGate](https://blog.oversecured.com/Introducing-MavenGate-a-supply-chain-attack-method-for-Java-and-Android-applications/) (2024) | 18% of Maven domains vulnerable |
     | App acquisition | Barcode Scanner (2021) | 10M+ installs |
 
+??? example "Public PoC"
+
+    [maven-hijack-poc](https://github.com/chains-project/maven-hijack-poc) -- Java-Class-Hijack supply-chain PoC abusing Maven resolution
+
 ## SDK Supply Chain Poisoning
 
 The most effective Android supply chain vector. A malicious SDK presents itself as a legitimate advertising, analytics, or monetization component. App developers integrate it through standard Gradle dependencies or direct SDK drops. The SDK activates its malicious functionality after integration, reaching the developer's entire user base.

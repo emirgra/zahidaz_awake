@@ -13,6 +13,10 @@ See also: [Notification Listener Abuse](notification-listener-abuse.md), [SMS In
 
     T1517 covers reading and dismissing notifications via `NotificationListenerService`. T1629.003 covers disabling Play Protect and suppressing security warnings.
 
+??? example "Public PoC"
+
+    [notification_remover](https://github.com/tjysdsg/notification_remover) -- Auto-cancels/suppresses notifications via NotificationListenerService
+
 ??? warning "Requirements"
 
     | Requirement | Details |

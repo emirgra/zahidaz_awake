@@ -11,6 +11,10 @@ Surviving device reboots, app kills, and user attempts at removal. Android's pro
     | [T1398](https://attack.mitre.org/techniques/T1398/) | Boot or Logon Initialization Scripts | Persistence |
     | [T1626.001](https://attack.mitre.org/techniques/T1626/001/) | Abuse Elevation Control Mechanism: Device Administrator Permissions | Privilege Escalation |
 
+??? example "Public PoC"
+
+    [android-keep-alive](https://github.com/hossain-khan/android-keep-alive) -- BOOT_COMPLETED receiver + periodic restart to keep itself alive
+
 ??? warning "Requirements"
 
     | Requirement | Details |

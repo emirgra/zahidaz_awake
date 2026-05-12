@@ -15,6 +15,10 @@ See also: [Accessibility Abuse](accessibility-abuse.md), [Device Admin Abuse](de
 
     T1404 covers kernel exploits (DirtyCow, DirtyPipe, Framaroot, Towelroot) and driver vulnerabilities. T1626 covers permission escalation chains including accessibility-to-full-control. T1631 covers native code injection and library loading for process-level escalation.
 
+??? example "Public PoC"
+
+    [badspin](https://github.com/0xkol/badspin) -- Working PoC for CVE-2022-20421 Android Binder use-after-free LPE to root
+
 ??? warning "Requirements"
 
     | Requirement | Details |

@@ -16,6 +16,10 @@ See also: [Network Traffic Interception](network-traffic-interception.md), [Anti
 
     Sub-techniques: [T1481.001](https://attack.mitre.org/techniques/T1481/001/) Dead Drop Resolver, [T1481.002](https://attack.mitre.org/techniques/T1481/002/) Bidirectional Communication (Telegram, MQTT), [T1481.003](https://attack.mitre.org/techniques/T1481/003/) One-Way Communication (FCM push).
 
+??? example "Public PoC"
+
+    [AhMyth-Android-RAT](https://github.com/AhMyth/AhMyth-Android-RAT) -- Open-source Android RAT with Node.js C2 server demonstrating command-and-control patterns
+
 ??? warning "Requirements"
 
     | Requirement | Details |
@@ -337,7 +341,7 @@ Hunting signal: a custom `HostnameVerifier` that ignores or substitutes the `hos
 
 Malware pinning its own C2 server's certificate to prevent interception by analysts or network security tools. The attacker embeds the server certificate or public key hash in the APK and rejects any connection where the certificate doesn't match.
 
-This is the reverse of the usual scenario: instead of a legitimate app pinning its server, the malware pins the attacker's server. An analyst running mitmproxy sees the connection fail unless they patch out the pinning logic first.
+This is the reverse of the usual scenario: instead of a legitimate app pinning its server, the malware pins the attacker's server. An analyst running [mitmproxy](https://mitmproxy.org/) sees the connection fail unless they patch out the pinning logic first.
 
 !!! info "Bypassing Malware Certificate Pinning"
 

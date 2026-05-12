@@ -12,6 +12,10 @@ See also: [Notification Suppression](notification-suppression.md), [SMS Intercep
 
     T1517 covers both reading notification content and dismissing notifications to suppress evidence. Malware listed under this technique on MITRE includes FlixOnline and [Mandrake](../malware/families/mandrake.md).
 
+??? example "Public PoC"
+
+    [notification-listener-service-example](https://github.com/Chagall/notification-listener-service-example) -- Working NotificationListenerService PoC intercepting every posted notification
+
 ??? warning "Requirements"
 
     | Requirement | Details |

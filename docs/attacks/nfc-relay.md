@@ -6,6 +6,10 @@ Relaying NFC (Near Field Communication) data from a victim's payment card to an 
 
     MITRE ATT&CK Mobile has no dedicated technique for NFC relay attacks. The closest related technique is [T1638](https://attack.mitre.org/techniques/T1638/) (Adversary-in-the-Middle), which covers relay/interception patterns conceptually. NFC relay using [NFCGate](https://github.com/nfcgate/nfcgate) and Android's HCE API is an emerging attack class not yet represented in the ATT&CK framework. This is a gap that AWAKE documents.
 
+??? example "Public PoC"
+
+    [NFCGate](https://github.com/nfcgate/nfcgate) -- Android NFC research toolkit with working relay mode (basis of NGate malware)
+
 ??? warning "Requirements"
 
     | Requirement | Details |
@@ -174,7 +178,7 @@ Testing NFC relay detection requires a controlled environment that replicates th
 
 ### Setup Steps
 
-1. Install NFCGate on both Android devices from the GitHub releases (requires root for on-device relay mode, though server relay mode works without root on some builds)
+1. Install [NFCGate](https://github.com/nfcgate/nfcgate) on both Android devices from the GitHub releases (requires root for on-device relay mode, though server relay mode works without root on some builds)
 2. Configure one device as "reader" mode and the other as "relay" mode
 3. Set the relay server address -- NFCGate supports direct device-to-device relay over a network or through an intermediary server
 4. Place the test card against the reader device

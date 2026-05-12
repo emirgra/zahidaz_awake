@@ -13,6 +13,10 @@ See also: [Phishing Techniques](phishing-techniques.md), [SMS Interception](sms-
 
     T1616 covers making, forwarding, and blocking phone calls. T1429 applies when the interception involves recording call audio.
 
+??? example "Public PoC"
+
+    [Ecr-helper](https://github.com/ppgtools/Ecr-helper) -- AccessibilityService + NotificationListener call-recording bypass on modern Android
+
 ??? warning "Requirements"
 
     | Requirement | Details |

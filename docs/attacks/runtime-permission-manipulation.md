@@ -11,6 +11,10 @@ Granting permissions without user interaction. Once malware obtains [`BIND_ACCES
 
     T1516 covers the programmatic clicking of "Allow" buttons on permission dialogs and navigating Settings screens. T1453 covers the underlying accessibility service abuse that enables all permission manipulation.
 
+??? example "Public PoC"
+
+    [android-restriction-bypass](https://github.com/quarkslab/android-restriction-bypass) -- Quarkslab PoC APK bypassing hidden-API and runtime restrictions
+
 ??? warning "Requirements"
 
     | Requirement | Details |

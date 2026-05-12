@@ -10,6 +10,10 @@ See also: [Camera & Mic Surveillance](camera-mic-surveillance.md), [Notification
     |---|---|---|
     | [T1513](https://attack.mitre.org/techniques/T1513/) | Screen Capture | Collection |
 
+??? example "Public PoC"
+
+    [MediaProjectionDemo](https://github.com/mtsahakis/MediaProjectionDemo) -- Sample app capturing the device screen via MediaProjection API
+
 ??? warning "Requirements"
 
     | Requirement | Details |

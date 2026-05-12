@@ -11,6 +11,10 @@ See also: [`BIND_ACCESSIBILITY_SERVICE`](../permissions/special/bind-accessibili
     | [T1453](https://attack.mitre.org/techniques/T1453/) | Abuse Accessibility Features | Collection, Credential Access |
     | [T1516](https://attack.mitre.org/techniques/T1516/) | Input Injection | Defense Evasion, Impact |
 
+??? example "Public PoC"
+
+    [ASLeech](https://github.com/noobexon1/ASLeech) -- Accessibility-service Android malware demo that resists GUI uninstall and abuses a11y events
+
 ??? warning "Requirements"
 
     | Requirement | Details |

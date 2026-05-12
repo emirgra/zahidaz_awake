@@ -19,6 +19,10 @@ See also: [Dynamic Code Loading](dynamic-code-loading.md), [Persistence Techniqu
 
     Google removed over 2.3 million apps from the Play Store in 2024 for policy violations. Despite automated scanning (Play Protect) and manual review, sophisticated droppers consistently bypass all layers. [ThreatFabric](https://www.threatfabric.com/blogs/droppers-bypassing-android-13-restrictions) and [Cleafy](https://www.cleafy.com/) regularly document families that survive on the store for months before detection.
 
+??? example "Public PoC"
+
+    [BypassPlayProtect](https://github.com/Cyber-Root0/BypassPlayProtect) -- Tool to bypass Google Play Protect detection on installed APKs
+
 ## Dropper Chains
 
 The standard architecture separates benign-looking dropper apps from actual malicious payloads across multiple stages.

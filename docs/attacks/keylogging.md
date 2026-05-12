@@ -10,6 +10,10 @@ See also: [Camera & Mic Surveillance](camera-mic-surveillance.md), [Screen Captu
     |---|---|---|
     | [T1417.001](https://attack.mitre.org/techniques/T1417/001/) | Input Capture: Keylogging | Credential Access, Collection |
 
+??? example "Public PoC"
+
+    [pounce-keys](https://github.com/NullPounce/pounce-keys) -- AccessibilityService keylogger with launcher stealth and exfiltration
+
 ??? warning "Requirements"
 
     | Requirement | Details |

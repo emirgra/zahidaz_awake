@@ -15,6 +15,10 @@ See also: [Device Admin Abuse](device-admin-abuse.md), [Accessibility Abuse](acc
 
     T1471 covers file encryption ransomware (Simplocker, DoubleLocker, SOVA v5). T1662 covers factory reset as evidence destruction (BRATA, BingoMod). T1629.002 covers screen locking and PIN changing as device lockout.
 
+??? example "Public PoC"
+
+    [Wasted](https://github.com/x13a/Wasted) -- Device Administration API app that locks and triggers factory-reset on demand
+
 ??? warning "Requirements"
 
     | Requirement | Details |

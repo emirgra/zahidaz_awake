@@ -10,6 +10,10 @@ Manipulating Android's activity back stack to place a malicious activity inside 
 
     Task affinity manipulation is a form of masquerading where the malicious activity appears within the target app's task context. MITRE ATT&CK Mobile does not have a dedicated technique for Android task manipulation; this is an area where AWAKE provides deeper coverage.
 
+??? example "Public PoC"
+
+    [taskHijacker](https://github.com/akabe1/taskHijacker) -- StrandHogg-style task-affinity hijacking PoC tooling
+
 ??? warning "Requirements"
 
     | Requirement | Details |

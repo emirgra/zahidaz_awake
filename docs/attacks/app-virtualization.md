@@ -10,6 +10,10 @@ See also: [Overlay Attacks](overlay-attacks.md), [Accessibility Abuse](accessibi
     |---|---|---|
     | [T1670](https://attack.mitre.org/techniques/T1670/) | Virtualization Solution | Defense Evasion |
 
+??? example "Public PoC"
+
+    [VirtualApp](https://github.com/asLody/VirtualApp) -- Android virtualization engine abused by plugin malware to run apps without install
+
 ## Why It Matters
 
 Traditional banking trojans use [overlay attacks](overlay-attacks.md) to display a fake login screen on top of the real app. This has known weaknesses: Google restricts overlay permissions since Android 10, and banking apps increasingly detect overlays.

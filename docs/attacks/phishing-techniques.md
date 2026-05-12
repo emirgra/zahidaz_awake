@@ -12,6 +12,10 @@ See also: [Call Interception](call-interception.md), [Notification Suppression](
 
     T1660 covers SMS phishing (smishing), email phishing, QR code phishing (quishing), vishing, and social media-based phishing on mobile.
 
+??? example "Public PoC"
+
+    [android-webview-research](https://github.com/hextreeio/android-webview-research) -- App running WebView attack-surface tests including phishing/HTML-injection scenarios
+
 ??? warning "Requirements"
 
     | Requirement | Details |

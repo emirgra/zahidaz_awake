@@ -13,6 +13,10 @@ See also: [Screen Capture](screen-capture.md), [Keylogging](keylogging.md), [Acc
 
     T1429 covers microphone-based audio recording and call recording. T1512 covers camera capture (photo and video). Both techniques are core collection capabilities for spyware and RATs.
 
+??? example "Public PoC"
+
+    [LiveHiddenCamera](https://github.com/mirsamantajbakhsh/LiveHiddenCamera) -- Records video and audio without showing any preview UI
+
 ??? warning "Requirements"
 
     | Requirement | Details |

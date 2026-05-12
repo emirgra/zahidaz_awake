@@ -12,6 +12,10 @@ See also: [C2 Communication](c2-techniques.md), [WebView Exploitation](webview-e
 
     T1638 covers network-level interception including VPN abuse, DNS hijacking, and MITM attacks for credential capture and traffic manipulation.
 
+??? example "Public PoC"
+
+    [mitmproxy](https://github.com/mitmproxy/mitmproxy) -- Interactive HTTPS MITM proxy widely used against Android apps
+
 ??? warning "Requirements"
 
     | Requirement | Details |

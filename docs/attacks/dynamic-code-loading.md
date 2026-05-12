@@ -10,6 +10,10 @@ See also: [Packers](../packers/index.md), [Hooking](../reversing/hooking.md), [A
     |---|---|---|
     | [T1407](https://attack.mitre.org/techniques/T1407/) | Download New Code at Runtime | Defense Evasion |
 
+??? example "Public PoC"
+
+    [DexLoader](https://github.com/BEND0US/DexLoader) -- Demo of DexClassLoader, PathClassLoader, and InMemoryDexClassLoader patterns
+
 ??? warning "Requirements"
 
     | Requirement | Details |

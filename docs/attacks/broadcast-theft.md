@@ -10,6 +10,10 @@ Intercepting broadcast intents meant for other apps. Android's broadcast system 
 
     T1624.001 covers registering for intents broadcasted by other applications, enabling interception of broadcasts not intended for the malicious app.
 
+??? example "Public PoC"
+
+    [android-sms-spoof](https://github.com/thomascannon/android-sms-spoof) -- Abuses exported SmsReceiverService broadcast to inject/forge SMS without permissions
+
 ??? warning "Requirements"
 
     | Requirement | Details |

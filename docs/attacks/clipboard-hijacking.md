@@ -8,6 +8,10 @@ Monitoring or modifying clipboard contents to steal sensitive data. Android's `C
     |---|---|---|
     | [T1414](https://attack.mitre.org/techniques/T1414/) | Clipboard Data | Collection, Credential Access |
 
+??? example "Public PoC"
+
+    [clipboard-hijacking-POC](https://github.com/Dan-Duran/clipboard-hijacking-POC) -- Crypto-address clipboard swap PoC
+
 ??? warning "Requirements"
 
     | Requirement | Details |

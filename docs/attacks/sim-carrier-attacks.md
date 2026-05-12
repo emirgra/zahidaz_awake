@@ -14,6 +14,10 @@ See also: [SMS Interception](sms-interception.md), [Call Interception](call-inte
 
     T1451 covers SIM swapping and eSIM manipulation for 2FA bypass. T1449 covers carrier-infrastructure-level location tracking and interception. Carrier billing fraud and USSD exploitation do not have dedicated MITRE techniques; this is an area where AWAKE provides deeper coverage. Simjacker and WIBattack (SIM toolkit attacks) are not represented in ATT&CK Mobile.
 
+??? example "Public PoC"
+
+    [5Ghoul](https://github.com/asset-group/5ghoul-5g-nr-attacks) -- 5G NR baseband attack PoC + fuzzer against Qualcomm/MediaTek modems
+
 ??? warning "Requirements"
 
     | Requirement | Details |

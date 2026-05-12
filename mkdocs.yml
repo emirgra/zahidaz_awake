@@ -273,6 +273,7 @@ nav:
       - Static Analysis: reversing/static-analysis.md
       - Dynamic Analysis: reversing/dynamic-analysis.md
       - Hooking: reversing/hooking.md
+      - ART Hooking Libraries: reversing/hooking-libraries.md
       - Patching: reversing/patching.md
       - Network Analysis: reversing/network-analysis.md
       - Development Frameworks:

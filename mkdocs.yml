@@ -124,6 +124,7 @@ nav:
   - Malware:
       - malware/index.md
       - Timeline: malware/timeline.md
+      - Distribution Channels: malware/distribution.md
       - Naming Conventions: malware/naming-conventions.md
       - Threat Actors: malware/threat-actors.md
       - Families:

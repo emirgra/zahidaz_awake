@@ -264,6 +264,7 @@ nav:
       - Promon SHIELD: packers/promon.md
       - Qihoo 360 Jiagu: packers/qihoo-360-jiagu.md
       - R8 / ProGuard: packers/r8-proguard.md
+      - Redex (Meta): packers/redex.md
       - SecShell (Bangcle): packers/secshell.md
       - Tencent Legu: packers/tencent-legu.md
       - Verimatrix XTD: packers/verimatrix.md

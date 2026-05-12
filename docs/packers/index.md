@@ -18,6 +18,7 @@ Obfuscators are a lighter category: they transform code to make it harder to rea
 | [Kiwisec (几维安全)](kiwisec.md) | Kiwisec | China |
 | [SecShell](secshell.md) | Bangcle / SecNeo (梆梆安全) | China |
 | [DPT Shell](dpt-shell.md) | luoyesiqiu (open source) | China |
+| [Ducex](ducex.md) | Unknown (described as Chinese-origin by [any.run](https://any.run/cybersecurity-blog/ducex-packer-analysis/)) | China |
 | [GoldCrypt](goldcrypt.md) | Unknown (underground forums) | Unknown |
 | [DexGuard](dexguard.md) | Guardsquare | Belgium |
 | [DexProtector](dexprotector.md) | [Licel](https://licelus.com/) | USA / UK |
@@ -40,9 +41,9 @@ Obfuscators are a lighter category: they transform code to make it harder to rea
 | [R8 / ProGuard](r8-proguard.md) | Free (Google/open source) | Default Android build tools. Name obfuscation, dead code removal, optimization. R8 replaced ProGuard. |
 | [Redex](redex.md) | Free (Meta, MIT open source) | Meta's DEX bytecode optimizer. Class merging, inlining, InterDex layout, `X.<short>` renaming. Not a packer or RASP, but heavily degrades static analysis of Meta apps. |
 | [Allatori](allatori.md) | Commercial | Java/Android obfuscator. String encryption, flow obfuscation, watermarking. |
-| DashO | Commercial | PreEmptive Solutions. Obfuscation + tamper detection + analytics. |
-| Zelix KlassMaster | Commercial | Aggressive flow obfuscation, string encryption, stack trace obfuscation. |
-| OLLVM | Open source | Obfuscator-LLVM. Control flow flattening, bogus control flow, string encryption for native code. Used by [Mandrake](../malware/families/mandrake.md). |
+| [DashO](https://www.preemptive.com/products/dasho/) | Commercial | PreEmptive Solutions. Obfuscation + tamper detection + analytics. |
+| [Zelix KlassMaster](https://www.zelix.com/klassmaster/) | Commercial | Aggressive flow obfuscation, string encryption, stack trace obfuscation. |
+| [OLLVM (Obfuscator-LLVM)](https://github.com/obfuscator-llvm/obfuscator) | Open source | Control flow flattening, bogus control flow, string encryption for native code. Used by [Mandrake](../malware/families/mandrake.md). |
 
 ## Protection Categories at a Glance
 
@@ -60,7 +61,7 @@ This is a category-level comparison (packer vs obfuscator vs RASP). For per-prod
 | Emulator detection | Some | No | Yes |
 | Runtime self-protection | Some | No | Yes |
 
-**RASP** (Runtime Application Self-Protection) products like Promon SHIELD focus on runtime checks rather than code transformation. They detect hostile environments (root, hooking, debugging) and respond at runtime, often combined with a packer or obfuscator.
+**RASP** (Runtime Application Self-Protection) products like [Promon SHIELD](promon.md) ([vendor page](https://promon.io/products/shield-mobile)), [Appdome OneShield](appdome.md) ([vendor page](https://www.appdome.com/how-to/mobile-app-security/mobile-rasp-and-app-shielding/oneshield-no-code-mobile-rasp-explained/)), [Arxan (Digital.ai)](arxan.md), [DexProtector](dexprotector.md) ([vendor page](https://licelus.com/products/dexprotector)), [LIAPP](liapp.md), and [Verimatrix XTD](verimatrix.md) focus on runtime checks rather than code transformation. They detect hostile environments (root, hooking, debugging, emulator, repackaging) and respond at runtime, often combined with a packer or obfuscator. The term was coined by Gartner; for vendor-neutral background see the [OWASP RASP overview](https://owasp.org/www-pdf-archive/RASP-OWASP-2017.pdf).
 
 ## Malware Families by Packer
 
@@ -71,7 +72,7 @@ Commercial packers are increasingly adopted by malware authors. The packer provi
 | [Virbox](virbox.md) | [Gigabud](../malware/families/gigabud.md) ([Zimperium](https://zimperium.com/blog/a-network-of-harm-gigabud-threat-and-its-associates)), [Klopatra](../malware/families/klopatra.md) ([Cleafy](https://www.cleafy.com/cleafy-labs/klopatra-exposing-a-new-android-banking-trojan-operation-with-roots-in-turkey)), GoldDigger / GoldPickaxe ([Group-IB](https://www.group-ib.com/blog/goldfactory-ios-trojan/)) | GoldFactory standardized on Virbox; recent Gigabud / GoldDigger samples wrap a `libstrategy.so` native module per Zimperium. Virbox itself uses randomized native library names rather than a fixed filename. |
 | [DexGuard](dexguard.md) | (No primary-sourced banker attribution at present; many higher-tier apps and some unattributed samples use DexGuard but specific malware family use is not substantiated in public research surveyed) | Commercial Guardsquare protection; class-level DEX encryption, native library renaming and encryption ([Guardsquare](https://www.guardsquare.com/dexguard)). No single canonical native library filename. |
 | [Tencent Legu](tencent-legu.md) | Various Chinese-market malware | Common in the Chinese market. Identified by version-suffixed `libshella-<version>.so` (ARM) / `libshellx-<version>.so` (x86) and asset `assets/0OO00l111l1l` per [Quarkslab](https://blog.quarkslab.com/a-glimpse-into-tencents-legu-packer.html). |
-| Ducex | [Triada](../malware/families/triada.md) | Advanced Chinese packer with RC4 function encryption and XOR string encryption; used by recent Triada variants per [any.run analysis](https://any.run/cybersecurity-blog/ducex-packer-analysis/). Previously misattributed to Tencent Legu on this page. |
+| [Ducex](ducex.md) | [Triada](../malware/families/triada.md) | Advanced Chinese packer with RC4 / SM4 function encryption and XOR string encryption; `libducex.so` plus in-DEX payload section per [any.run analysis](https://any.run/cybersecurity-blog/ducex-packer-analysis/). Previously misattributed to Tencent Legu on this page. |
 | [360 Jiagu](qihoo-360-jiagu.md) | Chinese banking trojans, stalkerware | `libjiagu.so` / `libjiagu_art.so`, asset `assets/jiagu_data.bin` (per [APKiD rules](https://github.com/rednaga/APKiD/blob/master/apkid/rules/apk/packers.yara)). Multi-DEX support. |
 | [Bangcle](bangcle.md) | Regional malware, adware | `libsecexe.so` / `libsecmain.so` markers ([APKiD rules](https://github.com/rednaga/APKiD/blob/master/apkid/rules/apk/packers.yara)). |
 | [SecShell](secshell.md) | [Joker](../malware/families/joker.md) ([Zscaler](https://www.zscaler.com/blogs/security-research/joker-facestealer-and-coper-banking-malwares-google-play-store)), Chinese malware | `libSecShell.so` plus `assets/secData0.jar` ([APKiD rules](https://github.com/rednaga/APKiD/blob/master/apkid/rules/apk/packers.yara)). Bangcle second-gen. Dual RC4/SM4 cipher, self-packed native code. |
@@ -110,7 +111,7 @@ Tools for approaching any packed sample regardless of the specific packer.
 | [Ghidra](https://ghidra-sre.org/) + [D-810](https://github.com/joydo/d810) | Native decompiler with OLLVM deobfuscation plugin | Arxan guard network, Mandrake native loaders, Promon SHIELD library, zShield post-XXTEA |
 | [IDA Pro](https://hex-rays.com/) + Keypatch | Native disassembler with inline patching | Virbox VM interpreter, DexProtector native bridge, LIAPP native library |
 | [Frida Stalker](https://frida.re/docs/stalker/) | Instruction-level tracing at runtime | Tracing Virbox VM dispatch loop, mapping guard execution in Arxan |
-| XXTEA ELF Unpacker (DavidBuchanan314) | Decrypts XXTEA-encrypted ELF bodies from zShield native libraries | zShield only. Removes outermost protection layer, OLLVM flattening remains |
+| [XXTEA ELF Unpacker (DavidBuchanan314)](https://gist.github.com/DavidBuchanan314/ceb3637b7a6877dd7f64950c84228043) | Decrypts XXTEA-encrypted ELF bodies from zShield native libraries | zShield only. Removes outermost protection layer, OLLVM flattening remains |
 
 ### Recommended Lab Setup
 
@@ -131,17 +132,14 @@ Physical devices are strongly preferred for DexProtector, Promon SHIELD, Arxan, 
 
 ## Unpacking Strategy
 
-```
-1. Identify packer (APKiD, manual inspection of native libs)
-2. Choose approach:
-   - Memory dump: hook DexClassLoader/InMemoryDexClassLoader to capture DEX at load time
-   - Process dump: dump /proc/self/maps regions containing DEX magic bytes
-   - Framework hook: intercept ClassLoader to extract loaded classes
-3. Reconstruct DEX from dump
-4. Decompile unpacked DEX normally (JADX, Ghidra)
-```
+Universal sequence before reaching for the per-packer page:
 
-For packer-specific unpacking procedures, see the individual packer pages. [Frida DEX dumping scripts](../reversing/hooking.md#dex-loading-interception) cover the universal hooking approach.
+1. Identify the packer (APKiD plus native library and asset inspection)
+2. Capture DEX via memory dump (hook `DexClassLoader` / `InMemoryDexClassLoader`), process dump (`/proc/self/maps` regions with DEX magic), or framework hook
+3. Reconstruct DEX from the dump
+4. Decompile with JADX or Ghidra
+
+The [Analysis Decision Tree](#analysis-decision-tree) below maps observed artifacts to specific packers. For per-packer unpacking specifics, see the individual packer pages. [Frida DEX dumping scripts](../reversing/hooking.md#dex-loading-interception) cover the universal hooking approach.
 
 ## Custom Packers
 
@@ -234,7 +232,10 @@ Start
       └─ White-box crypto (Verimatrix CryptoModule, zKeyBox) → Code lifting, not key extraction
 ```
 
-## Packer Trends in Malware (2024-2025)
+## Packer Trends in Malware
+
+*Last reviewed: 2026-05*
+
 
 | Trend | Details |
 |-------|---------|
@@ -295,15 +296,15 @@ How much each protection layer reduces detection rates across multi-engine stati
 |-----------|-------------------------------------|-----|
 | No protection | Baseline | All engines can scan the raw DEX |
 | RASP only (no packing) | Negligible | Code is still scannable; RASP operates at runtime |
-| R8/ProGuard only | Low | Engines pattern-match on behavior, not names |
-| Chinese packer (basic) | Moderate | Engines scan the stub, not the encrypted payload |
-| AppSealing | Moderate | DEX encrypted but historically weaker string protection |
-| DexGuard | High | String encryption hides IoCs; class-level encryption hides behavior patterns |
-| LIAPP | High | DEX encryption, native string encryption, and server-side attestation |
-| Appdome | High | DEX encryption, native library encryption, multi-vector RASP (OneShield) |
-| Verimatrix XTD | High | Code encryption, multi-language obfuscation, inlined string decryption |
-| Custom packer + obfuscation | High to Very High | Varies by implementation quality (e.g., Mandrake OLLVM) |
-| zShield | Very High | XXTEA ELF encryption, .szip DEX, randomized library names |
-| Virbox (virtualized) | Very High | Proprietary VM instructions are opaque to static scanners |
+| [R8 / ProGuard](r8-proguard.md) only | Low | Engines pattern-match on behavior, not names |
+| Chinese packer (basic, e.g. [Bangcle](bangcle.md), [360 Jiagu](qihoo-360-jiagu.md)) | Moderate | Engines scan the stub, not the encrypted payload |
+| [AppSealing](appsealing.md) | Moderate | DEX encrypted but historically weaker string protection |
+| [DexGuard](dexguard.md) | High | String encryption hides IoCs; class-level encryption hides behavior patterns |
+| [LIAPP](liapp.md) | High | DEX encryption, native string encryption, and server-side attestation |
+| [Appdome](appdome.md) | High | DEX encryption, native library encryption, multi-vector RASP (OneShield) |
+| [Verimatrix XTD](verimatrix.md) | High | Code encryption, multi-language obfuscation, inlined string decryption |
+| Custom packer + obfuscation | High to Very High | Varies by implementation quality (e.g., [Mandrake](../malware/families/mandrake.md) OLLVM) |
+| [zShield](zshield.md) | Very High | XXTEA ELF encryption, .szip DEX, randomized library names |
+| [Virbox](virbox.md) (virtualized) | Very High | Proprietary VM instructions are opaque to static scanners |
 
 These bands are qualitative analyst impressions, not the output of a published study. They reflect typical observed behavior on multi-engine static scanning of packed vs unpacked samples within the same family but no fixed methodology, sample corpus, or date is anchored. Per-family detection deltas vary widely. The actionable takeaways: DEX virtualization ([Virbox](virbox.md)) provides the highest static analysis resistance, while basic Chinese packers offer adequate protection against automated scanning but fall quickly to manual Frida-based analysis.

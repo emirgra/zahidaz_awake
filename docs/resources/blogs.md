@@ -1,6 +1,6 @@
 # Blogs & Research
 
-External blogs and research outlets covering Android security. For company profiles, see [Threat Intelligence](../industry/threat-intelligence.md).
+External blogs and research outlets covering Android security. For company profiles, see [Industry](../industry/index.md).
 
 ## Malware Research
 

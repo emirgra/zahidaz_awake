@@ -433,12 +433,159 @@ nav:
       - Surveillance & Data Trade: grayware/surveillance-data-trade.md
   - Industry:
       - industry/index.md
-      - AV Engines: industry/av-engines.md
-      - Digital Forensics: industry/digital-forensics.md
-      - Packer Vendors: industry/packer-vendors.md
-      - Security Products: industry/security-products.md
-      - Standards & Bug Bounties: industry/standards-bounties.md
-      - Threat Intelligence: industry/threat-intelligence.md
+      - 8kSec: industry/8ksec.md
+      - abuse.ch: industry/abuse-ch.md
+      - Access Now: industry/access-now.md
+      - ADF Solutions: industry/adf-solutions.md
+      - AhnLab: industry/ahnlab.md
+      - Amnesty Security Lab: industry/amnesty-security-lab.md
+      - Antiy: industry/antiy.md
+      - Any.Run: industry/any-run.md
+      - Appdome: industry/appdome.md
+      - AppCensus: industry/appcensus.md
+      - appknox: industry/appknox.md
+      - Approov: industry/approov.md
+      - AT&T Alien Labs: industry/att-alien-labs.md
+      - Avast: industry/avast.md
+      - Baidu: industry/baidu.md
+      - Belkasoft: industry/belkasoft.md
+      - BioCatch: industry/biocatch.md
+      - Bitdefender: industry/bitdefender.md
+      - Bitsight: industry/bitsight.md
+      - Bugcrowd: industry/bugcrowd.md
+      - Buguroo: industry/buguroo.md
+      - Build38: industry/build38.md
+      - Candiru: industry/candiru.md
+      - Cellebrite: industry/cellebrite.md
+      - Cellusys: industry/cellusys.md
+      - Censys: industry/censys.md
+      - Certo: industry/certo.md
+      - CheckPoint: industry/checkpoint.md
+      - Checkmarx: industry/checkmarx.md
+      - Cisco Talos: industry/cisco-talos.md
+      - Citizen Lab: industry/citizen-lab.md
+      - Cleafy: industry/cleafy.md
+      - CloudFlare: industry/cloudflare.md
+      - CloudSEK: industry/cloudsek.md
+      - Cofense: industry/cofense.md
+      - CrowdStrike: industry/crowdstrike.md
+      - Crowdfense: industry/crowdfense.md
+      - CTM360: industry/ctm360.md
+      - Cyble: industry/cyble.md
+      - CYFIRMA: industry/cyfirma.md
+      - Cytrox: industry/cytrox.md
+      - D3Lab: industry/d3lab.md
+      - DarkOwl: industry/darkowl.md
+      - Data Theorem: industry/data-theorem.md
+      - Detego: industry/detego.md
+      - Digital.ai: industry/digital-ai.md
+      - DomainTools: industry/domaintools.md
+      - Dr.Web: industry/drweb.md
+      - Elcomsoft: industry/elcomsoft.md
+      - EMVCo: industry/emvco.md
+      - Enea: industry/enea.md
+      - ENISA: industry/enisa.md
+      - Enki: industry/enki.md
+      - ESET: industry/eset.md
+      - F-Secure: industry/f-secure.md
+      - F6: industry/f6.md
+      - Feedzai: industry/feedzai.md
+      - FinFisher: industry/finfisher.md
+      - Flashpoint: industry/flashpoint.md
+      - Fortinet: industry/fortinet.md
+      - Google: industry/google.md
+      - Grayshift: industry/grayshift.md
+      - Group-IB: industry/group-ib.md
+      - GSMA: industry/gsma.md
+      - Guardsquare: industry/guardsquare.md
+      - HackerOne: industry/hackerone.md
+      - HarfangLab: industry/harfanglab.md
+      - HCL AppScan: industry/hcl-appscan.md
+      - Hex-Rays: industry/hex-rays.md
+      - HUMAN Security: industry/human-security.md
+      - Hunt.io: industry/hunt-io.md
+      - Huorong: industry/huorong.md
+      - Hybrid Analysis: industry/hybrid-analysis.md
+      - IBM: industry/ibm.md
+      - ImmuniWeb: industry/immuniweb.md
+      - Intel 471: industry/intel-471.md
+      - Intellexa: industry/intellexa.md
+      - Intigriti: industry/intigriti.md
+      - iVerify: industry/iverify.md
+      - Joe Sandbox: industry/joe-sandbox.md
+      - K7: industry/k7.md
+      - Kaspersky: industry/kaspersky.md
+      - KELA: industry/kela.md
+      - Kochava: industry/kochava.md
+      - Licel: industry/licel.md
+      - Lookout: industry/lookout.md
+      - Magnet Forensics: industry/magnet-forensics.md
+      - Malwarebytes: industry/malwarebytes.md
+      - Mandiant: industry/mandiant.md
+      - McAfee: industry/mcafee.md
+      - Memento Labs: industry/memento-labs.md
+      - Microsoft: industry/microsoft.md
+      - MITRE: industry/mitre.md
+      - MOBILedit: industry/mobiledit.md
+      - MobSF: industry/mobsf.md
+      - MSAB: industry/msab.md
+      - NCC Group: industry/ncc-group.md
+      - NIST: industry/nist.md
+      - NowSecure: industry/nowsecure.md
+      - NSO Group: industry/nso-group.md
+      - Operation Zero: industry/operation-zero.md
+      - Oversecured: industry/oversecured.md
+      - OWASP: industry/owasp.md
+      - Oxygen Forensics: industry/oxygen-forensics.md
+      - Palo Alto: industry/palo-alto.md
+      - Paraben: industry/paraben.md
+      - PCI SSC: industry/pci-ssc.md
+      - PNF Software: industry/pnf-software.md
+      - Pradeo: industry/pradeo.md
+      - PREBYTES: industry/prebytes.md
+      - Prodaft: industry/prodaft.md
+      - Promon: industry/promon.md
+      - Qihoo 360: industry/qihoo-360.md
+      - QuickHeal: industry/quickheal.md
+      - Quokka: industry/quokka.md
+      - RCS Labs: industry/rcs-labs.md
+      - Recorded Future: industry/recorded-future.md
+      - Resecurity: industry/resecurity.md
+      - ReversingLabs: industry/reversinglabs.md
+      - S2W: industry/s2w.md
+      - Sardine: industry/sardine.md
+      - Secure Blink: industry/secure-blink.md
+      - Sekoia: industry/sekoia.md
+      - SentinelOne: industry/sentinelone.md
+      - Shindan: industry/shindan.md
+      - Shodan: industry/shodan.md
+      - Sift: industry/sift.md
+      - Silent Push: industry/silent-push.md
+      - SonicWall: industry/sonicwall.md
+      - Sophos: industry/sophos.md
+      - Susteen: industry/susteen.md
+      - Synack: industry/synack.md
+      - Synopsys: industry/synopsys.md
+      - Tencent: industry/tencent.md
+      - ThreatFabric: industry/threatfabric.md
+      - ThreatMon: industry/threatmon.md
+      - Trellix: industry/trellix.md
+      - TrendMicro: industry/trendmicro.md
+      - Triage: industry/triage.md
+      - Trustwave: industry/trustwave.md
+      - Validin: industry/validin.md
+      - Variston: industry/variston.md
+      - Veracode: industry/veracode.md
+      - Verimatrix: industry/verimatrix.md
+      - VirusTotal: industry/virustotal.md
+      - VMRay: industry/vmray.md
+      - Volexity: industry/volexity.md
+      - XLab: industry/xlab.md
+      - YesWeHack: industry/yeswehack.md
+      - Zero Day Initiative: industry/zdi.md
+      - Zerodium: industry/zerodium.md
+      - Zimperium: industry/zimperium.md
+      - Zscaler: industry/zscaler.md
   - Resources:
       - resources/index.md
       - Blogs & Research: resources/blogs.md

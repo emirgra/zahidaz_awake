@@ -13,7 +13,7 @@ Forums, chat platforms, bug bounty programs, and researchers in the Android secu
 
 ## Bug Bounty Programs
 
-For more detail on programs and payouts, see [Standards & Bug Bounties](../industry/standards-bounties.md).
+For more detail on programs and payouts, see [Industry](../industry/index.md).
 
 | Program | Scope | Max Payout |
 |---------|-------|------------|

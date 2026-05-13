@@ -4,7 +4,6 @@ The companies and organizations involved in Android security, from threat intell
 
 | Page | Content |
 |------|---------|
-| [App Distribution](app-distribution.md) | Third-party stores, APK modding, and cracking scene |
 | [AV Engines](av-engines.md) | VirusTotal detection engines: primary, mobile-specific, EDR, regional |
 | [Digital Forensics](digital-forensics.md) | Mobile forensics tools for device extraction and analysis |
 | [Packer Vendors](packer-vendors.md) | Companies selling Android app protection and obfuscation |

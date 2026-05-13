@@ -433,7 +433,6 @@ nav:
       - Surveillance & Data Trade: grayware/surveillance-data-trade.md
   - Industry:
       - industry/index.md
-      - App Distribution: industry/app-distribution.md
       - AV Engines: industry/av-engines.md
       - Digital Forensics: industry/digital-forensics.md
       - Packer Vendors: industry/packer-vendors.md

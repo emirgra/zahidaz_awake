@@ -543,6 +543,31 @@ Use Ghidra, IDA Pro, or Binary Ninja for native code analysis. Function names ar
     ```
     If these commands return nothing, the library uses dynamic registration via `RegisterNatives` in `JNI_OnLoad`. Load it in Ghidra and search for cross-references to `RegisterNatives`.
 
+### Native String Obfuscation Identification
+
+Native loaders in commercial packers ([iJiami](../packers/ijiami.md), [Bangcle](../packers/bangcle.md), [Tencent Legu](../packers/tencent-legu.md), [Qihoo 360 Jiagu](../packers/qihoo-360-jiagu.md)) typically XOR-encode `.rodata` strings under a fixed short pad. Static triage fingerprints:
+
+| Signature | What It Means |
+|-----------|---------------|
+| Large `.rodata` region with high byte entropy that nevertheless contains inner NULs | XOR-pad encoding where the pad cycle resets per NUL-terminated record. Plaintext bytes equal to the pad position encode as `0x00`, so records carry inner NULs. |
+| Short ASCII fragments visible inside the high-entropy region | Pad characters appearing as plaintext self-encode to zero -- the ASCII bytes you can see are pad fragments, not real strings. iJiami v4 leaks the fragment `c1xs` constantly. |
+| PLT/GOT xrefs landing mid-region rather than at NUL boundaries | The xrefs point to record starts; the NULs visible in `strings(1)` output are the encoded form, not the terminators. Walking xrefs surfaces real record starts. |
+
+Pad recovery is a one-shot known-plaintext attack against any record long enough to span the pad period. A JNI method-descriptor string (uniquely determined by JNI conventions and reference resolution) is the safest known-plaintext choice.
+
+### NRV2E / UPX-Derivative Native Packers
+
+Stock UPX rejects with `NotPackedException: not packed by UPX` is a corroborating signal, not a definitive one. The reliable signature is inside the `DT_INIT` constructor:
+
+| Pattern | Role |
+|---------|------|
+| `call X; pop reg` | PIC base recovery |
+| `or ebp, 0xffffffff` | NRV bit-buffer init |
+| Inner loop reading one byte, XOR'ing a constant, writing one byte | Literal-byte emitter with the packer's anti-`upx -d` XOR (iJiami uses `0x50`) |
+| `push 0x5a; pop eax; int 0x80` (`6A 5A 58 CD 80`) or `mov eax, 0xc0; ... sysenter` | Raw-syscall `mmap` -- the stub allocates its output buffer without going through libc |
+
+Co-occurrence of these inside `DT_INIT` plus stock-UPX rejection is high-confidence NRV2E family. See the [iJiami packer page](../packers/ijiami.md#1-native-loader-packing-nrv2e--literal-xor) for the full layout.
+
 ## Family-Specific Static Analysis Notes
 
 Different malware families present unique static analysis challenges. The table below maps families to their specific obstacles and recommended approaches:

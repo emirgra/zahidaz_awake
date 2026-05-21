@@ -435,6 +435,29 @@ XposedHelpers.findAndHookMethod(
 );
 ```
 
+### Manual ART Method Patching (Packer-Side, Not Analyst-Side)
+
+A commercial packer pattern that uses the same ART internals as Xposed / [SandHook](https://github.com/ganyao114/SandHook) / [LSPlant](https://github.com/LSPosed/LSPlant) but for the packer's own benefit rather than for hooking the host app. Worth knowing because:
+
+1. It is the mechanism behind the `RegisterNatives` bypass that frustrates Frida users (see [Anti-Frida Detection and Bypass](#anti-frida-detection-and-bypass)).
+2. Detecting "SandHook is present" as a sign the app is being hooked produces a false positive on packers that bundle SandHook as a private binder.
+
+The packer's `JNI_OnLoad` reads a static `Method[]` from a Java helper class via `GetStaticObjectField`, converts each `Method` to a `jmethodID` via `FromReflectedMethod`, then writes the address of its own native handler into the `entryPointFromJni` field of the underlying ART `ArtMethod` struct. The result is the same as `RegisterNatives` would produce, but no `RegisterNatives` call is ever made -- a Frida hook on `env->RegisterNatives` returns nothing.
+
+To enumerate the native handlers, hook `FromReflectedMethod` or `art::Method::SetEntryPointFromJni` (the symbol name varies by Android version) and log the resolved address for each invocation:
+
+```javascript
+Interceptor.attach(Module.findExportByName('libart.so', '_ZN3art9ArtMethod23SetEntryPointFromJniPtrEPKv'), {
+    onEnter(args) {
+        const method = args[0];
+        const entry = args[1];
+        console.log('SetEntryPointFromJni: method=' + method + ' entry=' + entry);
+    }
+});
+```
+
+iJiami v4 ships SandHook + Xposed inside its own `libexec.so` for exactly this purpose -- to access the ART internals needed to patch `entryPointFromJni` on Android versions where the struct layout is private. The presence of SandHook symbols in `libexec.so` is the packer's binder, not evidence that the host app has been hooked by an analyst. Hook-detection rules that fire on SandHook string presence will false-positive on every iJiami v4 sample.
+
 ### Frida vs. Xposed
 
 | Aspect | Frida | Xposed / LSPosed |

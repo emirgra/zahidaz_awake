@@ -335,6 +335,50 @@ if (elapsed > THRESHOLD) {
 }
 ```
 
+## Native-Side Anti-Emulation Patterns
+
+Beyond build-property and process-list checks, native loaders ship a family of patterns that specifically target single-process emulators (Unicorn, Qiling) and Java-less static analysis. These appear in commercial packers ([iJiami](../packers/ijiami.md), [Bangcle](../packers/bangcle.md), [Tencent Legu](../packers/tencent-legu.md)) and high-end custom loaders.
+
+### Fixed-Iteration Fingerprint Loops
+
+A native loop reads a property (`ro.build.version.release_or_codename`, `ro.yunos.version`) and does something trivial with it (`strcpy`, hash, compare) hundreds of thousands to millions of times. The loop count is hard-coded and does not depend on the property's value -- returning the "correct" value via Frida or property hook does not short-circuit the loop. Two purposes:
+
+- Burn CPU cycles in a pattern that exposes naive emulators (Unicorn slows to a crawl long before the loop completes).
+- Mutate a side buffer whose final contents may feed downstream state, so blindly NOPing the loop can break later decryption.
+
+iJiami v4 ships two such loops during `JNI_OnLoad`: 2.7M iterations on the release-codename prop and 26 000 iterations on `ro.yunos.version`. Bypass: patch the loop counter rather than hooking the property reader, but verify what the side buffer is used for first.
+
+### Raw-Syscall `mmap` for Unpacking
+
+The packer's bootstrap allocates its unpack output buffer via raw `int 0x80` / `sysenter` / `svc #0` rather than through libc `mmap()`. Hooking `mmap` in libc.so will not catch the unpacking event. Common idiom on x86: `push 0x5a; pop eax; int 0x80` (bytes `6A 5A 58 CD 80`) for `__NR_mmap`, followed by `mov eax, 0xc0; ... sysenter` for the `__NR_mmap2` fast path.
+
+Bypass: hook the kernel-entry syscall path (Frida `Stalker` or kernel-side instrumentation) instead of libc, or instrument the stub at the disassembly level via Frida `Interceptor.attach` on the bootstrap address.
+
+### Cross-Process Cooperation (fork + ptrace)
+
+The loader forks a child, attaches to it via `ptrace(PTRACE_ATTACH)`, then exchanges register state via the ptrace interface to drive part of the unpacking or cipher dispatch in the child while the parent steers. Single-process Unicorn / Qiling instances do not exercise this path -- they execute only the parent's code path and never receive the child's contributed state.
+
+```
+fork()
+if (child)  -> call recursive_path()
+else        -> ptrace(PTRACE_ATTACH, child, 0, 0)
+               ptrace(PTRACE_CONT,    child, 0, 0)
+               wait(NULL)
+               call cipher_dispatch()
+```
+
+A `bsd_signal(SIGUSR2)` handler typically sits alongside, carrying the cooperation signaling. Bypass: build a two-process emulator harness with register-state proxying, or move to on-device dynamic analysis where the cooperation is inherent.
+
+### Opaque-Predicate Decoy Globals
+
+OLLVM bogus-CF inflation around a sensitive routine (cipher dispatcher, VM core) uses two or more globals as opaque-predicate inputs. The globals are read in conditional branches inside a `do { } while (true)` wrapper, are updated in place, and look to a decompiler like cryptographic state. They are algebraically constant -- both branches reduce to one -- and carry no real role.
+
+The trap is specifically designed to make static analysts chase fake cipher state. Constant-fold the opaque predicate via Z3 or by symbolic execution; the wrapper collapses to a straight-line call.
+
+### Stack-Probe Loop in Nested Unpack
+
+Between two stages of a native unpack stub, a loop walks tens of megabytes of address space (~60 MB in iJiami v4). The probe has no functional side effect on the unpacked payload, but a naive Unicorn / Qiling harness will hang indefinitely trying to map every probed page. Bypass: patch the loop counter or NOP the probe entirely once you have confirmed it is not feeding state to the next stage.
+
 ## AV and Security App Detection
 
 Malware checks for installed security apps to decide whether to activate. Some families disable Play Protect via [accessibility](accessibility-abuse.md) before proceeding.

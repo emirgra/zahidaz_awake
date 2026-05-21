@@ -114,6 +114,32 @@ combined[dexElements.length] = newElement;
 setField(pathList, "dexElements", combined);
 ```
 
+### LoadedApk.mClassLoader Substitution
+
+The canonical commercial-packer transparent-load mechanism, used by [Bangcle](../packers/bangcle.md), [Tencent Legu](../packers/tencent-legu.md), [Qihoo 360 Jiagu](../packers/qihoo-360-jiagu.md), [Baidu](../packers/baidu.md), [iJiami](../packers/ijiami.md), and most other Chinese commercial packers. After decrypting the inner DEX, the packer walks ART internals via reflection to replace the host app's `LoadedApk.mClassLoader` field with its own ClassLoader (which knows how to resolve classes against the unpacked DEX). All subsequent class lookups in the host app resolve transparently to the unpacked code, with no `DexClassLoader` / `InMemoryDexClassLoader` calls visible to a Frida hook on those constructors.
+
+```java
+Class<?> at = Class.forName("android.app.ActivityThread");
+Method curThread = at.getDeclaredMethod("currentActivityThread");
+Object thread = curThread.invoke(null);
+
+Field bound = at.getDeclaredField("mBoundApplication");
+bound.setAccessible(true);
+Object appBindData = bound.get(thread);
+
+Field info = appBindData.getClass().getDeclaredField("info");
+info.setAccessible(true);
+Object loadedApk = info.get(appBindData);
+
+Field cl = loadedApk.getClass().getDeclaredField("mClassLoader");
+cl.setAccessible(true);
+cl.set(loadedApk, payloadClassLoader);
+```
+
+Hunting signature: the recovered string table of the native loader contains the cluster `currentActivityThread`, `mBoundApplication`, `LoadedApk`, `mClassLoader`, `getApplicationInfo`, `sourceDir`, `mAppDir`. Even when string-encrypted, the combination is distinctive -- legitimate apps almost never reflect on all of these.
+
+Contrasts with [shadow-DEX class impersonation](#shadow-dex-class-impersonation) (which injects DEX into `dexElements` at index 0 to *shadow* legitimate classes) and [PathClassLoader manipulation](#pathclassloader-manipulation) (which appends DEX into the existing classloader's element list). LoadedApk substitution replaces the host's classloader wholesale rather than splicing into it -- the cleanest mechanism for delivering an entire unpacked app rather than a few payload classes.
+
 ## Payload Sources
 
 | Source | Stealth | Persistence | Used By |

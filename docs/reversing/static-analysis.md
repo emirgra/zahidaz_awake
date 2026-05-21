@@ -566,7 +566,7 @@ Stock UPX rejects with `NotPackedException: not packed by UPX` is a corroboratin
 | Inner loop reading one byte, XOR'ing a constant, writing one byte | Literal-byte emitter with the packer's anti-`upx -d` XOR (iJiami uses `0x50`) |
 | `push 0x5a; pop eax; int 0x80` (`6A 5A 58 CD 80`) or `mov eax, 0xc0; ... sysenter` | Raw-syscall `mmap` -- the stub allocates its output buffer without going through libc |
 
-Co-occurrence of these inside `DT_INIT` plus stock-UPX rejection is high-confidence NRV2E family. See the [iJiami packer page](../packers/ijiami.md#1-native-loader-packing-nrv2e--literal-xor) for the full layout.
+Co-occurrence of these inside `DT_INIT` plus stock-UPX rejection is high-confidence NRV2E family. See the [iJiami packer page](../packers/ijiami.md#1-native-loader-packing-nrv2e-literal-xor) for the full layout.
 
 ## Family-Specific Static Analysis Notes
 
